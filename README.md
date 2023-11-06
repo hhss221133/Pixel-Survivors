@@ -1,6 +1,12 @@
 # Pixel-Survivors
 COMP4021 Group 3 Final Project
 
+How to build and run:
+1. Clone the Repo
+2. 'npm install'
+3. cd into src directory
+4. 'node server.js'
+
 Members:
 hsaegusa@connect.ust.hk
 wlwkwong@connect.ust.hk
