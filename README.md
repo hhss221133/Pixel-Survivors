@@ -15,3 +15,8 @@ Project Details:
 4. The game over page will display a win/loss screen. When a player wins their individual scores will be displayed along with the completion time -and it will be listed on a rankings page. When a player loses only the damage statistics will be displayed.
 
 5. Cheating can be toggled in the game by pressing a key, and the damage output of the players increases significantly.
+
+
+link to assets
+
+https://docs.google.com/document/d/11CN1Sab_wOOiY_lCCS4OrXzSRlypOETKJ9lfh5rZ2p8/edit?usp=sharing
