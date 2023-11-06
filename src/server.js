@@ -27,6 +27,7 @@ app.use(UserAuth);
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+require('./socketHandler')(io);
 
 //Starting the HTTP Server
 httpServer.listen(8000);

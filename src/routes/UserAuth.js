@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/UserModel');
+const path = require('path');
+const requireLogin = require('../middleware/MWAuth');
+
 
 // Route to handle login
 router.post('/login', (req, res) => {
     const {username, password} = req.body;
 
-    UserModel.checkLogin(username, password, (err, result) => {
+    UserModel.checkLogin(username, password, (err, isValid) => {
         if (err) {
           // handle error, possibly return an error response
           return res.status(500).json({ success: false, message: 'An error occurred' });
         }
-        if (result) {
+        if (isValid) {
           // login successful
+          req.session.username = username;
           return res.json({ success: true, message: 'Login successful!' });
         } else {
           // login failed
@@ -37,6 +41,12 @@ router.post('/register', (req, res) => {
             return res.status(201).json({success: true, message: 'User registered successfully' });
         });
     });
+});
+
+
+router.get('/lobbies', requireLogin, (req, res) => {
+  // If the user is logged in, serve the protected page
+  res.sendFile(path.join(__dirname, '../protected_views/lobbies.html'));
 });
 
 

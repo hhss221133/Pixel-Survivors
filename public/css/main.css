@@ -5,6 +5,7 @@
 
 body {
     overflow: hidden;
+    margin:0;
 }
 
 h {
@@ -32,7 +33,8 @@ p {
 }
 
 .body_inner_wrap {
-    min-width: 100vw;
+    width:100vw;
+    min-width: 700px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;

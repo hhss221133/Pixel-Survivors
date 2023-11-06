@@ -1,0 +1,86 @@
+.lobby_main {
+    width:100vw;
+    min-width: 600px;
+    min-height: 100vh;
+    background-color: rgb(218, 218, 218);
+    padding:10px;
+    height:100%;
+}
+
+.lobby_list_main {
+    display:flex;
+    width:100%;
+    flex-direction:column;
+    padding:10px;
+    align-items: center;
+    background-color:aliceblue;
+    height:100%;
+    min-height:500px;
+}
+
+ul {
+    margin:0;
+    list-style-type: none;
+}
+
+span {
+    font-size:30px;
+}
+
+#lobby_list {
+    background-color:rgb(4, 218, 146);
+    padding:20px;
+    display:flex;
+    flex-direction: column;
+    max-height:60vh;
+    overflow:auto;
+    row-gap:10px;
+    min-width:400px;
+    min-height:400px;
+}
+
+.lobby_item {
+    display:flex;
+    flex-direction:row;
+    justify-content: center;
+    padding:5px;
+    background-color:rgb(212, 165, 255);
+    column-gap:20px;
+}
+
+.lobby_item_right {
+    margin-left:auto;
+    display:flex;
+    flex-direction:row;
+    column-gap:10px;
+}
+
+.lobby_inner {
+    display:flex;
+    flex-direction:row;
+    height:100%;
+}
+
+.profile {
+    background-color:brown;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    row-gap:20px;
+    min-height:400px;
+}
+
+.lobby_buttons {
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    /* align-items: center; */
+    width:100%;
+}
+
+.lobby_wrapper {
+    display:flex;
+    flex-direction:column;
+    column-gap: 10px;
+    padding:10px;
+}

@@ -64,6 +64,7 @@ function login_ajax() {
                 responseMessageElement.textContent = data.message;
                 responseMessageElement.style.color = data.success ? '#28a745' : '#d9534f'; // Change color based on success
                 responseMessageElement.style.display = 'block';
+                window.location.href = '/lobbies';
                 console.log(data);
             })
             .catch(error => {
