@@ -1,6 +1,10 @@
 # Pixel-Survivors
 COMP4021 Group 3 Final Project
 
+Members:
+hsaegusa@connect.ust.hk
+wlwkwong@connect.ust.hk
+
 Project Details:
 1. Pixel Survivors
 
