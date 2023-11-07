@@ -8,6 +8,8 @@ require('dotenv').config();
 const app = express();
 app.use(express.static('../public'));
 app.use(express.json());
+
+//Session settings
 const Session = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -22,12 +24,11 @@ const UserAuth = require('./routes/UserAuth');
 
 app.use(UserAuth);
 
-
 //Creating HTTP and WS server
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-require('./socketHandler')(io);
+require('./socketHandler')(io, Session);
 
 //Starting the HTTP Server
 httpServer.listen(8000);
