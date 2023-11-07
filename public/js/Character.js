@@ -10,11 +10,11 @@ const Character = function(ctx, x, y, gameArea) {
 
     let maxHP = 50;
 
-    let walkSpeed = 10;
+    let walkSpeed = 300;
 
     let attackPower = 1;
 
-    let deltaTime = 16.7; // frame time for 60fps
+    let deltaTime = 0.0167; // frame time for 60fps
 
     let start = Date.now();
 
@@ -35,7 +35,9 @@ const Character = function(ctx, x, y, gameArea) {
     const CalculateDeltaTime = function() {
         let current = Date.now();
         deltaTime = current - start;
+        deltaTime *= 0.001;
         start = current;
+
     };
 
     const GetDirection =  () => direction;

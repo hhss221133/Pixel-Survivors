@@ -8,12 +8,14 @@ const GameLoop = function() {
 
     const players = {};
 
-    const gameArea = BoundingBox(context, 0, 0, 1600, 900);
+    const gameArea = BoundingBox(context, 0, 0, 900, 1600);
 
     const CreatePlayerKnight = function() {
         const sequences = {
             /* sprite sequences for knight*/
-            idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true}
+            idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true},
+            moveLeft: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true},
+            moveRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true}
         };
 
         const NewPlayer = Player(context, 500, 500, gameArea);

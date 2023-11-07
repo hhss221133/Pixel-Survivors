@@ -3,8 +3,6 @@
 const Player = function(ctx, x, y, gameArea) {
     const character = Character(ctx, x, y, gameArea);
 
-
-
     /* Handle the keydown of ASDW keys for movement */
     $(document).on("keydown", function(event) {
 
@@ -12,7 +10,7 @@ const Player = function(ctx, x, y, gameArea) {
         if (event.keyCode != MOVEMENT_KEY.DOWN && event.keyCode != MOVEMENT_KEY.UP 
             && event.keyCode != MOVEMENT_KEY.LEFT && event.keyCode != MOVEMENT_KEY.RIGHT) return;
          
-        let newDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+        let newDir = character.GetDirection();
 
         /* x-direction */
         if (event.keyCode == MOVEMENT_KEY.LEFT) {
@@ -24,10 +22,10 @@ const Player = function(ctx, x, y, gameArea) {
 
         /* y-direction */
         if (event.keyCode == MOVEMENT_KEY.UP) {
-            newDir.vertical = DIRECTION_X.UP;
+            newDir.vertical = DIRECTION_Y.UP;
         }
         else if (event.keyCode == MOVEMENT_KEY.DOWN) {
-            newDir.vertical = DIRECTION_X.DOWN;
+            newDir.vertical = DIRECTION_Y.DOWN;
         }
 
         character.ChangeSpriteDirection(newDir);
@@ -45,22 +43,31 @@ const Player = function(ctx, x, y, gameArea) {
 
         /* x-direction */
         if (event.keyCode == MOVEMENT_KEY.LEFT ) {
-            newDir.horizontal = DIRECTION_X.STOP;
+            if (newDir.horizontal != DIRECTION_X.RIGHT)
+                newDir.horizontal = DIRECTION_X.STOP;
         }
         else if (event.keyCode == MOVEMENT_KEY.RIGHT) {
-            newDir.horizontal = DIRECTION_X.STOP;
+            if (newDir.horizontal != DIRECTION_X.LEFT)
+                newDir.horizontal = DIRECTION_X.STOP;
         }
 
         /* y-direction */
         if (event.keyCode == MOVEMENT_KEY.UP) {
-            newDir.vertical = DIRECTION_X.STOP;
+            if (newDir.vertical != DIRECTION_X.DOWN)
+                newDir.vertical = DIRECTION_X.STOP;
         }
         else if (event.keyCode == MOVEMENT_KEY.DOWN) {
-            newDir.vertical = DIRECTION_X.STOP;
+            if (newDir.vertical != DIRECTION_X.UP)
+                newDir.vertical = DIRECTION_X.STOP;
         }
 
         character.ChangeSpriteDirection(newDir);
     });
+
+    const Update = function(now) {
+
+        character.Update(now);
+    };
 
     return {
         SetMaxHP: character.SetMaxHP,
@@ -72,6 +79,6 @@ const Player = function(ctx, x, y, gameArea) {
         ChangeSpriteDirection: character.ChangeSpriteDirection,
         getBoundingBox: character.getBoundingBox,
         draw: character.draw,
-        Update: character.Update,
+        Update: Update,
     };
 };
