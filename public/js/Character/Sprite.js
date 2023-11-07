@@ -163,7 +163,6 @@ const Sprite = function(ctx, x, y) {
     const update = function(time) {
         if (lastUpdate == 0) lastUpdate = time;
 
-
         /* TODO */
         /* Move to the next sprite when the timing is right */
         if ((time - lastUpdate) >= sequence.timing) {

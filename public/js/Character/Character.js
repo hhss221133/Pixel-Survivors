@@ -40,7 +40,9 @@ const Character = function(ctx, x, y, gameArea) {
 
     };
 
-    const GetDirection =  () => direction;
+    const GetDirection = function() {
+        return {... direction};
+    };
 
     /* Create sprite sequeunces specific to each character  */
     const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, ShadowScale, SheetName) {
@@ -79,17 +81,22 @@ const Character = function(ctx, x, y, gameArea) {
             sprite.setXY(x, y);
     };
 
-    const ChangeSpriteDirection = function(dir) {
-        direction = dir;
+    const ChangeSpriteDirection = function(newDir) {
+        
 
-        switch (direction.horizontal) {
-            case DIRECTION_X.LEFT:
+        if (direction.horizontal != newDir.horizontal) {
+
+            /* Manage left and right animation*/
+            if (newDir.horizontal == DIRECTION_X.LEFT)
                 sprite.setSequence(sequences.moveLeft); 
-                break;
-            case DIRECTION_X.RIGHT:
+            else if (newDir.horizontal == DIRECTION_X.RIGHT)
                 sprite.setSequence(sequences.moveRight); 
-                break;             
-        };
+            else if (direction.vertical == DIRECTION_Y.STOP) 
+                (direction.horizontal == DIRECTION_X.LEFT)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
+        }
+        /* Manage up and down animation*/
+    
+        direction = newDir;
     };
 
     const UpdateSprite = (now) => {sprite.update(now)};

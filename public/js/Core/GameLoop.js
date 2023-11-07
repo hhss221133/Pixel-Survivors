@@ -14,8 +14,9 @@ const GameLoop = function() {
         const sequences = {
             /* sprite sequences for knight*/
             idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true},
+            idleLeft: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true},
             moveLeft: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true},
-            moveRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true}
+            moveRight: {x:0, y:55, width:100, height:55, count:8, timing:200, loop:true}
         };
 
         const NewPlayer = Player(context, 500, 500, gameArea);
