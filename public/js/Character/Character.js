@@ -83,19 +83,17 @@ const Character = function(ctx, x, y, gameArea) {
 
     const ChangeSpriteDirection = function(newDir) {
         
-
-        if (direction.horizontal != newDir.horizontal) {
-
-            /* Manage left and right animation*/
-            if (newDir.horizontal == DIRECTION_X.LEFT)
-                sprite.setSequence(sequences.moveLeft); 
-            else if (newDir.horizontal == DIRECTION_X.RIGHT)
-                sprite.setSequence(sequences.moveRight); 
-            else if (direction.vertical == DIRECTION_Y.STOP) 
-                (direction.horizontal == DIRECTION_X.LEFT)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
+        // To idle
+        if (newDir.horizontal == DIRECTION_X.STOP && newDir.vertical == DIRECTION_Y.STOP) {
+            (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
         }
-        /* Manage up and down animation*/
-    
+        else if (direction.horizontal != newDir.horizontal && newDir.horizontal != DIRECTION_X.STOP) {
+            (newDir.horizontal == DIRECTION_X.LEFT)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
+        }
+        else if (direction.vertical == DIRECTION_Y.STOP && newDir.vertical != DIRECTION_Y.STOP) {
+            (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
+        }
+
         direction = newDir;
     };
 

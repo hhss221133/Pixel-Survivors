@@ -15,7 +15,7 @@ const Sprite = function(ctx, x, y) {
     // - `count` - The total number of sprite images in the sequence
     // - `timing` - The timing for each sprite image
     // - `loop` - `true` if the sprite sequence is looped
-    let sequence = { x: 0, y: 0, width: 20, height: 20, count: 1, timing: 0, loop: false };
+    let sequence = { x: 0, y: 0, width: 20, height: 20, count: 1, timing: 0, loop: false, isLeft: false, startingIndex: 0 };
 
     // This is the index indicating the current sprite image used in the sprite sequence.
     let index = 0;
@@ -37,6 +37,10 @@ const Sprite = function(ctx, x, y) {
     const useSheet = function(spriteSheet) {
         sheet.src = spriteSheet;
         return this;
+    };
+
+    const getCurSequence = function() {
+        return {... sequence};
     };
 
     // This function returns the readiness of the sprite sheet image.
@@ -61,8 +65,9 @@ const Sprite = function(ctx, x, y) {
     // - `newSequence` - The new sprite sequence to be used by the sprite
     const setSequence = function(newSequence) {
         sequence = newSequence;
-        index = 0;
+        index = newSequence.startingIndex;
         lastUpdate = 0;
+
         return this;
     };
 
@@ -166,14 +171,28 @@ const Sprite = function(ctx, x, y) {
         /* TODO */
         /* Move to the next sprite when the timing is right */
         if ((time - lastUpdate) >= sequence.timing) {
+
             if (sequence.loop) {
-                index = (index + 1) % sequence.count;
+                if (sequence.isLeft) {
+                    index--;
+                    if (index < sequence.startingIndex + 1 - sequence.count)
+                    index = sequence.startingIndex;
+                }
+                else {
+                    index = (index + 1) % sequence.count;
+                }
+            } 
+            /* not looping */
+            else if (sequence.isLeft) {
+                if (index > sequence.startingIndex + 1 - sequence.count)
+                index--;
             }
-            else if (index < sequence.count - 1) {
+            else if (index < sequence.count - 1){
                 index++;
             }
+                
             lastUpdate = time;
-        }
+        }  
 
         return this;
     };
@@ -188,6 +207,7 @@ const Sprite = function(ctx, x, y) {
         setShadowScale: setShadowScale,
         getDisplaySize: getDisplaySize,
         getBoundingBox: getBoundingBox,
+        getCurSequence: getCurSequence,
         isReady: isReady,
         draw: draw,
         update: update

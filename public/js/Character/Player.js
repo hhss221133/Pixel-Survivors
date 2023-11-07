@@ -33,7 +33,6 @@ const Player = function(ctx, x, y, gameArea) {
         if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
         
-            
     });
 
     /* Handle the keyup of ASDW keys for movement */
