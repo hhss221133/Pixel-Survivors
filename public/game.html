@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Pixel Survivors</title>
+        <link rel="stylesheet" href="./css/game.css">
+    </head>
+
+    <body>
+        <div id="game-container">
+            <canvas width="1600px" height="900px"></canvas>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <script src="./js/GameLoop.js"></script>
+        <script src="./js/Character.js"></script>
+        <script src="./js/EnumContainer.js"></script>
+        <script src="./js/Sprite.js"></script>
+        <script src="./js/BoundingBox.js"></script>
+        <script src="./js/Player.js"></script>
+
+        <script>
+            let Game = GameLoop();
+            Game.StartGame();
+        </script>
+
+    </body>
+</html>
