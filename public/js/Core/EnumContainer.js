@@ -1,15 +1,15 @@
 /* Store the enum objects */
 
 const DIRECTION_X = {
-    LEFT : "Left",
-    RIGHT : "Right",
-    STOP : "Stop"   // not moving in x-axis
+    LEFT : 0,
+    RIGHT : 1,
+    STOP : 2  // not moving in x-axis
 };
 
 const DIRECTION_Y = {
-    UP : "Up",
-    DOWN : "Down",
-    STOP : "Stop"   // not moving in y-axis
+    UP : 0,
+    DOWN : 1,
+    STOP : 2   // not moving in y-axis
 };
 
 const MOVEMENT_KEY = {
@@ -24,7 +24,14 @@ const ACTION_KEY = {
 };
 
 const PLAYER_TYPE = {
-    KNIGHT : "Knight"
+    KNIGHT : 0
+};
+
+// states in the finite state machine(FSM)
+const FSM_STATE = {
+    MOVE: 0,    // walk and idle
+    ATTACK: 1,
+    DIE: 2
 };
 
 

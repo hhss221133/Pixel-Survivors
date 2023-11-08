@@ -4,9 +4,43 @@ const Character = function(ctx, x, y, gameArea) {
     // This is the sprite object of the player created from the Sprite module.
     const sprite = Sprite(ctx, x, y);
 
+    let charState = FSM_STATE.MOVE;
+
+    let attackCoolDown = 0.5; // in seconds
+
+    let bCanAttack = true;
+
+
+    const ToIdle = function() {
+        charState = FSM_STATE.MOVE;
+        
+        if (direction.horizontal == DIRECTION_X.STOP && direction.vertical == DIRECTION_Y.STOP) {
+            (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
+        }
+        else if (direction.horizontal != DIRECTION_X.STOP) {
+            (direction.horizontal == DIRECTION_X.LEFT)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
+        }
+        else if (direction.vertical != DIRECTION_Y.STOP) {
+            (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
+        }
+        
+    };
+
+    const StartAttack = function() {
+        bCanAttack = false;
+        SetFSMState(FSM_STATE.ATTACK);
+        setTimeout(ResetCanAttack, attackCoolDown * 1000);
+    }
+
+    const ResetCanAttack = () => {bCanAttack = true;}
+
+
+    sprite.setSequenceEndCallback(ToIdle);
+
     let sequences = {
         /* MUST BE initialized before using!*/
     };
+
 
     let maxHP = 50;
 
@@ -31,6 +65,19 @@ const Character = function(ctx, x, y, gameArea) {
     const SetAttackPower = function(NewAttackPower) {
         attackPower = NewAttackPower;
     };
+
+    const SetFSMState = function(NewState) {
+
+        if (charState == NewState) return;
+
+        charState = NewState;
+    }
+
+    const GetFSMState = () => {return charState;}
+
+    const CanCharAttack = function() {
+        return charState == FSM_STATE.MOVE && bCanAttack;
+    }
 
     const CalculateDeltaTime = function() {
         let current = Date.now();
@@ -83,18 +130,26 @@ const Character = function(ctx, x, y, gameArea) {
 
     const ChangeSpriteDirection = function(newDir) {
         
-        // To idle
+        
+        const curDir = {... direction};
+
+        direction = newDir;
+
+        
+        if (GetFSMState() != FSM_STATE.MOVE) return;
+        // To idle animation, only proceed if character is not doing other actions
+
         if (newDir.horizontal == DIRECTION_X.STOP && newDir.vertical == DIRECTION_Y.STOP) {
             (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
         }
-        else if (direction.horizontal != newDir.horizontal && newDir.horizontal != DIRECTION_X.STOP) {
+        else if (curDir.horizontal != newDir.horizontal && newDir.horizontal != DIRECTION_X.STOP) {
             (newDir.horizontal == DIRECTION_X.LEFT)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
         }
-        else if (direction.vertical == DIRECTION_Y.STOP && newDir.vertical != DIRECTION_Y.STOP) {
+        else if (curDir.vertical == DIRECTION_Y.STOP && newDir.vertical != DIRECTION_Y.STOP) {
             (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
         }
-
-        direction = newDir;
+        
+        
     };
 
     const UpdateSprite = (now) => {sprite.update(now)};
@@ -122,5 +177,12 @@ const Character = function(ctx, x, y, gameArea) {
         draw: sprite.draw,
         setSequence: sprite.setSequence,
         Update: Update,
+
+        // FSM State related
+        GetFSMState: GetFSMState,
+        SetFSMState: SetFSMState,
+        CanCharAttack: CanCharAttack,
+        setSequenceEndCallback: sprite.setSequenceEndCallback,
+        StartAttack: StartAttack,
     };
 };

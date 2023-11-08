@@ -7,6 +7,12 @@ const Sprite = function(ctx, x, y) {
     // This is the image object for the sprite sheet.
     const sheet = new Image();
 
+    // used to notice others when animation ends
+    let sequenceEndCallback = null;
+
+    const setSequenceEndCallback = function(newCallback) {sequenceEndCallback = newCallback;}
+
+
     // This is an object containing the sprite sequence information used by the sprite containing:
     // - `x` - The starting x position of the sprite sequence in the sprite sheet
     // - `y` - The starting y position of the sprite sequence in the sprite sheet
@@ -16,7 +22,6 @@ const Sprite = function(ctx, x, y) {
     // - `timing` - The timing for each sprite image
     // - `loop` - `true` if the sprite sequence is looped
     let sequence = { x: 0, y: 0, width: 20, height: 20, count: 1, timing: 0, loop: false, isLeft: false, startingIndex: 0 };
-
 
     // ending sequence when a non-looping sequence ends,
     let endSequence = null;
@@ -62,11 +67,13 @@ const Sprite = function(ctx, x, y) {
 
     // This function sets the sprite sequence.
     // - `newSequence` - The new sprite sequence to be used by the sprite
-    const setSequence = function(newSequence, newEndSequence) {
+    const setSequence = function(newSequence, newEndSequence = null) {
         sequence = newSequence;
         index = newSequence.startingIndex;
         lastUpdate = 0;
-        if (newEndSequence != null) endSequence = newEndSequence;
+        if (newEndSequence != null) {
+            endSequence = newEndSequence;
+        }
         else endSequence = null;
         return this;
     };
@@ -138,7 +145,6 @@ const Sprite = function(ctx, x, y) {
         /* TODO */
         /* Move to the next sprite when the timing is right */
         if ((time - lastUpdate) >= sequence.timing) {
-
             if (sequence.loop) {
                 if (sequence.isLeft) {
                     index--;
@@ -154,14 +160,20 @@ const Sprite = function(ctx, x, y) {
                 if (index > sequence.startingIndex + 1 - sequence.count)
                     index--;
                 else {
-                    if (endSequence != null) setSequence(endSequence);
+                    if (endSequence != null) {
+                        setSequence(endSequence);
+                        if (sequenceEndCallback != null) sequenceEndCallback();
+                    }
                 }
             }
             else if (index < sequence.count - 1){
                 index++;
             }
             else {
-                if (endSequence != null) setSequence(endSequence);
+                if (endSequence != null) {
+                    setSequence(endSequence);
+                    if (sequenceEndCallback != null) sequenceEndCallback();
+                }
             }
                 
             lastUpdate = time;
@@ -182,6 +194,9 @@ const Sprite = function(ctx, x, y) {
         getCurSequence: getCurSequence,
         isReady: isReady,
         draw: draw,
-        update: update
+        update: update,
+
+        // For FSM,
+        setSequenceEndCallback: setSequenceEndCallback
     };
 };

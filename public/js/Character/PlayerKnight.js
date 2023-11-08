@@ -26,11 +26,12 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
 
     const HandleKnightAttackInput = function(keyCode) {
         /* only for knight to attack */ 
-        if (playerType != PLAYER_TYPE.KNIGHT || keyCode != ACTION_KEY.ATTACK) return;
-           
+        if (keyCode != ACTION_KEY.ATTACK || !player.CanCharAttack()) return;
+
+        player.StartAttack();
+        
         (player.getCurSequence().isLeft)? player.setSequence(sequences.attackLeft, sequences.idleLeft) : 
             player.setSequence(sequences.attackRight, sequences.idleRight);
-      
     };
 
 

@@ -106,5 +106,12 @@ const Player = function(ctx, x, y, gameArea) {
         getBoundingBox: character.getBoundingBox,
         draw: character.draw,
         Update: Update,
+
+        // FSM State related
+        GetFSMState: character.GetFSMState,
+        SetFSMState: character.SetFSMState,
+        CanCharAttack: character.CanCharAttack,
+        setSequenceEndCallback: character.setSequenceEndCallback,
+        StartAttack: character.StartAttack,
     };
 };
