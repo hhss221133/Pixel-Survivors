@@ -9,8 +9,6 @@ const app = express();
 
 app.use(express.static('../public'));
 app.use(express.json());
-
-//Session settings
 const Session = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -25,6 +23,7 @@ const UserAuth = require('./routes/UserAuth');
 
 app.use(UserAuth);
 
+
 //Creating HTTP and WS server
 const httpServer = createServer(app);
 
@@ -36,7 +35,7 @@ const io = new Server(httpServer, {
 console.log(`Socket.IO pingInterval set to: ${io.opts.pingInterval}`);
 console.log(`Socket.IO pingTimeout set to: ${io.opts.pingTimeout}`);
 
-require('./socketHandler')(io, Session);
+require('./socketHandler')(io);
 
 //Starting the HTTP Server
 httpServer.listen(8000);

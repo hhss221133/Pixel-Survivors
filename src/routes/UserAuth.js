@@ -25,23 +25,6 @@ router.post('/login', (req, res) => {
     });
 });
 
-router.post('/logout', (req, res) => {
-  if(req.session.username) {
-    req.session.destroy(err => {
-      if(err) {
-          // console.error('Session destruction error:', err);
-        res.status(500).json({ success: false, message: 'Could not log out, please try again'});
-      } else {
-        res.clearCookie('connect.sid'); 
-        res.status(200).json({ success: true, message: 'Successfully logged out'});
-      }
-    });
-  } 
-  else {
-    res.status(400).json({ success: false, message: 'You are not logged in'});
-  }
-});
-
 router.post('/register', (req, res) => {
     const {username, password, passwordAgain} = req.body;
 
