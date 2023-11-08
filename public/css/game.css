@@ -2,6 +2,6 @@ canvas {
     position: absolute;
     top: 0px;
     left: 0px;
-    background: url(../../assets/background.png);
+    background: url(../assets/background.png);
     background-size: 100% 
 }
