@@ -78,6 +78,8 @@ const Sprite = function(ctx, x, y) {
         return this;
     };
 
+    const getScale = () => {return scale;}
+
     // This function sets the scaling factor of the sprite.
     // - `value` - The new scaling factor
     const setScale = function(value) {
@@ -124,8 +126,18 @@ const Sprite = function(ctx, x, y) {
         ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
             x - size.width / 2, y - size.height / 2, size.width, size.height);
 
+     /*   const box = getBoundingBox();
+        const points = box.getPoints();
+        ctx.rect(box.getLeft(), box.getTop(), box.getRight() - box.getLeft(), box.getBottom() - box.getTop(), );
+        ctx.stroke(); */
         /* Restore saved settings */
         ctx.restore();
+    };
+
+    // draw a box for debugging
+    const drawBox = function(box) {
+        ctx.rect(box.getLeft(), box.getTop(), box.getRight() - box.getLeft(), box.getBottom() - box.getTop());
+        ctx.stroke();
     };
      
     // This function draws the sprite.
@@ -188,7 +200,9 @@ const Sprite = function(ctx, x, y) {
         getXY: getXY,
         setXY: setXY,
         setSequence: setSequence,
+        getScale: getScale,
         setScale: setScale,
+        drawBox: drawBox,
         getDisplaySize: getDisplaySize,
         getBoundingBox: getBoundingBox,
         getCurSequence: getCurSequence,

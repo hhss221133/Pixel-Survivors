@@ -17,12 +17,6 @@ const Player = function(ctx, x, y, gameArea) {
         HandleMovementInputUp(event.keyCode);
     });
 
-
-    const Update = function(now) {
-
-        character.Update(now);
-    };
-
     const SetPlayerType = function(newType) {
         playerType = newType;
     };
@@ -100,12 +94,16 @@ const Player = function(ctx, x, y, gameArea) {
         CreateSpriteSequences: character.CreateSpriteSequences,
         MoveCharacter: character.MoveCharacter,
         SetPlayerType: SetPlayerType,
+        getXY: character.getXY,
+        getScale: character.getScale,
+        drawBox: character.drawBox,
         ChangeSpriteDirection: character.ChangeSpriteDirection,
         getCurSequence: character.getCurSequence,
+        getDisplaySize: character.getDisplaySize,
         setSequence: character.setSequence,
         getBoundingBox: character.getBoundingBox,
         draw: character.draw,
-        Update: Update,
+        Update: character.Update,
 
         // FSM State related
         GetFSMState: character.GetFSMState,
@@ -113,5 +111,8 @@ const Player = function(ctx, x, y, gameArea) {
         CanCharAttack: character.CanCharAttack,
         setSequenceEndCallback: character.setSequenceEndCallback,
         StartAttack: character.StartAttack,
+
+        // Hitbox related
+        SetHitBox: character.SetHitBox,
     };
 };

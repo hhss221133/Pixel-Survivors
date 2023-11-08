@@ -18,6 +18,41 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "../../assets/player_knight.png");
 
 
+    const GetHitBox = function() {
+        const size = player.getDisplaySize();
+
+        const {x, y} = player.getXY();
+
+        const top = y - size.height * 0.25;
+        const left = x - size.width * 0.2;
+        const bottom = y + size.height * 0.45;
+        const right = x + size.width * 0.2;
+
+        return BoundingBox(ctx, top, left, bottom, right);
+    };
+
+    const GetAttackHitBox = function() {
+        const playerScale = player.getScale();
+
+        const size = player.getDisplaySize();
+        const {x, y} = player.getXY();
+        const top = y - size.height * 0.25 - (playerScale * 10);
+        const bottom = y + size.height * 0.45 + (playerScale * 5);
+        let left, right;
+
+        if (player.getCurSequence().isLeft) {
+            left = x - size.width * 0.2 - (playerScale * 35);
+            right = x + size.width * 0.2;
+        }
+        else {
+            left = x - size.width * 0.2;
+            right = x + size.width * 0.2 + (playerScale * 35);
+        }
+
+        return BoundingBox(ctx, top, left, bottom, right);
+    };
+
+
     $(document).on("keydown", function(event) {
 
         HandleKnightAttackInput(event.keyCode);
@@ -34,6 +69,12 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
             player.setSequence(sequences.attackRight, sequences.idleRight);
     };
 
+    const Update = function(now) {
+        player.Update(now);
+
+        GetAttackHitBox();
+    };
+
 
 
 
@@ -47,6 +88,6 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         ChangeSpriteDirection: player.ChangeSpriteDirection,
         getBoundingBox: player.getBoundingBox,
         draw: player.draw,
-        Update: player.Update,
+        Update: Update,
     };
 };

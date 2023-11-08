@@ -10,10 +10,9 @@ const Character = function(ctx, x, y, gameArea) {
 
     let bCanAttack = true;
 
-
     const ToIdle = function() {
         charState = FSM_STATE.MOVE;
-        
+
         if (direction.horizontal == DIRECTION_X.STOP && direction.vertical == DIRECTION_Y.STOP) {
             (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.idleLeft) : sprite.setSequence(sequences.idleRight);
         }
@@ -169,10 +168,14 @@ const Character = function(ctx, x, y, gameArea) {
         SetWalkSpeed: SetWalkSpeed,
         SetAttackPower: SetAttackPower,
         GetDirection: GetDirection,
+        getXY: sprite.getXY,
+        getScale: sprite.getScale,
         CreateSpriteSequences: CreateSpriteSequences,
         MoveCharacter: MoveCharacter,
+        drawBox: sprite.drawBox,
         ChangeSpriteDirection: ChangeSpriteDirection,
         getBoundingBox: sprite.getBoundingBox,
+        getDisplaySize: sprite.getDisplaySize,
         getCurSequence: sprite.getCurSequence,
         draw: sprite.draw,
         setSequence: sprite.setSequence,
@@ -184,5 +187,6 @@ const Character = function(ctx, x, y, gameArea) {
         CanCharAttack: CanCharAttack,
         setSequenceEndCallback: sprite.setSequenceEndCallback,
         StartAttack: StartAttack,
+
     };
 };
