@@ -17,16 +17,15 @@ const Sprite = function(ctx, x, y) {
     // - `loop` - `true` if the sprite sequence is looped
     let sequence = { x: 0, y: 0, width: 20, height: 20, count: 1, timing: 0, loop: false, isLeft: false, startingIndex: 0 };
 
+
+    // ending sequence when a non-looping sequence ends,
+    let endSequence = null;
+
     // This is the index indicating the current sprite image used in the sprite sequence.
     let index = 0;
 
     // This is the scaling factor for drawing the sprite.
     let scale = 1;
-
-    // This is the scaling factor to determine the size of the shadow, relative to the scaled sprite image size.
-    // - `x` - The x scaling factor
-    // - `y` - The y scaling factor
-    let shadowScale = { x: 1, y: 0.25 };
 
     // This is the updated time of the current sprite image.
     // It is used to determine the timing to switch to the next sprite image.
@@ -63,11 +62,12 @@ const Sprite = function(ctx, x, y) {
 
     // This function sets the sprite sequence.
     // - `newSequence` - The new sprite sequence to be used by the sprite
-    const setSequence = function(newSequence) {
+    const setSequence = function(newSequence, newEndSequence) {
         sequence = newSequence;
         index = newSequence.startingIndex;
         lastUpdate = 0;
-
+        if (newEndSequence != null) endSequence = newEndSequence;
+        else endSequence = null;
         return this;
     };
 
@@ -78,14 +78,6 @@ const Sprite = function(ctx, x, y) {
         return this;
     };
 
-    // This function sets the scaling factor of the sprite shadow.
-    // - `value` - The new scaling factor as an object
-    //   - `value.x` - The x scaling factor
-    //   - `value.y` - The y scaling factor
-    const setShadowScale = function(value) {
-        shadowScale = value;
-        return this;
-    };
 
     // This function gets the display size of the sprite.
     const getDisplaySize = function() {
@@ -109,30 +101,6 @@ const Sprite = function(ctx, x, y) {
         return BoundingBox(ctx, top, left, bottom, right);
     };
 
-    // This function draws shadow underneath the sprite.
-    const drawShadow = function() {
-        /* Save the settings */
-        ctx.save();
-
-        /* Get the display size of the sprite */
-        const size = getDisplaySize();
-
-        /* Find the scaled width and height of the shadow */
-        const shadowWidth  = size.width * shadowScale.x;
-        const shadowHeight = size.height * shadowScale.y;
-
-        /* Draw a semi-transparent oval */
-        ctx.fillStyle = "black";
-        ctx.globalAlpha = 0.6;
-        ctx.beginPath();
-        ctx.ellipse(x, y + size.height / 2,
-                    shadowWidth / 2, shadowHeight / 2, 0, 0, 2 * Math.PI);
-        ctx.fill();
-
-        /* Restore saved settings */
-        ctx.restore();
-    };
-
     // This function draws the sprite.
     const drawSprite = function() {
         /* Save the settings */
@@ -153,10 +121,9 @@ const Sprite = function(ctx, x, y) {
         ctx.restore();
     };
      
-    // This function draws the shadow and the sprite.
+    // This function draws the sprite.
     const draw = function() {
         if (isReady()) {
-            drawShadow();
             drawSprite();
         }
         return this;
@@ -185,10 +152,16 @@ const Sprite = function(ctx, x, y) {
             /* not looping */
             else if (sequence.isLeft) {
                 if (index > sequence.startingIndex + 1 - sequence.count)
-                index--;
+                    index--;
+                else {
+                    if (endSequence != null) setSequence(endSequence);
+                }
             }
             else if (index < sequence.count - 1){
                 index++;
+            }
+            else {
+                if (endSequence != null) setSequence(endSequence);
             }
                 
             lastUpdate = time;
@@ -204,7 +177,6 @@ const Sprite = function(ctx, x, y) {
         setXY: setXY,
         setSequence: setSequence,
         setScale: setScale,
-        setShadowScale: setShadowScale,
         getDisplaySize: getDisplaySize,
         getBoundingBox: getBoundingBox,
         getCurSequence: getCurSequence,

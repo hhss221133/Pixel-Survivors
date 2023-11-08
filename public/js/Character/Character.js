@@ -45,9 +45,9 @@ const Character = function(ctx, x, y, gameArea) {
     };
 
     /* Create sprite sequeunces specific to each character  */
-    const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, ShadowScale, SheetName) {
+    const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, SheetName) {
         sequences = NewSpriteSequence;
-        sprite.setSequence(DefaultSequence).setScale(Scale).setShadowScale(ShadowScale).useSheet(SheetName);
+        sprite.setSequence(DefaultSequence).setScale(Scale).useSheet(SheetName);
     };
 
     const MoveCharacter = function() {
@@ -118,7 +118,9 @@ const Character = function(ctx, x, y, gameArea) {
         MoveCharacter: MoveCharacter,
         ChangeSpriteDirection: ChangeSpriteDirection,
         getBoundingBox: sprite.getBoundingBox,
+        getCurSequence: sprite.getCurSequence,
         draw: sprite.draw,
+        setSequence: sprite.setSequence,
         Update: Update,
     };
 };

@@ -19,4 +19,12 @@ const MOVEMENT_KEY = {
     RIGHT: "68" // D
 }
 
+const ACTION_KEY = {
+    ATTACK: "75"
+};
+
+const PLAYER_TYPE = {
+    KNIGHT : "Knight"
+};
+
 

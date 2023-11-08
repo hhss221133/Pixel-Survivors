@@ -10,23 +10,12 @@ const GameLoop = function() {
 
     const gameArea = BoundingBox(context, 0, 0, 900, 1600);
 
-    const CreatePlayerKnight = function() {
-        const sequences = {
-            /* sprite sequences for knight*/
-            idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
-            idleLeft: {x:0, y:495, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},
-            moveLeft: {x:0, y:550, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},
-            moveRight: {x:0, y:55, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0}
-        };
 
-        const NewPlayer = Player(context, 500, 500, gameArea);
-        NewPlayer.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, shadowScale = {x:0, y:0}, "../../assets/player_knight.png");
-        return NewPlayer;
-    };
 
     const InitializeGame = function() {
         // Initialze player, enemy and UI
-        players.player1 = CreatePlayerKnight();
+
+        players.player1 = PlayerKnight(context, 500, 500, gameArea);
     };
 
     const doFrame = function(now) {

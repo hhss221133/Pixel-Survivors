@@ -2,77 +2,94 @@
 const Player = function(ctx, x, y, gameArea) {
     const character = Character(ctx, x, y, gameArea);
 
+    let playerType = PLAYER_TYPE.KNIGHT;
+
     /* Handle the keydown of ASDW keys for movement */
     $(document).on("keydown", function(event) {
+
+        HandleMovementInputDown(event.keyCode);
+
+    });
+
+    /* Handle the keyup of ASDW keys for movement */
+    $(document).on("keyup", function(event) {
+
+        HandleMovementInputUp(event.keyCode);
+    });
+
+
+    const Update = function(now) {
+
+        character.Update(now);
+    };
+
+    const SetPlayerType = function(newType) {
+        playerType = newType;
+    };
+
+    const HandleMovementInputDown = function(keyCode) {
         /* not movement key, return */
-        if (event.keyCode != MOVEMENT_KEY.DOWN && event.keyCode != MOVEMENT_KEY.UP 
-            && event.keyCode != MOVEMENT_KEY.LEFT && event.keyCode != MOVEMENT_KEY.RIGHT) return;
+        if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
+            && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
 
         let curDir = character.GetDirection();
         let newDir = character.GetDirection();
 
         /* x-direction */
-        if (event.keyCode == MOVEMENT_KEY.LEFT) {
+        if (keyCode == MOVEMENT_KEY.LEFT) {
             if (curDir.horizontal != DIRECTION_X.LEFT) 
                 newDir.horizontal = DIRECTION_X.LEFT;
         }
-        else if (event.keyCode == MOVEMENT_KEY.RIGHT) {
+        else if (keyCode == MOVEMENT_KEY.RIGHT) {
             if (curDir.horizontal != DIRECTION_X.RIGHT) 
                 newDir.horizontal = DIRECTION_X.RIGHT;
         }
 
 
         /* y-direction */
-        if (event.keyCode == MOVEMENT_KEY.UP) {
+        if (keyCode == MOVEMENT_KEY.UP) {
             newDir.vertical = DIRECTION_Y.UP;
         }
-        else if (event.keyCode == MOVEMENT_KEY.DOWN) {
+        else if (keyCode == MOVEMENT_KEY.DOWN) {
             newDir.vertical = DIRECTION_Y.DOWN;
         }
 
         if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
-        
-    });
+    };
 
-    /* Handle the keyup of ASDW keys for movement */
-    $(document).on("keyup", function(event) {
+    const HandleMovementInputUp = function(keyCode) {
 
         /* not movement key, return */
-        if (event.keyCode != MOVEMENT_KEY.DOWN && event.keyCode != MOVEMENT_KEY.UP 
-            && event.keyCode != MOVEMENT_KEY.LEFT && event.keyCode != MOVEMENT_KEY.RIGHT) return;
+        if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
+            && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
             
         /* get the current direction of the player for initialization */
         let curDir = character.GetDirection();
         let newDir = character.GetDirection();
 
         /* x-direction */
-        if (event.keyCode == MOVEMENT_KEY.LEFT ) {
+        if (keyCode == MOVEMENT_KEY.LEFT ) {
             if (curDir.horizontal != DIRECTION_X.RIGHT)
                 newDir.horizontal = DIRECTION_X.STOP;
         }
-        else if (event.keyCode == MOVEMENT_KEY.RIGHT) {
+        else if (keyCode == MOVEMENT_KEY.RIGHT) {
             if (curDir.horizontal != DIRECTION_X.LEFT)
                 newDir.horizontal = DIRECTION_X.STOP;
         }
 
         /* y-direction */
-        if (event.keyCode == MOVEMENT_KEY.UP) {
+        if (keyCode == MOVEMENT_KEY.UP) {
             if (curDir.vertical != DIRECTION_X.DOWN)
                 newDir.vertical = DIRECTION_X.STOP;
         }
-        else if (event.keyCode == MOVEMENT_KEY.DOWN) {
+        else if (keyCode == MOVEMENT_KEY.DOWN) {
             if (curDir.vertical != DIRECTION_X.UP)
                 newDir.vertical = DIRECTION_X.STOP;
         }
 
         if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
-    });
-
-    const Update = function(now) {
-
-        character.Update(now);
     };
 
     return {
@@ -82,7 +99,10 @@ const Player = function(ctx, x, y, gameArea) {
         GetDirection: character.GetDirection,
         CreateSpriteSequences: character.CreateSpriteSequences,
         MoveCharacter: character.MoveCharacter,
+        SetPlayerType: SetPlayerType,
         ChangeSpriteDirection: character.ChangeSpriteDirection,
+        getCurSequence: character.getCurSequence,
+        setSequence: character.setSequence,
         getBoundingBox: character.getBoundingBox,
         draw: character.draw,
         Update: Update,
