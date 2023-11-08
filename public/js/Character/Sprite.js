@@ -126,10 +126,6 @@ const Sprite = function(ctx, x, y) {
         ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
             x - size.width / 2, y - size.height / 2, size.width, size.height);
 
-     /*   const box = getBoundingBox();
-        const points = box.getPoints();
-        ctx.rect(box.getLeft(), box.getTop(), box.getRight() - box.getLeft(), box.getBottom() - box.getTop(), );
-        ctx.stroke(); */
         /* Restore saved settings */
         ctx.restore();
     };

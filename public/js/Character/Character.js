@@ -22,7 +22,7 @@ const Character = function(ctx, x, y, gameArea) {
         else if (direction.vertical != DIRECTION_Y.STOP) {
             (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
         }
-        
+    
     };
 
     const StartAttack = function() {

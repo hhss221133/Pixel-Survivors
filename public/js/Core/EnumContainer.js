@@ -24,7 +24,8 @@ const ACTION_KEY = {
 };
 
 const PLAYER_TYPE = {
-    KNIGHT : 0
+    KNIGHT : 0,
+    WIZARD : 1
 };
 
 // states in the finite state machine(FSM)

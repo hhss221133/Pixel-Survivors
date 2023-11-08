@@ -16,6 +16,7 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         players.player1 = PlayerKnight(context, 500, 500, gameArea);
+        players.player2 = PlayerWizard(context, 1000, 500, gameArea);
     };
 
     const doFrame = function(now) {
@@ -23,8 +24,10 @@ const GameLoop = function() {
         context.clearRect(0, 0, cv.width, cv.height);
 
         players.player1.Update(now);
+        players.player2.Update(now);
 
         players.player1.draw();
+        players.player2.draw();
         /* Process the next frame */
         requestAnimationFrame(doFrame);
     };

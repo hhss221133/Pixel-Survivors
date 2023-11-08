@@ -8,8 +8,8 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
         idleLeft: {x:0, y:495, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},
 
-        moveRight: {x:0, y:55, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
-        moveLeft: {x:0, y:550, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},
+        moveRight: {x:0, y:55, width:100, height:55, count:8, timing:100, loop:true, isLeft: false, startingIndex: 0},
+        moveLeft: {x:0, y:550, width:100, height:55, count:8, timing:100, loop:true, isLeft: true, startingIndex: 9},
 
         attackRight: {x:0, y:165, width:100, height:55, count:8, timing:50, loop:false, isLeft: false, startingIndex: 0},
         attackLeft: {x:0, y:660, width:100, height:55, count:8, timing:50, loop:false, isLeft: true, startingIndex: 9}
@@ -72,7 +72,6 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
     const Update = function(now) {
         player.Update(now);
 
-        GetAttackHitBox();
     };
 
 
