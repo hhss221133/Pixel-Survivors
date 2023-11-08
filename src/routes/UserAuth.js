@@ -66,5 +66,9 @@ router.get('/lobbies', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, '../protected_views/lobbies.html'));
 });
 
+router.get('/lobby', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, '../protected_views/lobby.html'));
+});
+
 
 module.exports = router;
