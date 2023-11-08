@@ -6,8 +6,11 @@ require('dotenv').config();
 
 //Express App setup
 const app = express();
+
 app.use(express.static('../public'));
 app.use(express.json());
+
+//Session settings
 const Session = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -22,12 +25,18 @@ const UserAuth = require('./routes/UserAuth');
 
 app.use(UserAuth);
 
-
 //Creating HTTP and WS server
 const httpServer = createServer(app);
-const io = new Server(httpServer);
 
-require('./socketHandler')(io);
+const io = new Server(httpServer, {
+    pingInterval: 5000, // How often a ping is sent, in milliseconds
+    pingTimeout: 1000,   // How long to wait for a pong before considering the connection closed
+});
+
+console.log(`Socket.IO pingInterval set to: ${io.opts.pingInterval}`);
+console.log(`Socket.IO pingTimeout set to: ${io.opts.pingTimeout}`);
+
+require('./socketHandler')(io, Session);
 
 //Starting the HTTP Server
 httpServer.listen(8000);
