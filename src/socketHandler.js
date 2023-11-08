@@ -1,5 +1,8 @@
 
+const LobbiesEvents = require('./events/LobbiesEvents');
 const LobbyEvents = require('./events/LobbyEvents');
+const {performCleanup, edit_lobby_status} = require('./middleware/MWLobbiesCleanup');
+const {socketrequireLogin} = require('./middleware/MWSocketSessions');
 
 
 module.exports = function (io, Session) {
@@ -8,21 +11,37 @@ module.exports = function (io, Session) {
         Session(socket.request, {}, next);
     });
 
+    io.use(socketrequireLogin);
+
+    const userTimeouts = new Map();
+
     io.on('connection', (socket) => {
-        console.log('User connected');
+        const sessID = socket.request.session.username;
 
-        if (socket.request.session && socket.request.session.username) {
-            console.log(socket.request.session.username, "logged in and connected");
-            // User has a valid session
+        console.log("");
+        console.log(socket.request.session.username, 'connected');
+        
+        clearTimeout(socket.disconnectionTimeout);
 
-            LobbyEvents(socket, io);
-        } else {
-            // User does not have a valid session, handle accordingly
-            socket.emit('auth_error', 'User is not authenticated');
-        }
+        LobbiesEvents(socket, io, userTimeouts);
+        LobbyEvents(socket, io), userTimeouts;
 
-        socket.on('disconnect', () => {
-            console.log("User disconnected");
+        socket.on('reconnected', () => {
+            clearTimeout(userTimeouts.get(sessID));
+            userTimeouts.delete(sessID);
+            edit_lobby_status(sessID, socket, 'waiting');
+        });
+
+        socket.on('disconnect', (reason) => {
+            console.log("");
+            console.log(socket.request.session.username, "disconnected with reason", reason);
+            
+            edit_lobby_status(sessID, socket, 'disable');
+
+            userTimeouts.set(sessID, setTimeout(() => {
+                performCleanup(sessID, socket, io);
+            }, 3000));
+
         });
     });
 }

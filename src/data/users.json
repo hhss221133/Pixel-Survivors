@@ -6,5 +6,17 @@
   {
     "username": "t",
     "password": "$2b$04$SR6N8tJAo9G6Kckbv2DZV.k71aGGBAkLhkevgnLyod75JHFkGvscW"
+  },
+  {
+    "username": "Haruki",
+    "password": "$2b$04$6lHJHQ0G37ufhHGr5SnS4OS9eBTrdxjlIaDadPyY5XgtyP7Sm/9Be"
+  },
+  {
+    "username": "new",
+    "password": "$2b$04$WLNZlS.oN1ufBAEj7.LXierJWNfXGz0UmkENxh5ml6meOZfVITzX."
+  },
+  {
+    "username": "q",
+    "password": "$2b$04$xVOZKOaRRTOgE3tWJHFuWOBicGWJWiM8jpiQ2FOT5Epnk8LQdkEsG"
   }
 ]
