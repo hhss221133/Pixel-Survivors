@@ -24,7 +24,7 @@ module.exports = function (io, Session) {
         clearTimeout(socket.disconnectionTimeout);
 
         LobbiesEvents(socket, io, userTimeouts);
-        LobbyEvents(socket, io), userTimeouts;
+        LobbyEvents(socket, io, userTimeouts);
 
         socket.on('reconnected', () => {
             clearTimeout(userTimeouts.get(sessID));

@@ -71,26 +71,6 @@ function LobbyEvents(socket, io, userTimeouts) {
 
     socket.on('leave lobby json', () => {
         console.log(socket.request.session.username, "requested delete lobby");
-        // LobbiesModel.leaveLobby(socket.request.session.username, socket.request.session.roomID, (err, updatedLobbies, lobbyInfo) => {
-        //     if (err) {
-        //         // console.error('Error in lobby delete:', err);
-
-        //         socket.emit('lobby delete error', "Lobby deletion failed");
-        //     } else {
-                
-        //         io.to(roomID).emit('lobby updated', lobbyInfo);
-        //         io.emit('io updated lobbies json', updatedLobbies);
-
-        //         roomID = socket.request.session.roomID;
-                
-        //         //Delete roomID session variable
-        //         deleteRoomID(socket, (err) => {
-        //             if (err) {
-        //                 console.error('Session save error:', err);
-        //             }
-        //         });
-        //     }
-        // });
         performCleanup(socket.request.session.username, socket, io);
         userTimeouts.delete(socket.request.session.username);
     });

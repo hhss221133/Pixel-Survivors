@@ -15,11 +15,11 @@
             <div class = "lobby_list_main">
                 <div class = lobby_wrapper>
                     <h class>Lobbies</h>
-                    <button>Create Lobby</button>
+                    <button id="create_lobby">Create Lobby</button>
                 </div>
                 <div class = lobby_inner>
                     <div class = profile>
-                        <button>Logout</button>
+                        <button id=logout_button>Logout</button>
                         <h1 class>Profile</h1>
                         <h1 id = 'profile_username'>Username</h1>
                         <button>Rankings</button>
@@ -32,6 +32,7 @@
 
 
         <script src="/socket.io/socket.io.min.js"></script>
-        <script src="./js/SocketHandler.js"></script>
+        <script type='module' src="./js/SocketHandler.js"></script>
+        <script type='module' src="./js/Lobbies.js"></script>
     </body>
 </html>
