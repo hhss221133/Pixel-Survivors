@@ -2,6 +2,8 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
 
     const enemy = Enemy(ctx, x, y, gameArea, enemyID);
 
+    enemy.SetAttackCoolDown(2);
+
     const sequences = {
         idleRight: {x:0, y:0, width:150, height:150, count:4, timing:200, loop:true, isLeft: false, startingIndex: 0},
         idleLeft: {x:0, y:600, width:150, height:150, count:4, timing:200, loop:true, isLeft: true, startingIndex: 7},
@@ -9,8 +11,8 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         moveRight: {x:0, y:150, width:150, height:150, count:4, timing:100, loop:true, isLeft: false, startingIndex: 0},
         moveLeft: {x:0, y:750, width:150, height:150, count:4, timing:100, loop:true, isLeft: true, startingIndex: 7},
 
-        attackRight: {x:0, y:300, width:150, height:150, count:8, timing:100, loop:false, isLeft: false, startingIndex: 0},
-        attackLeft: {x:0, y:900, width:150, height:150, count:8, timing:100, loop:false, isLeft: true, startingIndex: 7},
+        attackRight: {x:0, y:300, width:150, height:150, count:8, timing:100, loop:false, isLeft: false, startingIndex: 0, attackIndex: 6},
+        attackLeft: {x:0, y:900, width:150, height:150, count:8, timing:100, loop:false, isLeft: true, startingIndex: 7, attackIndex: 1},
 
         dieRight: {x:0, y:450, width:150, height:150, count:4, timing:100, loop:false, isLeft: false, startingIndex: 0},
         dieLeft: {x:0, y:1050, width:150, height:150, count:4, timing:100, loop:false, isLeft: true, startingIndex: 7},
@@ -53,8 +55,44 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         return BoundingBox(ctx, top, left, bottom, right);
     }
 
+    const HandleAttackHitBox = function() {
+
+        // only enable the hitbox when the character is attacking
+        if (enemy.GetFSMState() != FSM_STATE.ATTACK || !enemy.getCurSequence().attackIndex) return;
+
+        const sequence = enemy.getCurSequence();
+
+        if (sequence.isLeft) {
+            if (enemy.getIndex() <= sequence.attackIndex) {
+                CheckHitPlayer();
+            }
+        }
+        else {
+            // right animation
+            if (enemy.getIndex() >= sequence.attackIndex) {
+                CheckHitPlayer();
+            }
+        }
+    };
+
+    const CheckHitPlayer = function() {
+        // check if player hits any enemy
+        for (const playerName in players) {
+            if (GetAttackHitBox().intersect(players[playerName].GetHitBox())) {
+                if (enemy.TryAddHitTargetToArray(players[playerName])) {
+                    // deal damage to enemy
+                    players[playerName].TakeDamage(enemy.GetAttackPower());
+                }
+            }
+        }
+    };
+
+
+
     const Update = function(now) {
         enemy.Update(now);
+
+        HandleAttackHitBox();
     };
 
     return {

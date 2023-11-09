@@ -2,6 +2,12 @@
 const Player = function(ctx, x, y, gameArea) {
     const character = Character(ctx, x, y, gameArea);
 
+    character.SetMaxHP(3);
+
+    const invulnerabilityTime = 1; // in second
+
+    let bCanTakeDamage = true;
+
     let playerType = PLAYER_TYPE.KNIGHT;
 
     character.SetWalkSpeed(300);
@@ -27,6 +33,8 @@ const Player = function(ctx, x, y, gameArea) {
         /* not movement key, return */
         if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
             && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
+
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
 
         let curDir = character.GetDirection();
         let newDir = character.GetDirection();
@@ -59,6 +67,8 @@ const Player = function(ctx, x, y, gameArea) {
         /* not movement key, return */
         if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
             && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
+
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
             
         /* get the current direction of the player for initialization */
         let curDir = character.GetDirection();
@@ -88,18 +98,41 @@ const Player = function(ctx, x, y, gameArea) {
         character.ChangeSpriteDirection(newDir);
     };
 
+    const HandlePlayerDead = function() {
+
+        character.setSequenceEndCallback(PlayerDie);
+        // stop the player
+        character.ChangeSpriteDirection({horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP});
+
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
+            character.setSequence(character.GetSequenceList().dieRight);
+    };
+    
+    const PlayerDie = function() {
+
+    };
+
     const TakeDamage = function(damage) {
 
-        const clamp = (val, max, min) => Math.min(Math.max(val, min), max)
+        if (character.GetFSMState() == FSM_STATE.DEAD || !bCanTakeDamage) return;
 
-        let HP = character.GetHP();
-        HP = clamp(HP.curHP - damage, HP.maxHP, 0);
+        bCanTakeDamage = false;
+        setTimeout(ResetCanTakeDamage, invulnerabilityTime * 1000);
 
-        if (HP.curHP <= 0) {
-            // character die
-            character.SetFSMState(FSM_STATE.DEAD);
-        }
+        character.DealDamage(damage);
+        
+        let HP = character.GetCurHP();
+
+        if (HP > 0) return;
+
+        // character die
+        character.SetFSMState(FSM_STATE.DEAD);
+
+        HandlePlayerDead();
+        
     }
+
+    const ResetCanTakeDamage = () => {bCanTakeDamage = true;}
 
     const Update = function(now) {
 
@@ -133,10 +166,14 @@ const Player = function(ctx, x, y, gameArea) {
         setSequenceEndCallback: character.setSequenceEndCallback,
         StartAttack: character.StartAttack,
 
+        // attack related
         getIndex: character.getIndex,
         TryAddHitTargetToArray: character.TryAddHitTargetToArray,
         EmptyHitTargetArray: character.EmptyHitTargetArray,
         GetAttackPower: character.GetAttackPower,
+        HandlePlayerDead: HandlePlayerDead,
+        TakeDamage: TakeDamage,
+        GetCurHP: character.GetCurHP,
 
     };
 };

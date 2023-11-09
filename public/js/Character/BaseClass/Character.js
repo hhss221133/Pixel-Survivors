@@ -10,7 +10,7 @@ const Character = function(ctx, x, y, gameArea) {
 
     let bCanAttack = true;
 
-    let maxHP = 3;
+    let maxHP = 1;
 
     let curHP = maxHP;
 
@@ -38,6 +38,13 @@ const Character = function(ctx, x, y, gameArea) {
         hitTargetArray.push(newTarget);
         return true;
     };
+
+    const SetMaxHP = function(newMaxHp) {
+        maxHP = newMaxHp;
+        curHP = maxHP;
+    }
+
+    const SetAttackCoolDown = (newCoolDown) => {attackCoolDown = newCoolDown;}
 
     const GetSequenceList = () => {return sequences;}
     
@@ -75,10 +82,6 @@ const Character = function(ctx, x, y, gameArea) {
     const ResetCanAttack = () => {bCanAttack = true;}
 
     sprite.setSequenceEndCallback(ToIdle);
-
-    const SetMaxHP = function(NewHP) {
-        maxHP = NewHP;
-    };
 
     const SetWalkSpeed = function(NewWalkSpeed) {
         walkSpeed = NewWalkSpeed;
@@ -221,6 +224,7 @@ const Character = function(ctx, x, y, gameArea) {
         EmptyHitTargetArray: EmptyHitTargetArray,
         GetAttackPower: GetAttackPower,
         DealDamage: DealDamage,
+        SetAttackCoolDown: SetAttackCoolDown,
 
         // animation
         GetSequenceList: GetSequenceList,

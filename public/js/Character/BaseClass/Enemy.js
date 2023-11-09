@@ -6,11 +6,11 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in second)
 
-    const moveThreshold = 50;   // enemy will stop moving if it is too close to the player
+    const moveThreshold = 80;   // enemy will stop moving if it is too close to the player
 
-    const yMoveThreshold = 5; 
+    const yMoveThreshold = 30; 
 
-    const xMoveThreshold = 5;   // to prevent the enemy from changing direction endlessly
+    const xMoveThreshold = 30;   // to prevent the enemy from changing direction endlessly
 
     let targetPlayer = null;
 
@@ -21,6 +21,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         let minDistance = Number.POSITIVE_INFINITY;
 
         for (const player in players) {
+            
+            if (players[player].GetCurHP() <= 0) continue;
+
             const playerXY = players[player].getXY();
             const enemyXY = character.getXY();
             let distance = Math.sqrt(Math.pow((playerXY.x - enemyXY.x), 2) + Math.pow((playerXY.y - enemyXY.y), 2) );
@@ -45,6 +48,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
         if (distanceToPlayer < moveThreshold && yDistance < yMoveThreshold) {
             character.ChangeSpriteDirection(newDir);
+            if (character.CanCharAttack()) Attack();
             return;
         }
 
@@ -108,12 +112,21 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         }
     }
 
+    const Attack = function() {
+        character.StartAttack();
+
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().attackLeft, character.GetSequenceList().idleLeft) :
+            character.setSequence(character.GetSequenceList().attackRight, character.GetSequenceList().idleRight);
+    };
+
     const Update = function(now) {
         character.Update(now);
         
         
         if (character.GetFSMState() == FSM_STATE.DEAD) return;
+
         FindTargetPlayer();
+
         MoveEnemy();
 
     };
@@ -135,16 +148,23 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         setSequence: character.setSequence,
         draw: character.draw,
         Update: Update,
+        GetID: GetID,
 
         // FSM State related
         GetFSMState: character.GetFSMState,
         SetFSMState: character.SetFSMState,
         CanCharAttack: character.CanCharAttack,
         setSequenceEndCallback: character.setSequenceEndCallback,
+
+        // attack 
         StartAttack: character.StartAttack,
         TakeDamage: TakeDamage,
         DealDamage: character.DealDamage,
         GetCurHP: character.GetCurHP,
-        GetID: GetID,
+        getIndex: character.getIndex,
+        SetAttackCoolDown: character.SetAttackCoolDown,
+        TryAddHitTargetToArray: character.TryAddHitTargetToArray,
+        GetAttackPower: character.GetAttackPower,
+        
     }
 };

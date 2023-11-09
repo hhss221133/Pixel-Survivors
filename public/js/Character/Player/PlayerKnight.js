@@ -12,7 +12,11 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         moveLeft: {x:0, y:550, width:100, height:55, count:8, timing:100, loop:true, isLeft: true, startingIndex: 9},
 
         attackRight: {x:0, y:165, width:100, height:55, count:8, timing:50, loop:false, isLeft: false, startingIndex: 0, attackIndex: 2},
-        attackLeft: {x:0, y:660, width:100, height:55, count:8, timing:50, loop:false, isLeft: true, startingIndex: 9, attackIndex: 7}
+        attackLeft: {x:0, y:660, width:100, height:55, count:8, timing:50, loop:false, isLeft: true, startingIndex: 9, attackIndex: 7},
+
+        dieRight: {x:0, y:275, width:100, height:55, count:8, timing:100, loop:false, isLeft: false, startingIndex: 0},
+        dieLeft: {x:0, y:770, width:100, height:55, count:8, timing:100, loop:false, isLeft: true, startingIndex: 9},
+
     }
 
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "../../assets/player_knight.png");
@@ -123,7 +127,10 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         CreateSpriteSequences: player.CreateSpriteSequences,
         MoveCharacter: player.MoveCharacter,
         ChangeSpriteDirection: player.ChangeSpriteDirection,
+        GetHitBox: GetHitBox,
         draw: player.draw,
         Update: Update,
+        TakeDamage: player.TakeDamage,
+        GetCurHP: player.GetCurHP,
     };
 };
