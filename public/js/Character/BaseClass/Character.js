@@ -14,7 +14,7 @@ const Character = function(ctx, x, y, gameArea) {
 
     let curHP = maxHP;
 
-    let walkSpeed = 300;
+    let walkSpeed = 100;
 
     let attackPower = 1;
 

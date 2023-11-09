@@ -4,6 +4,8 @@ const Player = function(ctx, x, y, gameArea) {
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
+    character.SetWalkSpeed(300);
+
     /* Handle the keydown of ASDW keys for movement */
     $(document).on("keydown", function(event) {
 
@@ -48,7 +50,7 @@ const Player = function(ctx, x, y, gameArea) {
             newDir.vertical = DIRECTION_Y.DOWN;
         }
 
-        if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
+     //   if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
     };
 

@@ -119,6 +119,7 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         SetWalkSpeed: player.SetWalkSpeed,
         SetAttackPower: player.SetAttackPower,
         GetDirection: player.GetDirection,
+        getXY: player.getXY,
         CreateSpriteSequences: player.CreateSpriteSequences,
         MoveCharacter: player.MoveCharacter,
         ChangeSpriteDirection: player.ChangeSpriteDirection,

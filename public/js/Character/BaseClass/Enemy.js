@@ -4,16 +4,76 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const ID = enemyID;
 
-    const disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in s)
+    const disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in second)
+
+    const moveThreshold = 50;   // enemy will stop moving if it is too close to the player
+
+    const yMoveThreshold = 5; 
+
+    const xMoveThreshold = 5;   // to prevent the enemy from changing direction endlessly
+
+    let targetPlayer = null;
+
+    let distanceToPlayer = 0;
+
+    const FindTargetPlayer = function() {
+        targetPlayer = null;
+        let minDistance = Number.POSITIVE_INFINITY;
+
+        for (const player in players) {
+            const playerXY = players[player].getXY();
+            const enemyXY = character.getXY();
+            let distance = Math.sqrt(Math.pow((playerXY.x - enemyXY.x), 2) + Math.pow((playerXY.y - enemyXY.y), 2) );
+            if (distance < minDistance) {
+                minDistance = distance;
+                targetPlayer = players[player];
+            }
+        }
+        distanceToPlayer = minDistance;
+ 
+    }
 
     const MoveEnemy = function() {
 
+        if (!targetPlayer) return;
+
+        let newDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+        const playerXY = targetPlayer.getXY();
+        const enemyXY = character.getXY();
+        
+        const yDistance = Math.abs(playerXY.y - enemyXY.y);
+
+        if (distanceToPlayer < moveThreshold && yDistance < yMoveThreshold) {
+            character.ChangeSpriteDirection(newDir);
+            return;
+        }
+
+
+        let xDiff = Math.abs(playerXY.x - enemyXY.x);
+
+        if (playerXY.x < enemyXY.x && xDiff > xMoveThreshold) {
+            newDir.horizontal = DIRECTION_X.LEFT;
+        }
+        else if (playerXY.x > enemyXY.x && xDiff > xMoveThreshold) {
+            newDir.horizontal = DIRECTION_X.RIGHT;
+        }
+
+        if (playerXY.y > enemyXY.y) {
+            newDir.vertical = DIRECTION_Y.DOWN;
+        }
+        else if (playerXY.y < enemyXY.y) {
+            newDir.vertical = DIRECTION_Y.UP;
+        }
+
+        character.ChangeSpriteDirection(newDir);
     };
 
     const GetID = () => {return ID;}
 
 
     const TakeDamage = function(damage) {
+
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
 
         character.DealDamage(damage);
         
@@ -50,7 +110,12 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const Update = function(now) {
         character.Update(now);
+        
+        
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
+        FindTargetPlayer();
         MoveEnemy();
+
     };
 
 
