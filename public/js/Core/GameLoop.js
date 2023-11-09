@@ -22,8 +22,11 @@ const GameLoop = function() {
         players.player1 = PlayerKnight(context, 500, 500, gameArea);
      //   players.player2 = PlayerWizard(context, 1000, 500, gameArea);
 
-        const skeletonID = "skeleton1";
-        enemies[skeletonID]= EnemySkeleton(context, 1000, 500, gameArea, skeletonID);
+        const skeleton = "skeleton1";
+        const flyingEye = "flyingEye1";
+        enemies[flyingEye]= EnemyFlyingEye(context, 1000, 500, gameArea, flyingEye);
+     //   enemies[skeleton]= EnemySkeleton(context, 1000, 300, gameArea, flyingEye);
+
     };
 
     const doFrame = function(now) {

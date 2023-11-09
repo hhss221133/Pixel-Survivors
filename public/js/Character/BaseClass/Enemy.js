@@ -4,17 +4,23 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const ID = enemyID;
 
-    const disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in second)
+    let disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in second)
 
-    const moveThreshold = 80;   // enemy will stop moving if it is too close to the player
+    let moveThreshold = 80;   // enemy will stop moving if it is too close to the player
 
-    const yMoveThreshold = 30; 
+    let yMoveThreshold = 30; 
 
-    const xMoveThreshold = 30;   // to prevent the enemy from changing direction endlessly
+    let xMoveThreshold = 30;   // to prevent the enemy from changing direction endlessly
 
     let targetPlayer = null;
 
     let distanceToPlayer = 0;
+
+    const SetThreshold = function(newMoveThreshold, newXMoveThreshold, newYMoveThreshold){
+        moveThreshold = newMoveThreshold;
+        yMoveThreshold = newYMoveThreshold;
+        xMoveThreshold = newXMoveThreshold;
+    };
 
     const FindTargetPlayer = function() {
         targetPlayer = null;
@@ -38,9 +44,13 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const MoveEnemy = function() {
 
-        if (!targetPlayer) return;
-
         let newDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+        if (!targetPlayer) {
+            character.ChangeSpriteDirection(newDir);
+            return;
+        }
+
+
         const playerXY = targetPlayer.getXY();
         const enemyXY = character.getXY();
         
@@ -48,7 +58,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
         if (distanceToPlayer < moveThreshold && yDistance < yMoveThreshold) {
             character.ChangeSpriteDirection(newDir);
-            if (character.CanCharAttack()) Attack();
+            if (character.CanCharAttack()) {
+                Attack();
+            } 
             return;
         }
 
@@ -131,7 +143,6 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     };
 
-
     return {
         SetMaxHP: character.SetMaxHP,
         SetWalkSpeed: character.SetWalkSpeed,
@@ -165,6 +176,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         SetAttackCoolDown: character.SetAttackCoolDown,
         TryAddHitTargetToArray: character.TryAddHitTargetToArray,
         GetAttackPower: character.GetAttackPower,
+        SetThreshold: SetThreshold,
         
     }
 };

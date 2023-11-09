@@ -123,6 +123,7 @@ const Player = function(ctx, x, y, gameArea) {
         
         let HP = character.GetCurHP();
 
+        console.log("Player Remaining HP: " + HP);
         if (HP > 0) return;
 
         // character die
