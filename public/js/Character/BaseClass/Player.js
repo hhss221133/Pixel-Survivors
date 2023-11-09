@@ -86,6 +86,26 @@ const Player = function(ctx, x, y, gameArea) {
         character.ChangeSpriteDirection(newDir);
     };
 
+    const TakeDamage = function(damage) {
+
+        const clamp = (val, max, min) => Math.min(Math.max(val, min), max)
+
+        let HP = character.GetHP();
+        HP = clamp(HP.curHP - damage, HP.maxHP, 0);
+
+        if (HP.curHP <= 0) {
+            // character die
+            character.SetFSMState(FSM_STATE.DEAD);
+        }
+    }
+
+    const Update = function(now) {
+
+        character.Update(now);
+    };
+
+
+
     return {
         SetMaxHP: character.SetMaxHP,
         SetWalkSpeed: character.SetWalkSpeed,
@@ -101,9 +121,8 @@ const Player = function(ctx, x, y, gameArea) {
         getCurSequence: character.getCurSequence,
         getDisplaySize: character.getDisplaySize,
         setSequence: character.setSequence,
-        getBoundingBox: character.getBoundingBox,
         draw: character.draw,
-        Update: character.Update,
+        Update: Update,
 
         // FSM State related
         GetFSMState: character.GetFSMState,
@@ -112,7 +131,10 @@ const Player = function(ctx, x, y, gameArea) {
         setSequenceEndCallback: character.setSequenceEndCallback,
         StartAttack: character.StartAttack,
 
-        // Hitbox related
-        SetHitBox: character.SetHitBox,
+        getIndex: character.getIndex,
+        TryAddHitTargetToArray: character.TryAddHitTargetToArray,
+        EmptyHitTargetArray: character.EmptyHitTargetArray,
+        GetAttackPower: character.GetAttackPower,
+
     };
 };

@@ -31,15 +31,9 @@ const PlayerWizard = function(ctx, x, y, gameArea) {
         return BoundingBox(ctx, top, left, bottom, right);
     };
 
-    $(document).on("keydown", function(event) {
+    const HandleWizardAttackInput = function() {
 
-        HandleKnightAttackInput(event.keyCode);
 
-    });
-
-    const HandleKnightAttackInput = function(keyCode) {
-        /* only for knight to attack */ 
-        if (keyCode != ACTION_KEY.ATTACK || !player.CanCharAttack()) return;
 
         player.StartAttack();
         

@@ -11,8 +11,8 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         moveRight: {x:0, y:55, width:100, height:55, count:8, timing:100, loop:true, isLeft: false, startingIndex: 0},
         moveLeft: {x:0, y:550, width:100, height:55, count:8, timing:100, loop:true, isLeft: true, startingIndex: 9},
 
-        attackRight: {x:0, y:165, width:100, height:55, count:8, timing:50, loop:false, isLeft: false, startingIndex: 0},
-        attackLeft: {x:0, y:660, width:100, height:55, count:8, timing:50, loop:false, isLeft: true, startingIndex: 9}
+        attackRight: {x:0, y:165, width:100, height:55, count:8, timing:50, loop:false, isLeft: false, startingIndex: 0, attackIndex: 2},
+        attackLeft: {x:0, y:660, width:100, height:55, count:8, timing:50, loop:false, isLeft: true, startingIndex: 9, attackIndex: 7}
     }
 
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "../../assets/player_knight.png");
@@ -65,13 +65,50 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
 
         player.StartAttack();
         
-        (player.getCurSequence().isLeft)? player.setSequence(sequences.attackLeft, sequences.idleLeft) : 
+        (player.getCurSequence().isLeft)? player.setSequence(sequences.attackLeft, sequences.idleLeft) :
             player.setSequence(sequences.attackRight, sequences.idleRight);
+        
     };
 
+    const HandleAttackHitBox = function() {
+        // only enable the hitbox when the character is attacking
+        if (player.GetFSMState() != FSM_STATE.ATTACK || !player.getCurSequence().attackIndex) return;
+
+        const sequence = player.getCurSequence();
+
+
+
+        if (sequence.isLeft) {
+            if (player.getIndex() <= sequence.attackIndex) {
+                CheckHitEnemy();
+            }
+        }
+        else {
+            // right animation
+            if (player.getIndex() >= sequence.attackIndex) {
+                CheckHitEnemy();
+            }
+        }
+    };
+
+    const CheckHitEnemy = function() {
+        // check if player hits any enemy
+        for (const enemyName in enemies) {
+            if (GetAttackHitBox().intersect(enemies[enemyName].GetHitBox())) {
+                if (player.TryAddHitTargetToArray(enemies[enemyName])) {
+                    // deal damage to enemy
+                    enemies[enemyName].TakeDamage(player.GetAttackPower());
+                }
+            }
+        }
+    };
+
+
     const Update = function(now) {
+
         player.Update(now);
 
+        HandleAttackHitBox();
     };
 
 
@@ -85,7 +122,6 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         CreateSpriteSequences: player.CreateSpriteSequences,
         MoveCharacter: player.MoveCharacter,
         ChangeSpriteDirection: player.ChangeSpriteDirection,
-        getBoundingBox: player.getBoundingBox,
         draw: player.draw,
         Update: Update,
     };

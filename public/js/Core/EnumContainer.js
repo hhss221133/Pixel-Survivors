@@ -32,7 +32,7 @@ const PLAYER_TYPE = {
 const FSM_STATE = {
     MOVE: 0,    // walk and idle
     ATTACK: 1,
-    DIE: 2
+    DEAD: 2
 };
 
 

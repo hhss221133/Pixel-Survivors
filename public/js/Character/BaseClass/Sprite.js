@@ -43,6 +43,8 @@ const Sprite = function(ctx, x, y) {
         return this;
     };
 
+    const getIndex = () => {return index};
+
     const getCurSequence = function() {
         return {... sequence};
     };
@@ -71,10 +73,7 @@ const Sprite = function(ctx, x, y) {
         sequence = newSequence;
         index = newSequence.startingIndex;
         lastUpdate = 0;
-        if (newEndSequence != null) {
-            endSequence = newEndSequence;
-        }
-        else endSequence = null;
+        endSequence = (newEndSequence != null)? newEndSequence : null;
         return this;
     };
 
@@ -96,20 +95,6 @@ const Sprite = function(ctx, x, y) {
         return {width: scaledWidth, height: scaledHeight};
     };
 
-    // This function gets the bounding box of the sprite.
-    const getBoundingBox = function() {
-        /* Get the display size of the sprite */
-        const size = getDisplaySize();
-
-        /* Find the box coordinates */
-        const top = y - size.height / 2;
-        const left = x - size.width / 2;
-        const bottom = y + size.height / 2;
-        const right = x + size.width / 2;
-
-        return BoundingBox(ctx, top, left, bottom, right);
-    };
-
     // This function draws the sprite.
     const drawSprite = function() {
         /* Save the settings */
@@ -118,9 +103,6 @@ const Sprite = function(ctx, x, y) {
         /* Get the display size of the sprite */
         const size = getDisplaySize();
 
-
-        /* TODO */
-        /* Replace the following code to draw the sprite correctly */
         
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
@@ -138,11 +120,15 @@ const Sprite = function(ctx, x, y) {
      
     // This function draws the sprite.
     const draw = function() {
-        if (isReady()) {
-            drawSprite();
-        }
+        if (!isReady()) return; 
+
+        drawSprite();
         return this;
     };
+
+    const Test = function() {
+        console.log("1");
+    }
 
     // This function updates the sprite by moving to the next sprite
     // at appropriate time.
@@ -150,42 +136,52 @@ const Sprite = function(ctx, x, y) {
     const update = function(time) {
         if (lastUpdate == 0) lastUpdate = time;
 
-        /* TODO */
         /* Move to the next sprite when the timing is right */
-        if ((time - lastUpdate) >= sequence.timing) {
-            if (sequence.loop) {
-                if (sequence.isLeft) {
-                    index--;
-                    if (index < sequence.startingIndex + 1 - sequence.count)
-                    index = sequence.startingIndex;
-                }
-                else {
-                    index = (index + 1) % sequence.count;
-                }
-            } 
-            /* not looping */
-            else if (sequence.isLeft) {
-                if (index > sequence.startingIndex + 1 - sequence.count)
-                    index--;
-                else {
-                    if (endSequence != null) {
-                        setSequence(endSequence);
-                        if (sequenceEndCallback != null) sequenceEndCallback();
-                    }
-                }
-            }
-            else if (index < sequence.count - 1){
-                index++;
+        if ((time - lastUpdate) < sequence.timing) return;
+
+        if (sequence.loop) {
+            if (sequence.isLeft) {
+                index--;
+                if (index < sequence.startingIndex + 1 - sequence.count)
+                index = sequence.startingIndex;
             }
             else {
-                if (endSequence != null) {
-                    setSequence(endSequence);
-                    if (sequenceEndCallback != null) sequenceEndCallback();
-                }
+                index = (index + 1) % sequence.count;
             }
-                
-            lastUpdate = time;
-        }  
+        } 
+
+        /* not looping */
+        else if (sequence.isLeft) {
+            // left animation
+            if (index > sequence.startingIndex + 1 - sequence.count)
+                index--;
+
+            else {
+                if (endSequence != null) 
+                // left animation ends (not looping)
+                    setSequence(endSequence);
+                if (sequenceEndCallback != null) sequenceEndCallback();
+            }
+
+            
+        }
+        // right animation
+        else  {
+            if (index < sequence.count - 1){
+                // animation continues
+                index++;
+            }
+
+            else {
+                if (endSequence != null) 
+                    setSequence(endSequence);
+                if (sequenceEndCallback != null) sequenceEndCallback();
+            }
+
+
+        }
+        
+        lastUpdate = time;
 
         return this;
     };
@@ -200,13 +196,11 @@ const Sprite = function(ctx, x, y) {
         setScale: setScale,
         drawBox: drawBox,
         getDisplaySize: getDisplaySize,
-        getBoundingBox: getBoundingBox,
         getCurSequence: getCurSequence,
         isReady: isReady,
         draw: draw,
         update: update,
-
-        // For FSM,
-        setSequenceEndCallback: setSequenceEndCallback
+        setSequenceEndCallback: setSequenceEndCallback,
+        getIndex: getIndex,
     };
 };

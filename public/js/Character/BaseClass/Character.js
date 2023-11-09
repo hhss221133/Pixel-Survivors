@@ -10,6 +10,47 @@ const Character = function(ctx, x, y, gameArea) {
 
     let bCanAttack = true;
 
+    let maxHP = 3;
+
+    let curHP = maxHP;
+
+    let walkSpeed = 300;
+
+    let attackPower = 1;
+
+    let deltaTime = 0.0167; // frame time for 60fps
+
+    let start = Date.now();
+
+    let sequences = {
+        /* MUST BE initialized before using!*/
+    };
+
+    let hitTargetArray = [];  // store the target hit in the current attack, need to be reset every attack
+
+    let direction = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+
+    const EmptyHitTargetArray = () => {hitTargetArray = [];}
+
+    const TryAddHitTargetToArray = function(newTarget) {
+        if (hitTargetArray.includes(newTarget)) return false;
+
+        hitTargetArray.push(newTarget);
+        return true;
+    };
+
+    const GetSequenceList = () => {return sequences;}
+    
+    const GetAttackPower = () => {return attackPower;}
+
+    const DealDamage = function(damage) {
+        // only for damage calculation, not for performing action after death
+        const clamp = (val, max, min) => Math.min(Math.max(val, min), max);
+        curHP = clamp(curHP - damage, maxHP, 0);
+    };
+
+    const GetCurHP = () => {return curHP;}
+
     const ToIdle = function() {
         charState = FSM_STATE.MOVE;
 
@@ -22,7 +63,7 @@ const Character = function(ctx, x, y, gameArea) {
         else if (direction.vertical != DIRECTION_Y.STOP) {
             (sprite.getCurSequence().isLeft)? sprite.setSequence(sequences.moveLeft) : sprite.setSequence(sequences.moveRight);
         }
-    
+        EmptyHitTargetArray();
     };
 
     const StartAttack = function() {
@@ -33,25 +74,7 @@ const Character = function(ctx, x, y, gameArea) {
 
     const ResetCanAttack = () => {bCanAttack = true;}
 
-
     sprite.setSequenceEndCallback(ToIdle);
-
-    let sequences = {
-        /* MUST BE initialized before using!*/
-    };
-
-
-    let maxHP = 50;
-
-    let walkSpeed = 300;
-
-    let attackPower = 1;
-
-    let deltaTime = 0.0167; // frame time for 60fps
-
-    let start = Date.now();
-
-    let direction = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
 
     const SetMaxHP = function(NewHP) {
         maxHP = NewHP;
@@ -100,6 +123,8 @@ const Character = function(ctx, x, y, gameArea) {
 
         // if character is not moving, just return
         if (direction.horizontal == DIRECTION_X.STOP && direction.vertical == DIRECTION_Y.STOP) return;
+
+        if (charState == FSM_STATE.DEAD) return;
 
         let { x, y } = sprite.getXY();
 
@@ -151,16 +176,18 @@ const Character = function(ctx, x, y, gameArea) {
         
     };
 
-    const UpdateSprite = (now) => {sprite.update(now)};
-
     // deltaTime stores the time in one frame
     const Update = function(now) {
+
+        sprite.update(now);
 
         CalculateDeltaTime();
 
         MoveCharacter();
+    };
 
-        UpdateSprite(now);
+    const StateDead = function() {
+
     };
 
     return {
@@ -174,12 +201,12 @@ const Character = function(ctx, x, y, gameArea) {
         MoveCharacter: MoveCharacter,
         drawBox: sprite.drawBox,
         ChangeSpriteDirection: ChangeSpriteDirection,
-        getBoundingBox: sprite.getBoundingBox,
         getDisplaySize: sprite.getDisplaySize,
         getCurSequence: sprite.getCurSequence,
         draw: sprite.draw,
         setSequence: sprite.setSequence,
         Update: Update,
+        GetCurHP: GetCurHP,
 
         // FSM State related
         GetFSMState: GetFSMState,
@@ -187,6 +214,16 @@ const Character = function(ctx, x, y, gameArea) {
         CanCharAttack: CanCharAttack,
         setSequenceEndCallback: sprite.setSequenceEndCallback,
         StartAttack: StartAttack,
+
+        // HitBox and attack related,
+        getIndex: sprite.getIndex,
+        TryAddHitTargetToArray: TryAddHitTargetToArray,
+        EmptyHitTargetArray: EmptyHitTargetArray,
+        GetAttackPower: GetAttackPower,
+        DealDamage: DealDamage,
+
+        // animation
+        GetSequenceList: GetSequenceList,
 
     };
 };
