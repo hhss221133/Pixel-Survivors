@@ -10,7 +10,7 @@ const Character = function(ctx, x, y, gameArea) {
 
     let bCanAttack = true;
 
-    let maxHP = 1;
+    let maxHP = 3;
 
     let curHP = maxHP;
 
@@ -21,6 +21,12 @@ const Character = function(ctx, x, y, gameArea) {
     let deltaTime = 0.0167; // frame time for 60fps
 
     let start = Date.now();
+
+    let knockBackDuration = 0.2; // in second
+
+    let knockBackSpeed = 1000; // in pixel
+
+    let knockBackDirection = null;
 
     let sequences = {
         /* MUST BE initialized before using!*/
@@ -39,9 +45,25 @@ const Character = function(ctx, x, y, gameArea) {
         return true;
     };
 
+    const SetKnockBackSpeed = function(newSpeed) {
+        knockBackSpeed = newSpeed;
+    }
+
     const SetMaxHP = function(newMaxHp) {
         maxHP = newMaxHp;
         curHP = maxHP;
+    }
+
+    const StartKnockBack = function(newDir) {
+        knockBackDirection = newDir;
+        charState = FSM_STATE.KNOCKBACK;
+        setTimeout(EndKnockBack, knockBackDuration * 1000);
+    };
+
+    const EndKnockBack = function() {
+        if (charState == FSM_STATE.DEAD) return;
+        knockBackDirection = null;
+        ToIdle();
     }
 
     const SetAttackCoolDown = (newCoolDown) => {attackCoolDown = newCoolDown;}
@@ -59,6 +81,7 @@ const Character = function(ctx, x, y, gameArea) {
     const GetCurHP = () => {return curHP;}
 
     const ToIdle = function() {
+
         charState = FSM_STATE.MOVE;
 
         if (direction.horizontal == DIRECTION_X.STOP && direction.vertical == DIRECTION_Y.STOP) {
@@ -127,7 +150,7 @@ const Character = function(ctx, x, y, gameArea) {
         // if character is not moving, just return
         if (direction.horizontal == DIRECTION_X.STOP && direction.vertical == DIRECTION_Y.STOP) return;
 
-        if (charState == FSM_STATE.DEAD) return;
+        if (charState == FSM_STATE.DEAD || charState == FSM_STATE.KNOCKBACK) return;
 
         let { x, y } = sprite.getXY();
 
@@ -153,6 +176,35 @@ const Character = function(ctx, x, y, gameArea) {
         /* Set the new position if it is within the game area */
         if (gameArea.isPointInBox(x, y))
             sprite.setXY(x, y);
+    };
+
+    const HandleKnockBack = function() {
+
+        if (charState != FSM_STATE.KNOCKBACK || !knockBackDirection) return;
+
+        let { x, y } = sprite.getXY();
+
+        switch (knockBackDirection.horizontal) {
+            case DIRECTION_X.LEFT:
+                x -= knockBackSpeed * deltaTime;
+                break;
+            case DIRECTION_X.RIGHT:
+                x += knockBackSpeed * deltaTime;
+                break;
+        };
+
+        switch (knockBackDirection.vertical) {
+            case DIRECTION_Y.UP:
+                y -= knockBackSpeed * deltaTime;
+                break;
+            case DIRECTION_Y.DOWN:
+                y += knockBackSpeed * deltaTime;
+                break;
+        };
+
+        if (gameArea.isPointInBox(x, y))
+            sprite.setXY(x, y);
+
     };
 
     const ChangeSpriteDirection = function(newDir) {
@@ -187,6 +239,8 @@ const Character = function(ctx, x, y, gameArea) {
         CalculateDeltaTime();
 
         MoveCharacter();
+
+        HandleKnockBack();
     };
 
     const StateDead = function() {
@@ -225,6 +279,8 @@ const Character = function(ctx, x, y, gameArea) {
         GetAttackPower: GetAttackPower,
         DealDamage: DealDamage,
         SetAttackCoolDown: SetAttackCoolDown,
+        StartKnockBack: StartKnockBack,
+        SetKnockBackSpeed: SetKnockBackSpeed,
 
         // animation
         GetSequenceList: GetSequenceList,

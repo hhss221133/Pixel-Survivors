@@ -6,7 +6,9 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetWalkSpeed(80);
 
-    enemy.SetThreshold(20, 10, 20);
+    enemy.SetThreshold(80, 80, 50);
+
+    enemy.SetKnockBackSpeed(500);
 
     const sequences = {
         idleRight: {x:0, y:0, width:150, height:150, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
@@ -86,7 +88,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
             if (GetAttackHitBox().intersect(players[playerName].GetHitBox())) {
                 if (enemy.TryAddHitTargetToArray(players[playerName])) {
                     // deal damage to enemy
-                    players[playerName].TakeDamage(enemy.GetAttackPower());
+                    players[playerName].TakeDamage(enemy.GetAttackPower(), enemy.getXY());
                 }
             }
         }

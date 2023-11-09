@@ -2,7 +2,7 @@
 const Player = function(ctx, x, y, gameArea) {
     const character = Character(ctx, x, y, gameArea);
 
-    character.SetMaxHP(3);
+    character.SetMaxHP(5);
 
     const invulnerabilityTime = 1; // in second
 
@@ -112,7 +112,7 @@ const Player = function(ctx, x, y, gameArea) {
 
     };
 
-    const TakeDamage = function(damage) {
+    const TakeDamage = function(damage, enemyXY) {
 
         if (character.GetFSMState() == FSM_STATE.DEAD || !bCanTakeDamage) return;
 
@@ -120,6 +120,8 @@ const Player = function(ctx, x, y, gameArea) {
         setTimeout(ResetCanTakeDamage, invulnerabilityTime * 1000);
 
         character.DealDamage(damage);
+
+        StartKnockBack(enemyXY);
         
         let HP = character.GetCurHP();
 
@@ -130,8 +132,31 @@ const Player = function(ctx, x, y, gameArea) {
         character.SetFSMState(FSM_STATE.DEAD);
 
         HandlePlayerDead();
-        
-    }
+    };
+
+    const StartKnockBack = function(enemyXY) {
+
+        const playerXY = character.getXY();
+
+        let knockBackDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+
+        if (playerXY.x < enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.LEFT;
+        }
+        else if (playerXY.x > enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.RIGHT;
+        }
+
+        if (playerXY.y < enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.UP;
+        }
+        else if (playerXY.y > enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.DOWN;
+        } 
+
+        character.StartKnockBack(knockBackDir);
+
+    };
 
     const ResetCanTakeDamage = () => {bCanTakeDamage = true;}
 

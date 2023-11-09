@@ -25,7 +25,7 @@ const GameLoop = function() {
         const skeleton = "skeleton1";
         const flyingEye = "flyingEye1";
         enemies[flyingEye]= EnemyFlyingEye(context, 1000, 500, gameArea, flyingEye);
-     //   enemies[skeleton]= EnemySkeleton(context, 1000, 300, gameArea, flyingEye);
+        enemies[skeleton]= EnemySkeleton(context, 1000, 300, gameArea, flyingEye);
 
     };
 

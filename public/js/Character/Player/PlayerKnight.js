@@ -101,7 +101,7 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
             if (GetAttackHitBox().intersect(enemies[enemyName].GetHitBox())) {
                 if (player.TryAddHitTargetToArray(enemies[enemyName])) {
                     // deal damage to enemy
-                    enemies[enemyName].TakeDamage(player.GetAttackPower());
+                    enemies[enemyName].TakeDamage(player.GetAttackPower(), player.getXY());
                 }
             }
         }

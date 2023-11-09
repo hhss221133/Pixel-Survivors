@@ -4,6 +4,8 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackCoolDown(2);
 
+    enemy.SetKnockBackSpeed(400);
+
     const sequences = {
         idleRight: {x:0, y:0, width:150, height:150, count:4, timing:200, loop:true, isLeft: false, startingIndex: 0},
         idleLeft: {x:0, y:600, width:150, height:150, count:4, timing:200, loop:true, isLeft: true, startingIndex: 7},
@@ -81,7 +83,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
             if (GetAttackHitBox().intersect(players[playerName].GetHitBox())) {
                 if (enemy.TryAddHitTargetToArray(players[playerName])) {
                     // deal damage to enemy
-                    players[playerName].TakeDamage(enemy.GetAttackPower());
+                    players[playerName].TakeDamage(enemy.GetAttackPower(), enemy.getXY());
                 }
             }
         }

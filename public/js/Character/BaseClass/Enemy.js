@@ -87,11 +87,13 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
     const GetID = () => {return ID;}
 
 
-    const TakeDamage = function(damage) {
+    const TakeDamage = function(damage, playerXY) {
 
         if (character.GetFSMState() == FSM_STATE.DEAD) return;
 
         character.DealDamage(damage);
+
+        StartKnockBack(playerXY);
         
         let HP = character.GetCurHP();
         if (HP > 0) return;
@@ -100,6 +102,30 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         character.SetFSMState(FSM_STATE.DEAD);
         HandleEnemyDead();
         
+    };
+
+    const StartKnockBack = function(playerXY) {
+
+        const enemyXY = character.getXY();
+
+        let knockBackDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+
+        if (playerXY.x > enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.LEFT;
+        }
+        else if (playerXY.x < enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.RIGHT;
+        }
+
+        if (playerXY.y > enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.UP;
+        }
+        else if (playerXY.y < enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.DOWN;
+        } 
+
+        character.StartKnockBack(knockBackDir);
+
     };
 
     const HandleEnemyDead = function() {
@@ -177,6 +203,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         TryAddHitTargetToArray: character.TryAddHitTargetToArray,
         GetAttackPower: character.GetAttackPower,
         SetThreshold: SetThreshold,
+        SetKnockBackSpeed: character.SetKnockBackSpeed,
         
     }
 };
