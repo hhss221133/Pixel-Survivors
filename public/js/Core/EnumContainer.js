@@ -24,14 +24,24 @@ const ACTION_KEY = {
 };
 
 const PLAYER_TYPE = {
-    KNIGHT : 0,
-    WIZARD : 1
+    KNIGHT : "Knight",
+    WIZARD : "Wizard"
 };
 
 const ENEMY_TYPE = {
     SKELETON: "Skeleton",
     FLYINGEYE: "FlyingEye",
 };
+
+const PROJECTILE_TYPE = {
+    WATERBALL: "Waterball",
+    FIREBALL: "Fireball"
+};
+
+const ACTOR_TYPE = {
+    PLAYER: 0,
+    ENEMY: 1
+}
 
 // states in the finite state machine(FSM)
 const FSM_STATE = {

@@ -1,8 +1,6 @@
 const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
-    const character = Character(ctx, x, y, gameArea);
-
-    const ID = enemyID;
+    const character = Character(ctx, x, y, gameArea, enemyID);
 
     let disposeEnemyTime = 1; // time to dispose the enemy when it is dead (in second)
 
@@ -28,7 +26,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
         for (const player in players) {
             
-            if (players[player].GetCurHP() <= 0) continue;
+            if (players[player].GetFSMState() == FSM_STATE.DEAD) continue;
 
             const playerXY = players[player].getXY();
             const enemyXY = character.getXY();
@@ -83,9 +81,6 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
         character.ChangeSpriteDirection(newDir);
     };
-
-    const GetID = () => {return ID;}
-
 
     const TakeDamage = function(damage, playerXY) {
 
@@ -142,9 +137,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
     };
 
     const DisposeEnemy = function() {
-        for (enemyName in enemies) {
-            if (enemies[enemyName].GetID() == ID) {
-                delete enemies[ID];
+        for (const enemyName in enemies) {
+            if (enemies[enemyName].GetID() == character.GetID()) {
+                delete enemies[character.GetID()];
                 return;
             } 
         }
@@ -169,6 +164,8 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     };
 
+    const GetActorType = () => ACTOR_TYPE.ENEMY;
+
     return {
         SetMaxHP: character.SetMaxHP,
         SetWalkSpeed: character.SetWalkSpeed,
@@ -185,7 +182,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         draw: character.draw,
         getDisplaySize: character.getDisplaySize,
         Update: Update,
-        GetID: GetID,
+        GetID: character.GetID,
 
         // FSM State related
         GetFSMState: character.GetFSMState,
@@ -204,6 +201,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         GetAttackPower: character.GetAttackPower,
         SetThreshold: SetThreshold,
         SetKnockBackSpeed: character.SetKnockBackSpeed,
+        GetActorType: GetActorType,
         
     }
 };

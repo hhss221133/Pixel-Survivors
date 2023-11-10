@@ -1,6 +1,6 @@
-const PlayerKnight = function(ctx, x, y, gameArea) {
+const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
-    const player = Player(ctx, x, y, gameArea);
+    const player = Player(ctx, x, y, gameArea, actorID);
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
@@ -19,7 +19,7 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
 
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "assets/player_knight.png");
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "/public/assets/player_knight.png");
 
 
     const GetHitBox = function() {
@@ -115,9 +115,6 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         HandleAttackHitBox();
     };
 
-
-
-
     return {
         SetMaxHP: player.SetMaxHP,
         SetWalkSpeed: player.SetWalkSpeed,
@@ -126,12 +123,12 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         GetDirection: player.GetDirection,
         getXY: player.getXY,
         CreateSpriteSequences: player.CreateSpriteSequences,
-        MoveCharacter: player.MoveCharacter,
-        ChangeSpriteDirection: player.ChangeSpriteDirection,
         GetHitBox: GetHitBox,
         draw: player.draw,
         Update: Update,
         TakeDamage: player.TakeDamage,
-        GetCurHP: player.GetCurHP,
+        GetFSMState: player.GetFSMState,
+        GetID: player.GetID,
+        GetActorType: player.GetActorType,
     };
 };

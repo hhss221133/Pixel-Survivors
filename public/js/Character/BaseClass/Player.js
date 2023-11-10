@@ -1,6 +1,6 @@
+const Player = function(ctx, x, y, gameArea, actorID) {
 
-const Player = function(ctx, x, y, gameArea) {
-    const character = Character(ctx, x, y, gameArea);
+    const character = Character(ctx, x, y, gameArea, actorID);
 
     character.SetMaxHP(5);
 
@@ -109,8 +109,17 @@ const Player = function(ctx, x, y, gameArea) {
     };
     
     const PlayerDie = function() {
-
+        setTimeout(DisposePlayer, 2000);
     };
+    
+    const DisposePlayer = function() {
+        for (playerName in players) {
+            if (players[playerName].GetID() == character.GetID()) {
+                delete players[character.GetID()];
+                return;
+            } 
+        }
+    }
 
     const TakeDamage = function(damage, enemyXY) {
 
@@ -165,6 +174,8 @@ const Player = function(ctx, x, y, gameArea) {
         character.Update(now);
     };
 
+    const GetActorType = () => ACTOR_TYPE.PLAYER;
+
 
 
     return {
@@ -184,6 +195,8 @@ const Player = function(ctx, x, y, gameArea) {
         setSequence: character.setSequence,
         draw: character.draw,
         Update: Update,
+        GetID: character.GetID,
+        GetActorType: GetActorType,
 
         // FSM State related
         GetFSMState: character.GetFSMState,

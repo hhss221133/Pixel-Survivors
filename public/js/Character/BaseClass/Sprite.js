@@ -126,14 +126,11 @@ const Sprite = function(ctx, x, y) {
         return this;
     };
 
-    const Test = function() {
-        console.log("1");
-    }
-
     // This function updates the sprite by moving to the next sprite
     // at appropriate time.
     // - `time` - The timestamp when this function is called
     const update = function(time) {
+
         if (lastUpdate == 0) lastUpdate = time;
 
         /* Move to the next sprite when the timing is right */
@@ -170,6 +167,7 @@ const Sprite = function(ctx, x, y) {
             if (index < sequence.count - 1){
                 // animation continues
                 index++;
+                
             }
 
             else {

@@ -20,7 +20,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:1050, width:150, height:150, count:4, timing:100, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "assets/enemy_skeleton.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "/public/assets/enemy_skeleton.png");
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();
@@ -113,6 +113,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         setSequence: enemy.setSequence,
         draw: enemy.draw,
         Update: Update,
+        GetActorType: enemy.GetActorType,
 
         // FSM State related
         GetFSMState: enemy.GetFSMState,

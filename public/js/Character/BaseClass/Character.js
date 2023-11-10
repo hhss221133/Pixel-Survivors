@@ -1,8 +1,10 @@
 /* Component to store the properties for all characters, i.e. player & enemy */
 
-const Character = function(ctx, x, y, gameArea) {
+const Character = function(ctx, x, y, gameArea, actorID) {
     // This is the sprite object of the player created from the Sprite module.
     const sprite = Sprite(ctx, x, y);
+
+    const ID = actorID;
 
     let charState = FSM_STATE.MOVE;
 
@@ -18,10 +20,6 @@ const Character = function(ctx, x, y, gameArea) {
 
     let attackPower = 1;
 
-    let deltaTime = 0.0167; // frame time for 60fps
-
-    let start = Date.now();
-
     let knockBackDuration = 0.2; // in second
 
     let knockBackSpeed = 1000; // in pixel
@@ -35,6 +33,8 @@ const Character = function(ctx, x, y, gameArea) {
     let hitTargetArray = [];  // store the target hit in the current attack, need to be reset every attack
 
     let direction = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+
+    const GetID = () => {return ID;}
 
     const EmptyHitTargetArray = () => {hitTargetArray = [];}
 
@@ -236,15 +236,9 @@ const Character = function(ctx, x, y, gameArea) {
 
         sprite.update(now);
 
-        CalculateDeltaTime();
-
         MoveCharacter();
 
         HandleKnockBack();
-    };
-
-    const StateDead = function() {
-
     };
 
     return {
@@ -264,6 +258,7 @@ const Character = function(ctx, x, y, gameArea) {
         Update: Update,
         GetCurHP: GetCurHP,
         getDisplaySize: sprite.getDisplaySize,
+        GetID: GetID,
 
         // FSM State related
         GetFSMState: GetFSMState,

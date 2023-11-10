@@ -24,7 +24,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:750, width:150, height:150, count:4, timing:150, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "assets/enemy_flyingEye.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "/public/assets/enemy_flyingEye.png");
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();
@@ -118,6 +118,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         setSequence: enemy.setSequence,
         draw: enemy.draw,
         Update: Update,
+        GetActorType: enemy.GetActorType,
 
         // FSM State related
         GetFSMState: enemy.GetFSMState,
@@ -130,7 +131,9 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         GetHitBox: GetHitBox,
         GetAttackHitBox: GetAttackHitBox,
         TakeDamage: enemy.TakeDamage,
-        GetID: enemy.GetID
+        GetID: enemy.GetID,
+
+        
 
     }
 };
