@@ -28,6 +28,11 @@ const PLAYER_TYPE = {
     WIZARD : 1
 };
 
+const ENEMY_TYPE = {
+    SKELETON: "Skeleton",
+    FLYINGEYE: "FlyingEye",
+};
+
 // states in the finite state machine(FSM)
 const FSM_STATE = {
     MOVE: 0,    // walk and idle

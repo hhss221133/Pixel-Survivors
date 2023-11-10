@@ -4,7 +4,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const ID = enemyID;
 
-    let disposeEnemyTime = 2; // time to dispose the enemy when it is dead (in second)
+    let disposeEnemyTime = 1; // time to dispose the enemy when it is dead (in second)
 
     let moveThreshold = 80;   // enemy will stop moving if it is too close to the player
 

@@ -10,6 +10,8 @@ const GameLoop = function() {
 
     const totalGameTime = 240;   // Total game time in seconds
 
+    let enemyIndex = 0;
+
 
 
     const gameArea = BoundingBox(context, 0, 0, 900, 1600);
@@ -22,11 +24,9 @@ const GameLoop = function() {
         players.player1 = PlayerKnight(context, 500, 500, gameArea);
      //   players.player2 = PlayerWizard(context, 1000, 500, gameArea);
 
-        const skeleton = "skeleton1";
-        const flyingEye = "flyingEye1";
-        enemies[flyingEye]= EnemyFlyingEye(context, 1000, 500, gameArea, flyingEye);
-        enemies[skeleton]= EnemySkeleton(context, 1000, 300, gameArea, flyingEye);
 
+        AddSkeleton(1000, 300);
+        AddFlyingEye(1000, 500);
     };
 
     const doFrame = function(now) {
@@ -49,6 +49,26 @@ const GameLoop = function() {
             enemies[enemyName].draw();
         }
     };
+
+    const AddEnemy = function(enemyType, enemyX, enemyY) {
+        let newEnemyID = enemyType + "_" + enemyIndex;
+        switch (enemyType) {
+            case ENEMY_TYPE.SKELETON:
+                enemies[newEnemyID] = EnemySkeleton(context, enemyX, enemyY, gameArea, newEnemyID);
+                break;
+            case ENEMY_TYPE.FLYINGEYE:
+                enemies[newEnemyID] = EnemyFlyingEye(context, enemyX, enemyY, gameArea, newEnemyID);
+                break;
+        }
+
+        enemyIndex++;
+    };
+
+    const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
+
+    const AddFlyingEye = (x, y) => AddEnemy(ENEMY_TYPE.FLYINGEYE, x, y);
+        
+    
 
     const StartGame = function() {
 

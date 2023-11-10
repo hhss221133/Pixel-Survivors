@@ -20,8 +20,8 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         attackRight: {x:0, y:150, width:150, height:150, count:8, timing:150, loop:false, isLeft: false, startingIndex: 0, attackIndex: 5},
         attackLeft: {x:0, y:600, width:150, height:150, count:8, timing:150, loop:false, isLeft: true, startingIndex: 7, attackIndex: 2},
 
-        dieRight: {x:0, y:300, width:150, height:150, count:4, timing:250, loop:false, isLeft: false, startingIndex: 0},
-        dieLeft: {x:0, y:750, width:150, height:150, count:4, timing:250, loop:false, isLeft: true, startingIndex: 7},
+        dieRight: {x:0, y:300, width:150, height:150, count:4, timing:150, loop:false, isLeft: false, startingIndex: 0},
+        dieLeft: {x:0, y:750, width:150, height:150, count:4, timing:150, loop:false, isLeft: true, startingIndex: 7},
     };
 
     enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "../../assets/enemy_flyingEye.png");
