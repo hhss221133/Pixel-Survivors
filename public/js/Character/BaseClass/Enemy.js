@@ -181,9 +181,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         drawBox: character.drawBox,
         ChangeSpriteDirection: character.ChangeSpriteDirection,
         getCurSequence: character.getCurSequence,
-        getDisplaySize: character.getDisplaySize,
         setSequence: character.setSequence,
         draw: character.draw,
+        getDisplaySize: character.getDisplaySize,
         Update: Update,
         GetID: GetID,
 

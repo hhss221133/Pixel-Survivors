@@ -15,7 +15,7 @@ const PlayerWizard = function(ctx, x, y, gameArea) {
         attackLeft: {x:0, y:788, width:128, height:128, count:7, timing:50, loop:false, isLeft: true, startingIndex: 7}
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "../../assets/player_wizard.png");
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "assets/player_wizard.png");
 
 
     const GetHitBox = function() {

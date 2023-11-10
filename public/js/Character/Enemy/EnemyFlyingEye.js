@@ -24,7 +24,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:750, width:150, height:150, count:4, timing:150, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "../../assets/enemy_flyingEye.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "assets/enemy_flyingEye.png");
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();

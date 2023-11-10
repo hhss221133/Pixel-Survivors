@@ -258,12 +258,12 @@ const Character = function(ctx, x, y, gameArea) {
         MoveCharacter: MoveCharacter,
         drawBox: sprite.drawBox,
         ChangeSpriteDirection: ChangeSpriteDirection,
-        getDisplaySize: sprite.getDisplaySize,
         getCurSequence: sprite.getCurSequence,
         draw: sprite.draw,
         setSequence: sprite.setSequence,
         Update: Update,
         GetCurHP: GetCurHP,
+        getDisplaySize: sprite.getDisplaySize,
 
         // FSM State related
         GetFSMState: GetFSMState,

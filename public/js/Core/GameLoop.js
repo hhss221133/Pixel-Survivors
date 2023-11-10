@@ -2,6 +2,8 @@ const players = {};
 
 const enemies = {};
 
+const projectiles = {};
+
 const GameLoop = function() {
 
     /* Get the canvas and 2D context */

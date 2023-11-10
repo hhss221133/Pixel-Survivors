@@ -19,7 +19,7 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
 
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "../../assets/player_knight.png");
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "assets/player_knight.png");
 
 
     const GetHitBox = function() {
@@ -122,6 +122,7 @@ const PlayerKnight = function(ctx, x, y, gameArea) {
         SetMaxHP: player.SetMaxHP,
         SetWalkSpeed: player.SetWalkSpeed,
         SetAttackPower: player.SetAttackPower,
+        GetAttackPower: player.GetAttackPower,
         GetDirection: player.GetDirection,
         getXY: player.getXY,
         CreateSpriteSequences: player.CreateSpriteSequences,
