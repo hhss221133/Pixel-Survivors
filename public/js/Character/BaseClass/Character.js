@@ -134,14 +134,6 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         return charState == FSM_STATE.MOVE && bCanAttack;
     }
 
-    const CalculateDeltaTime = function() {
-        let current = Date.now();
-        deltaTime = current - start;
-        deltaTime *= 0.001;
-        start = current;
-
-    };
-
     const GetDirection = function() {
         return {... direction};
     };

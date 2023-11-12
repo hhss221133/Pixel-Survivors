@@ -115,6 +115,7 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
         player.Update(now);
 
         HandleAttackHitBox();
+
     };
 
     return {

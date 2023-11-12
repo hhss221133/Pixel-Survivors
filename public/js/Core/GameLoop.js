@@ -6,9 +6,9 @@ const projectiles = {};
 
 const totalGameTime = 240;   // Total game time in seconds
 
-let actorIndex = 0;
+let actorIndex = 0; // for generating GUID
 
-let deltaTime = 0.0167; // frame time for 60fps
+let deltaTime = 0.0167; // default frame time for 60fps
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
@@ -55,6 +55,12 @@ const AddProjectile = function(owner, projectileType, startPos, endPos, launchSp
     
 };
 
+const AddBoss = function(x, y) {
+    let newBossID = "Boss" + "_" + actorIndex; 
+    enemies[newBossID] = Boss(context, x, y, gameArea, newBossID);
+    actorIndex++;
+};
+
 const AddKnight = (x, y) => AddPlayer(PLAYER_TYPE.KNIGHT, x, y);
 
 const AddWizard = (x, y) => AddPlayer(PLAYER_TYPE.WIZARD, x, y);
@@ -84,10 +90,11 @@ const GameLoop = function() {
     const InitializeGame = function() {
         // Initialze player, enemy and UI
 
-       // AddKnight(500, 500);
-        AddWizard(600, 500);
+        AddKnight(500, 500);
+     //   AddWizard(600, 500);
 
-        AddMushroom(1000, 700);
+        AddBoss(1000, 400);
+      //  AddMushroom(1000, 700);
       //  AddSkeleton(1000, 300);
      //   AddFlyingEye(1000, 500);
     };
