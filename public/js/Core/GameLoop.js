@@ -20,6 +20,8 @@ const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
 
 const AddFlyingEye = (x, y) => AddEnemy(ENEMY_TYPE.FLYINGEYE, x, y);
 
+const AddMushroom = (x, y) => AddEnemy(ENEMY_TYPE.MUSHROOM, x, y);
+
 const AddEnemy = function(enemyType, enemyX, enemyY) {
     let newEnemyID = enemyType + "_" + actorIndex;
     switch (enemyType) {
@@ -28,6 +30,9 @@ const AddEnemy = function(enemyType, enemyX, enemyY) {
             break;
         case ENEMY_TYPE.FLYINGEYE:
             enemies[newEnemyID] = EnemyFlyingEye(context, enemyX, enemyY, gameArea, newEnemyID);
+            break;
+        case ENEMY_TYPE.MUSHROOM:
+            enemies[newEnemyID] = EnemyMushroom(context, enemyX, enemyY, gameArea, newEnemyID);
             break;
     }
 
@@ -39,7 +44,7 @@ const AddProjectile = function(owner, projectileType, startPos, endPos, launchSp
 
     switch (projectileType) {
         case PROJECTILE_TYPE.FIREBALL:
-       //     enemies[newEnemyID] = EnemySkeleton(context, enemyX, enemyY, gameArea, newEnemyID);
+            projectiles[newProjectileID] = Fireball(context, startPos.x, startPos.y, gameArea, owner, endPos, launchSpeed, newProjectileID);
             break;
         case PROJECTILE_TYPE.WATERBALL:
             projectiles[newProjectileID] = Waterball(context, startPos.x, startPos.y, gameArea, owner, endPos, launchSpeed, newProjectileID);
@@ -82,7 +87,8 @@ const GameLoop = function() {
        // AddKnight(500, 500);
         AddWizard(600, 500);
 
-     //   AddSkeleton(1000, 300);
+        AddMushroom(1000, 700);
+      //  AddSkeleton(1000, 300);
      //   AddFlyingEye(1000, 500);
     };
 

@@ -2,19 +2,26 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
     const player = Player(ctx, x, y, gameArea, actorID);
     
-    const magicSpeed = 200;
+    const magicSpeed = 300;
 
     let playerType = PLAYER_TYPE.WIZARD;
 
+    player.SetAttackCoolDown(0.8);
+
+    player.SetWalkSpeed(250);
+
     const sequences = {
         idleRight: {x:0, y:20, width:128, height:128, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
-        idleLeft: {x:0, y:537, width:128, height:128, count:8, timing:200, loop:true, isLeft: true, startingIndex: 7},
+        idleLeft: {x:0, y:532, width:128, height:128, count:8, timing:200, loop:true, isLeft: true, startingIndex: 7},
 
         moveRight: {x:0, y:148, width:128, height:128, count:8, timing:100, loop:true, isLeft: false, startingIndex: 0},
         moveLeft: {x:0, y:660, width:128, height:128, count:8, timing:100, loop:true, isLeft: true, startingIndex: 7},
 
         attackRight: {x:0, y:276, width:128, height:128, count:7, timing:50, loop:false, isLeft: false, startingIndex: 0},
-        attackLeft: {x:0, y:788, width:128, height:128, count:7, timing:50, loop:false, isLeft: true, startingIndex: 7}
+        attackLeft: {x:0, y:788, width:128, height:128, count:7, timing:50, loop:false, isLeft: true, startingIndex: 7},
+
+        dieRight: {x:0, y:404, width:128, height:128, count:4, timing:200, loop:false, isLeft: false, startingIndex: 0},
+        dieLeft: {x:0, y:916, width:128, height:128, count:4, timing:200, loop:false, isLeft: true, startingIndex: 7},
     }
 
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "/public/assets/player_wizard.png");
@@ -51,7 +58,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
         if (!player.CanCharAttack()) return;
 
-        const size = player.getDisplaySize();
         const {x, y} = player.getXY();
         const playerScale = player.getScale();
 

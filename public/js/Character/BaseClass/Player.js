@@ -10,8 +10,6 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
-    character.SetWalkSpeed(300);
-
     /* Handle the keydown of ASDW keys for movement */
     $(document).on("keydown", function(event) {
 
@@ -197,6 +195,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         Update: Update,
         GetID: character.GetID,
         GetActorType: GetActorType,
+        SetAttackCoolDown: character.SetAttackCoolDown,
 
         // FSM State related
         GetFSMState: character.GetFSMState,

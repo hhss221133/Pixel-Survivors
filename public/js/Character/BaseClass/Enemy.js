@@ -4,7 +4,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     let disposeEnemyTime = 1; // time to dispose the enemy when it is dead (in second)
 
-    let moveThreshold = 80;   // enemy will stop moving if it is too close to the player
+    let moveThreshold = 80;   // enemy will start attack if this is greater than their distance
 
     let yMoveThreshold = 30; 
 
@@ -39,6 +39,8 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         distanceToPlayer = minDistance;
  
     }
+
+    const GetTargetPlayer = () => {return targetPlayer;}
 
     const MoveEnemy = function() {
 
@@ -202,6 +204,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         SetThreshold: SetThreshold,
         SetKnockBackSpeed: character.SetKnockBackSpeed,
         GetActorType: GetActorType,
+        CanSpawnProjectile: character.CanSpawnProjectile,
+        ResetCanSpawnProjectile: character.ResetCanSpawnProjectile,
+        GetTargetPlayer: GetTargetPlayer,
         
     }
 };

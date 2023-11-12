@@ -20,6 +20,10 @@ const Projectile = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
 
     const GetID = () => {return ID;}
 
+    const GetDamage = () => {return damage;}
+
+    const CanDealDamage = () => {return bCanDealDamage;}
+
     const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, SheetName) {
         sequences = NewSpriteSequence;
         sprite.setSequence(DefaultSequence).setScale(Scale).useSheet(SheetName);
@@ -87,5 +91,8 @@ const Projectile = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
         CreateSpriteSequences: CreateSpriteSequences,
         Update: Update,
         GetID: GetID,
+        GetDamage: GetDamage,
+        CanDealDamage: CanDealDamage,
+        Explode: Explode,
     }
 };

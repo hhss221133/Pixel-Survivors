@@ -12,6 +12,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     let bCanAttack = true;
 
+    let bCanSpawnProjectile = false; // only for enemies that can spawn projectile
+
     let maxHP = 3;
 
     let curHP = maxHP;
@@ -72,6 +74,10 @@ const Character = function(ctx, x, y, gameArea, actorID) {
     
     const GetAttackPower = () => {return attackPower;}
 
+    const CanSpawnProjectile = () => {return bCanSpawnProjectile;}
+
+    const ResetCanSpawnProjectile = () => {bCanSpawnProjectile = false;}
+
     const DealDamage = function(damage) {
         // only for damage calculation, not for performing action after death
         const clamp = (val, max, min) => Math.min(Math.max(val, min), max);
@@ -98,6 +104,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     const StartAttack = function() {
         bCanAttack = false;
+        bCanSpawnProjectile = true;
         SetFSMState(FSM_STATE.ATTACK);
         setTimeout(ResetCanAttack, attackCoolDown * 1000);
     }
@@ -276,6 +283,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         SetAttackCoolDown: SetAttackCoolDown,
         StartKnockBack: StartKnockBack,
         SetKnockBackSpeed: SetKnockBackSpeed,
+        CanSpawnProjectile: CanSpawnProjectile,
+        ResetCanSpawnProjectile: ResetCanSpawnProjectile,
 
         // animation
         GetSequenceList: GetSequenceList,

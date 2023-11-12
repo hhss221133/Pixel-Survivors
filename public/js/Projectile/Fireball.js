@@ -1,4 +1,4 @@
-const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID) {
+const Fireball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID) {
 
     const projectile = Projectile(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID);
 
@@ -7,7 +7,7 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
         explode: {x:0, y:0, width:191, height:141, count:6, timing:50, loop:false, isLeft: false, startingIndex: 0}
     }
 
-    projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, "/public/assets/waterball.png");
+    projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, "/public/assets/fireball.png");
 
     const GetHitBox = function() {
         const size = projectile.getDisplaySize();
@@ -25,14 +25,14 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
     const HandleProjectileHitBox = function() {
         if (!owner) return;
 
-        if (owner.GetActorType() == ACTOR_TYPE.PLAYER) {
+        if (owner.GetActorType() == ACTOR_TYPE.ENEMY) {
             // player's projectile
 
-            for (const enemyName in enemies) {
-                const curEnemy = enemies[enemyName]; 
-                if (projectile.CanDealDamage() && curEnemy.GetFSMState() != FSM_STATE.DEAD && GetHitBox().intersect(curEnemy.GetHitBox())) {
+            for (const playerName in players) {
+                const curPlayer = players[playerName]; 
+                if (projectile.CanDealDamage() && curPlayer.GetFSMState() != FSM_STATE.DEAD && GetHitBox().intersect(curPlayer.GetHitBox())) {
                         // deal damage to enemy
-                        curEnemy.TakeDamage(projectile.GetDamage(), projectile.getXY());
+                        curPlayer.TakeDamage(projectile.GetDamage(), projectile.getXY());
                         projectile.Explode();
                         return;
                 }

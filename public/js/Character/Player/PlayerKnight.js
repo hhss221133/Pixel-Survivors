@@ -4,6 +4,8 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
+    player.SetWalkSpeed(300);
+
     const sequences = {
         idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
         idleLeft: {x:0, y:495, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},

@@ -31,6 +31,7 @@ const PLAYER_TYPE = {
 const ENEMY_TYPE = {
     SKELETON: "Skeleton",
     FLYINGEYE: "FlyingEye",
+    MUSHROOM: "Mushroom"
 };
 
 const PROJECTILE_TYPE = {
