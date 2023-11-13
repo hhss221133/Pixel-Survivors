@@ -59,23 +59,23 @@ const LobbiesModel = {
     joinLobby: (username, roomID, callback) => {
         readLobbiesFile((err, lobbies) => {
             if (err) return callback(err, null);
-    
+
             const lobby = lobbies.find(lobby => lobby.createdBy === roomID);
             if (!lobby) {
                 return callback(new Error('Lobby not found'), null);
             }
 
+            const isAlreadyJoined = lobby.players.some(player => player.username === username);
+            if (isAlreadyJoined) {
+                return callback(new Error('User has already joined this lobby'), null);
+            }
+
             if (lobby.status != 'waiting') {
-                return callback(new Error('Lobby currenctly disalbed'), null);
+                return callback(new Error('Lobby currently disabled'), null);
             }
     
             if (lobby.players.length >= lobby.settings.maxPlayers) {
                 return callback(new Error('Lobby is full'), null);
-            }
-    
-            const isAlreadyJoined = lobby.players.some(player => player.username === username);
-            if (isAlreadyJoined) {
-                return callback(new Error('User has already joined this lobby'), null);
             }
     
             lobby.players.push({
@@ -93,6 +93,10 @@ const LobbiesModel = {
 
     setLobbyStatus: (username, roomID, status, callback) => {
         readLobbiesFile((err, lobbies) => {
+            if(username != roomID) {
+                return;
+            }
+
             if (err) return callback(err);
     
             // Find the lobby with the given ID

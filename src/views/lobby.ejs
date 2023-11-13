@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pixel Survivors Lobbies</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" href="./css/lobby.css">
+    </head>
+    <body>
+        <section class="lobby_wrap">
+            <div class = "lobby_container">
+                <h3> Please do not refresh the browser </h3>
+                <div class = "player">
+                    <h1> Player 1 (Host) </h1>
+                    <h2 id="host"> Loading... </h2>
+                </div>
+                <div class = "player">
+                    <h1> Player 2 </h1>
+                    <h2 id="client"> Loading... </h2>
+                </div>
+                <%
+                    if(username == roomID) {
+                        %>
+                            <button id="start_game" class = "start_game">
+                                Start Game
+                            </button> 
+                        <%
+                    }
+                %>
+            </div>
+        </section>
+
+
+        <script src="/socket.io/socket.io.min.js"></script>
+        <script type='module' src="./js/SocketHandler.js"></script>
+        <script type='module' src="./js/Lobby.js"></script>
+    </body>
+</html>

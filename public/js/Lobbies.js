@@ -75,6 +75,9 @@ function populate_lobbies(lobbies) {
         usersSpan.className = 'lobby_users';
         usersSpan.textContent = `${lobby.players.length}/${lobby.settings.maxPlayers}`; 
 
+        //Create status span
+        const statSpan = document.createElement('span');
+        statSpan.textContent = `${lobby.status}`;
         // Create the join button
         const joinButton = document.createElement('button');
         joinButton.className = 'join_btn';
@@ -85,6 +88,7 @@ function populate_lobbies(lobbies) {
         // Append the username span and the right div (which contains the users count and join button) to the list item
         listItem.appendChild(usernameSpan);
         itemRightDiv.appendChild(usersSpan);
+        itemRightDiv.appendChild(statSpan);
         itemRightDiv.appendChild(joinButton);
         listItem.appendChild(itemRightDiv);
 

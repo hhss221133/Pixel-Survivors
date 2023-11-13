@@ -1,0 +1,25 @@
+.lobby_wrap {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.lobby_container {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    row-gap:30px;
+    background-color:var(--grey);
+    padding:10px;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+.player {
+    display:flex;
+    flex-direction:column;
+}
+
+h3 {
+    margin:0;
+}

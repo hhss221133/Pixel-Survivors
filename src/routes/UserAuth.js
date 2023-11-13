@@ -68,7 +68,8 @@ router.get('/lobbies', requireLogin, (req, res) => {
 });
 
 router.get('/lobby', requireLogin, (req, res) => {
-  res.sendFile(path.join(__dirname, '../protected_views/lobby.html'));
+  res.sendFile(path.join(__dirname, '../views/lobby.html'));
+  res.render('lobby', {username: req.session.username, roomID: req.session.roomID});
 });
 
 // router.get('/game', requireLogin, (req, res) => {

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
     ping_server();
     retrieve_session();
+    start_game_button();
 });
 
 function ping_server() {
@@ -12,6 +13,20 @@ function ping_server() {
 
 function retrieve_session() {
     socket.emit("retrieve lobby session");
+}
+
+function start_game_button() {
+    const start_game = document.getElementById('start_game');
+    if(start_game) {
+        start_game.addEventListener('click', function(e) {
+            e.preventDefault();
+            start_Game();
+        });
+    }
+}
+
+function start_Game() {
+    socket.emit("start game");
 }
 
 function create_lobby_json() {
@@ -64,7 +79,8 @@ socket.on('lobby updated', (lobbyInfo) => {
     }
 });
 
-socket.on('lobby join json error', () => {
-    alert("The host is disconnected, please try again.");
+socket.on('lobby join json error', (err) => {
+    alert(err);
+    alert("There was an error joining the room, please try again.");
     window.location.href = '/lobbies';
 });

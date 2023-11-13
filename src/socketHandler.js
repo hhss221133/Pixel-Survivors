@@ -36,7 +36,9 @@ module.exports = function (io, Session) {
             console.log("");
             console.log(sessID, "disconnected with reason", reason);
             
-            edit_lobby_status(sessID, socket, 'disable');
+            edit_lobby_status(sessID, socket, 'disabled');
+
+            io.emit('io updated lobbies json'); //multicast
 
             userTimeouts.set(sessID, setTimeout(() => {
                 performCleanup(sessID, socket, io);

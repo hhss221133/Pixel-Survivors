@@ -73,6 +73,10 @@ function LobbyEvents(socket, io, userTimeouts) {
         performCleanup(socket.request.session.username, socket, io);
         userTimeouts.delete(socket.request.session.username);
     });
+
+    socket.on('start game', () => {
+        console.log("hi");
+    });
 }
 
 module.exports = LobbyEvents;
