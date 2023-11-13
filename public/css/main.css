@@ -13,7 +13,9 @@ body {
     overflow: hidden;
     margin:0;
     background-color: black;
-    background-image: url();
+    /* background-image: url('../assets/enemy_skeleton_clipped.png'); */
+    background-repeat: repeat;
+    /* background-size: 150px 150px; */
 }
 
 @keyframes flickerAnimation {
@@ -81,7 +83,7 @@ p {
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-position:center center;
-    padding: 80px 120px 80px 120px
+    padding: 80px 120px 80px 120px;
 }
 
 .login_registration_container {

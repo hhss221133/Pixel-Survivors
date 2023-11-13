@@ -83,8 +83,19 @@ span {
     flex-direction:column;
     column-gap: 10px;
     padding:10px;
+    width:100%;
+    justify-content: center;
+    align-items:center;
+}
+
+.lobby_title {
     background-image: url('../assets/irony_title.png');
-    background-size: contain;
+    background-size:contain;
     background-repeat: no-repeat;
     background-position: center;
+    display:flex;
+    padding-left: 40px;
+    padding-top:10px;
+    padding-bottom:15px;
+    padding-right: 40px;
 }
