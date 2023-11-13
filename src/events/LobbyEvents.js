@@ -1,6 +1,5 @@
 const LobbiesModel = require('../models/LobbiesModel');
-const {deleteRoomID } = require('../middleware/MWSocketSessions');
-const {performCleanup, edit_lobby_status} = require('../middleware/MWLobbiesCleanup');
+const {performCleanup} = require('../middleware/MWLobbiesCleanup');
 
 
 function LobbyEvents(socket, io, userTimeouts) {

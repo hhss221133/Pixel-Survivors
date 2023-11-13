@@ -19,7 +19,7 @@ module.exports = function (io, Session) {
         const sessID = socket.request.session.username;
 
         console.log("");
-        console.log(socket.request.session.username, 'connected');
+        console.log(sessID, 'connected');
         
         clearTimeout(socket.disconnectionTimeout);
 
@@ -34,7 +34,7 @@ module.exports = function (io, Session) {
 
         socket.on('disconnect', (reason) => {
             console.log("");
-            console.log(socket.request.session.username, "disconnected with reason", reason);
+            console.log(sessID, "disconnected with reason", reason);
             
             edit_lobby_status(sessID, socket, 'disable');
 

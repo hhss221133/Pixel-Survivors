@@ -1,5 +1,5 @@
 const LobbiesModel = require('../models/LobbiesModel');
-const { setRoomID, deleteRoomID } = require('../middleware/MWSocketSessions');
+const { setRoomID } = require('../middleware/MWSocketSessions');
 const {performCleanup} = require('../middleware/MWLobbiesCleanup');
 
 

@@ -19,6 +19,7 @@ const Session = session({
     cookie: { maxAge: 300000 }
 });
 app.use(Session);
+app.set('view engine', 'ejs');
 
 //Routes import defined here
 const UserAuth = require('./routes/UserAuth');
@@ -40,3 +41,5 @@ require('./socketHandler')(io, Session);
 
 //Starting the HTTP Server
 httpServer.listen(8000);
+
+console.log('HTTP and WS server started on port 8000');
