@@ -21,7 +21,6 @@ function performCleanup(sessID, socket, io) {
     LobbiesModel.leaveLobby(sessID, socket.request.session.roomID, (err, updatedLobbies, lobbyInfo) => {
         if (err) {
             console.error('Error in lobby delete:', err);
-            
             socket.emit('lobby delete error', "Lobby deletion failed");
         } else {
             roomID = socket.request.session.roomID;
