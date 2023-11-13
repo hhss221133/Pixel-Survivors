@@ -63,7 +63,8 @@ router.post('/register', (req, res) => {
 
 router.get('/lobbies', requireLogin, (req, res) => {
   // If the user is logged in, serve the protected page
-  res.sendFile(path.join(__dirname, '../protected_views/lobbies.html'));
+  // res.sendFile(path.join(__dirname, '../protected_views/lobbies.html'));
+  res.render('lobbies', {username: req.session.username});
 });
 
 router.get('/lobby', requireLogin, (req, res) => {

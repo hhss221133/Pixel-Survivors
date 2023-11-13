@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     logout();
     perform_cleanup();
-    get_profile();
+    // get_profile();
     get_lobbies();
     create_lobby_session();
 });
@@ -48,9 +48,9 @@ function populate_profile(username) {
     username_el.textContent = username;
 }
 
-function get_profile() {
-    socket.emit('get username');
-}
+// function get_profile() {
+//     socket.emit('get username');
+// }
 
 function populate_lobbies(lobbies) {
     const lobbyListElement = document.getElementById('lobby_list');
@@ -122,10 +122,10 @@ function join_lobby_session() {
 }
 
 //Socket Listeners
-socket.on('receive username', (username) => {
-    currentUsername = username;
-    populate_profile(username);
-});
+// socket.on('receive username', (username) => {
+//     currentUsername = username;
+//     populate_profile(username);
+// });
 
 
 socket.on('all lobbies list', (lobbies) => {

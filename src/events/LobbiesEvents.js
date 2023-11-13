@@ -5,13 +5,13 @@ const {performCleanup} = require('../middleware/MWLobbiesCleanup');
 
 function LobbiesEvents(socket, io, userTimeouts) {
     
-    //Use for Lobbies profile section
-    socket.on('get username', () =>{
-        console.log("");
-        console.log(socket.request.session.username, "requested username");
-        console.log("sent username to", socket.request.session.username);
-        socket.emit('receive username', socket.request.session.username);
-    });
+    // //Use for Lobbies profile section
+    // socket.on('get username', () =>{
+    //     console.log("");
+    //     console.log(socket.request.session.username, "requested username");
+    //     console.log("sent username to", socket.request.session.username);
+    //     socket.emit('receive username', socket.request.session.username);
+    // });
 
     // Handle request for lobbies list
     socket.on('request lobbies', () => {
