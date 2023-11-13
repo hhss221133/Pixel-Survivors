@@ -83,4 +83,8 @@ span {
     flex-direction:column;
     column-gap: 10px;
     padding:10px;
+    background-image: url('../assets/irony_title.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
