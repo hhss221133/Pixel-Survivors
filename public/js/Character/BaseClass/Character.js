@@ -135,8 +135,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
     const GetFSMState = () => {return charState;}
 
     const CanCharAttack = function() {
-        return charState == FSM_STATE.MOVE && bCanAttack;
-    }
+        return (charState == FSM_STATE.MOVE || charState == FSM_STATE.KNOCKBACK) && bCanAttack;
+    } 
 
     const GetDirection = function() {
         return {... direction};
@@ -234,6 +234,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         
     };
 
+    const GetMaxHP = () => {return maxHP;}
+
     // deltaTime stores the time in one frame
     const Update = function(now) {
 
@@ -246,10 +248,12 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     return {
         SetMaxHP: SetMaxHP,
+        GetMaxHP: GetMaxHP,
         SetWalkSpeed: SetWalkSpeed,
         SetAttackPower: SetAttackPower,
         GetDirection: GetDirection,
         getXY: sprite.getXY,
+        setXY: sprite.setXY,
         getScale: sprite.getScale,
         CreateSpriteSequences: CreateSpriteSequences,
         MoveCharacter: MoveCharacter,
@@ -284,7 +288,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
         // animation
         GetSequenceList: GetSequenceList,
-        SetSequenceEndToIdle: SetSequenceEndToIdle
+        SetSequenceEndToIdle: SetSequenceEndToIdle,
+        getSequenceEndCallback: sprite.getSequenceEndCallback,
 
     };
 };

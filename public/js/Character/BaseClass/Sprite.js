@@ -12,6 +12,8 @@ const Sprite = function(ctx, x, y) {
 
     const setSequenceEndCallback = function(newCallback) {sequenceEndCallback = newCallback;}
 
+    const getSequenceEndCallback = function() {return sequenceEndCallback;}
+
 
     // This is an object containing the sprite sequence information used by the sprite containing:
     // - `x` - The starting x position of the sprite sequence in the sprite sheet
@@ -201,5 +203,6 @@ const Sprite = function(ctx, x, y) {
         update: update,
         setSequenceEndCallback: setSequenceEndCallback,
         getIndex: getIndex,
+        getSequenceEndCallback: getSequenceEndCallback
     };
 };

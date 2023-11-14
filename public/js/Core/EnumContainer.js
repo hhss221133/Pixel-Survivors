@@ -51,7 +51,7 @@ const BOSS_ATTACK_TYPE = {
     MULTIPLESHOOT: 2,
     FASTSHOOT: 3,
     TELEPORT: 4,
-    AOE: 5
+    EXPLOSION: 5
 };
 
 // states in the finite state machine(FSM)

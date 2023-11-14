@@ -4,6 +4,8 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackCoolDown(2);
 
+    enemy.SetMaxHP(1);
+
     enemy.SetWalkSpeed(80);
 
     enemy.SetThreshold(80, 80, 50);

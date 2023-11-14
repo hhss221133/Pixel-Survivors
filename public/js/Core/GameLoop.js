@@ -4,6 +4,8 @@ const enemies = {};
 
 const projectiles = {};
 
+const explosions = {};
+
 const totalGameTime = 240;   // Total game time in seconds
 
 let actorIndex = 0; // for generating GUID
@@ -56,6 +58,13 @@ const AddProjectile = function(owner, projectileType, startPos, endPos, launchSp
 
     actorIndex++;
     
+};
+
+const AddExplosion = function(owner) {
+    let newExplosionID = owner.GetID() + "_Explosion_" + actorIndex;
+    explosions[newExplosionID] = Explosion(context, 0, 0, gameArea, owner, newExplosionID);
+
+    actorIndex++;
 };
 
 const AddBoss = function(x, y) {
@@ -113,8 +122,8 @@ const GameLoop = function() {
     const InitializeGame = function() {
         // Initialze player, enemy and UI
 
-      //  AddKnight(500, 500);
-        AddWizard(600, 500);
+        AddKnight(500, 500);
+     //   AddWizard(600, 500);
 
         AddBoss(1000, 400);
       //  AddMushroom(1000, 700);
@@ -142,18 +151,26 @@ const GameLoop = function() {
     };
 
     const UpdateAndDraw = function(now) {
-        for(const playerName in players) {
-            const updateTarget = players[playerName];
+        for(const explosionName in explosions) {
+            const updateTarget = explosions[explosionName];
             updateTarget.Update(now);
             updateTarget.draw();
         }
+
+        for(const projectileName in projectiles) {
+            const updateTarget = projectiles[projectileName];
+            updateTarget.Update(now);
+            updateTarget.draw();
+        }
+
         for(const enemyName in enemies) {
             const updateTarget = enemies[enemyName];
             updateTarget.Update(now);
             updateTarget.draw();
         }
-        for(const projectileName in projectiles) {
-            const updateTarget = projectiles[projectileName];
+
+        for(const playerName in players) {
+            const updateTarget = players[playerName];
             updateTarget.Update(now);
             updateTarget.draw();
         }

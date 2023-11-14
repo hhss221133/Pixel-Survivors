@@ -2,7 +2,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const character = Character(ctx, x, y, gameArea, actorID);
 
-    character.SetMaxHP(5);
+    character.SetMaxHP(50);
 
     const invulnerabilityTime = 1; // in second
 

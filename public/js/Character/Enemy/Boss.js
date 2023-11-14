@@ -2,13 +2,13 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const character = Character(ctx, x, y, gameArea, enemyID);
 
-    character.SetMaxHP(200);
+    const attackCoolDown = {1: 4, 2: 3.5, 3: 3, 4: 2.5, 5: 2.5};
 
-    character.SetAttackCoolDown(5);
+    character.SetMaxHP(175);
+
+    character.SetAttackCoolDown(attackCoolDown[1]);
 
     character.SetWalkSpeed(50);
-
-    character.SetKnockBackSpeed(150);
 
     let attackType = BOSS_ATTACK_TYPE.NONE;
 
@@ -18,7 +18,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let xMoveThreshold = 20;   // to prevent the enemy from changing direction endlessly
 
-    let summonCoolDown = {1: 5, 2: 18, 3: 15, 4: 13, 5: 10}; 
+    let summonCoolDown = {1: 15, 2: 13, 3: 11, 4: 9, 5: 8}; 
 
     let bCanSummon = true;
 
@@ -34,7 +34,11 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const multipleShootSpeed = {1: 150, 2: 200, 3: 225, 4: 250, 5: 300};
 
+    const explosionTime = {4: 2, 5: 1.5};
 
+    const explosionCount = {4: 5, 5: 7};
+
+    const GetExplosionTime = () => {return explosionTime[bossStage];}
 
     const GetAttackType = () => {return attackType;}
 
@@ -53,17 +57,20 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         fastshootRight: {x:0, y:186, width:140, height:93, count:7, timing:200, loop:false, isLeft: false, startingIndex: 0, attackIndex: 4},
         fastshootLeft: {x:0, y:837, width:140, height:93, count:7, timing:200, loop:false, isLeft: true, startingIndex: 9, attackIndex: 5},
 
-        teleportStartRight: {x:0, y:279, width:140, height:93, count:10, timing:100, loop:false, isLeft: false, startingIndex: 0},
-        teleportStartLeft: {x:0, y:930, width:140, height:93, count:10, timing:100, loop:false, isLeft: true, startingIndex: 9},
+        teleportStartRight: {x:0, y:279, width:140, height:93, count:10, timing:80, loop:false, isLeft: false, startingIndex: 0},
+        teleportStartLeft: {x:0, y:930, width:140, height:93, count:10, timing:80, loop:false, isLeft: true, startingIndex: 9},
 
         summonRight: {x:0, y:372, width:140, height:93, count:9, timing:150, loop:false, isLeft: false, startingIndex: 0},
         summonLeft: {x:0, y:1023, width:140, height:93, count:9, timing:150, loop:false, isLeft: true, startingIndex: 9},
 
+        explosionRight: {x:0, y:372, width:140, height:93, count:9, timing:150, loop:false, isLeft: false, startingIndex: 0, attackIndex: 5},
+        explosionLeft: {x:0, y:1023, width:140, height:93, count:9, timing:150, loop:false, isLeft: true, startingIndex: 9, attackIndex: 4},
+
         dieRight: {x:0, y:465, width:140, height:93, count:3, timing:800, loop:false, isLeft: false, startingIndex: 0},
         dieLeft: {x:0, y:1116, width:140, height:93, count:3, timing:800, loop:false, isLeft: true, startingIndex: 9},
 
-        teleportEndRight: {x:0, y:558, width:140, height:93, count:10, timing:100, loop:false, isLeft: false, startingIndex: 0},
-        teleportEndLeft: {x:0, y:1209, width:140, height:93, count:10, timing:100, loop:false, isLeft: true, startingIndex: 9},
+        teleportEndRight: {x:0, y:558, width:140, height:93, count:10, timing:80, loop:false, isLeft: false, startingIndex: 0},
+        teleportEndLeft: {x:0, y:1209, width:140, height:93, count:10, timing:80, loop:false, isLeft: true, startingIndex: 9},
     };
 
     character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 3, "/public/assets/boss.png");
@@ -128,29 +135,65 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const Teleport = function() {
 
+        character.setSequenceEndCallback(TeleportAction);
+
+        IsPlayerAtLeft()? character.setSequence(sequences.teleportStartLeft, sequences.teleportEndLeft) :
+            character.setSequence(sequences.teleportStartRight, sequences.teleportEndRight);
+    };
+
+    const TeleportAction = function() {
+        character.SetSequenceEndToIdle();
+        // teleport the boss 
+
+        const {x, y} = FindRandomSpawnPosition();
+        character.setXY(x, y);
+    }
+
+    const ExplosionAttack = function() {
+        attackType = BOSS_ATTACK_TYPE.EXPLOSION;
+        IsPlayerAtLeft()? character.setSequence(sequences.explosionLeft, sequences.idleLeft) :
+            character.setSequence(sequences.explosionRight, sequences.idleRight);
     };
 
     const RandomAttack = function() {
 
         character.StartAttack();
 
-        MultipleShoot();
-        return;
-
         if (TrySummonEnemy()) return; // summoning enemy has highest priority 
+
+        const ranNum = Math.floor(Math.random() * 10);
 
         if (bossStage == 1) {
             // stage 1 => P(Normal Shoot) = 0.7, P(Multiple Shoot) = 0.3
-            const ranNum = Math.floor(Math.random() * 10);
             (ranNum <= 2)? MultipleShoot() : NormalShoot();
         }
 
         else if (bossStage == 2) {
-
+            // stage 2 => P(Normal Shoot) = 0.5, P(Multiple Shoot) = 0.3, P(Teleport) = 0.2
+            if (ranNum <= 1) Teleport();
+            else if (ranNum <= 4) MultipleShoot();
+            else NormalShoot();
         }
 
+        else if (bossStage == 3) {
+            // stage 3 => P(Normal Shoot) = 0.2, P(Multiple Shoot) = 0.3, P(Fast Shoot) = 0.3, P(Teleport) = 0.2
+            if (ranNum <= 1) Teleport();
+            else if (ranNum <= 4) FastShoot();
+            else if (ranNum <= 7) MultipleShoot();
+            else NormalShoot();
+        }
+        else if (bossStage == 4) {
+            // stage 4 => P(Multiple Shoot) = 0.4, P(Fast Shoot) = 0.2, P(Explosion) = 0.4
+            if (ranNum <= 3) MultipleShoot();
+            else if (ranNum <= 5) FastShoot();
+            else ExplosionAttack();
+        }
         else {
-
+            // stage 5 => P(Multiple Shoot) = 0.2, P(Fast Shoot) = 0.3, P(Explosion) = 0.3, P(Teleport) = 0.2
+            if (ranNum <= 1) MultipleShoot();
+            else if (ranNum <= 4) FastShoot();
+            else if (ranNum <= 6) Teleport();
+            else ExplosionAttack();
         }
 
     };
@@ -166,11 +209,13 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     }
 
     const HandleSpawnAttack = function() {
-        // spawn projectile or AOE when the sprite index is correct
+        // spawn projectile or exploision when the sprite index is correct
 
         if (!IsAttack() || !character.CanSpawnProjectile()) return;
 
         const sequence = character.getCurSequence();
+
+        if (!sequence.attackIndex) return;
 
         if ((sequence.isLeft && character.getIndex() > sequence.attackIndex) || (!sequence.isLeft && character.getIndex() <sequence.attackIndex)) return;
 
@@ -186,8 +231,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
             case BOSS_ATTACK_TYPE.FASTSHOOT:
                 SpawnFastPlasmaball();
                 break;
-            case BOSS_ATTACK_TYPE.AOE:
-                SpawnAOE();
+            case BOSS_ATTACK_TYPE.EXPLOSION:
+                SpawnExplosion();
                 break;
         }
     };
@@ -249,8 +294,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     };
 
-    const SpawnAOE = function() {
-
+    const SpawnExplosion = function() {
+        for (let i = 0; i < explosionCount[bossStage]; i++) {
+            AddExplosion(enemies[character.GetID()]);
+        }
     };
 
     const GetProjectileSpawnPos = function() {
@@ -278,14 +325,16 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         const enemyNum = Object.keys(enemies).length - 1;
 
-        if (enemyNum >= summonMaxNum[bossStage]) return false;
+        if (enemyNum >= summonMaxNum[bossStage] * 0.7) return false;
 
         // should summon enemy
         (character.getCurSequence().isLeft)? character.setSequence(sequences.summonLeft, sequences.idleLeft) :
             character.setSequence(sequences.summonRight, sequences.idleRight);
 
-        setTimeout(SummonEnemy, 900);
-        setTimeout(ResetCanSummon, Math.random() * (summonCoolDown[bossStage]*1.3 - summonCoolDown[bossStage]*0.7) + summonCoolDown[bossStage]*0.7);
+        setTimeout(SummonEnemy, 5 * sequences.summonRight.timing);
+        let coolDown = Math.random() * (summonCoolDown[bossStage]*1.3 - summonCoolDown[bossStage]*0.7) + summonCoolDown[bossStage]*0.7;
+        coolDown *= 1000;
+        setTimeout(ResetCanSummon, coolDown);
         return true;
 
     }
@@ -401,8 +450,9 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         character.DealDamage(damage);
 
-        StartKnockBack(playerXY);
-        
+        CheckStageChange();
+
+
         let HP = character.GetCurHP();
         if (HP > 0) return;
 
@@ -412,29 +462,14 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         
     };
 
-    const StartKnockBack = function(playerXY) {
+    const CheckStageChange = function() {
+        if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) bossStage = 2;
+        else if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) bossStage = 3;
+        else if (bossStage == 3 && character.GetCurHP() <= character.GetMaxHP() * 0.4) bossStage = 4;
+        else if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) bossStage = 5;
+        character.SetAttackCoolDown(attackCoolDown[bossStage]);
+    }
 
-        const enemyXY = character.getXY();
-
-        let knockBackDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
-
-        if (playerXY.x > enemyXY.x) {
-            knockBackDir.horizontal = DIRECTION_X.LEFT;
-        }
-        else if (playerXY.x < enemyXY.x) {
-            knockBackDir.horizontal = DIRECTION_X.RIGHT;
-        }
-
-        if (playerXY.y > enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
-            knockBackDir.vertical = DIRECTION_Y.UP;
-        }
-        else if (playerXY.y < enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
-            knockBackDir.vertical = DIRECTION_Y.DOWN;
-        } 
-
-        character.StartKnockBack(knockBackDir);
-
-    };
 
     return {
         Update: Update,
@@ -445,7 +480,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         GetHitBox: GetHitBox,
         GetAttackType: GetAttackType,
         GetAttackPower: character.GetAttackPower,
-        TakeDamage: TakeDamage
+        TakeDamage: TakeDamage,
+        GetExplosionTime: GetExplosionTime
     }
 
 };

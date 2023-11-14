@@ -4,6 +4,8 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackCoolDown(2);
 
+    enemy.SetMaxHP(2);
+
     enemy.SetKnockBackSpeed(400);
 
     const sequences = {

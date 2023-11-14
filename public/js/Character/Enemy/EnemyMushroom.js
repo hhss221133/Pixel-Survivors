@@ -7,6 +7,8 @@ const EnemyMushroom = function(ctx, x, y, gameArea, enemyID) {
     enemy.SetKnockBackSpeed(350);
 
     enemy.SetThreshold(300, 150, 1000);
+
+    enemy.SetMaxHP(3);
     
     let fireballSpeed = 150;
 
