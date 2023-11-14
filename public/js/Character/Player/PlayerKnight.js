@@ -21,7 +21,7 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "/public/assets/player_knight.png");
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, "assets/original/player_knight.png", "assets/white/player_knight_white.png");
 
 
     const GetHitBox = function() {

@@ -7,6 +7,14 @@ const Sprite = function(ctx, x, y) {
     // This is the image object for the sprite sheet.
     const sheet = new Image();
 
+    const whiteSheet = new Image();
+
+    const MaxWhiteSheetFrameNum = 10;
+
+    let curWhiteSheetFrameNum = 0;
+
+    let bShouldUseWhiteSheet = false;
+
     // used to notice others when animation ends
     let sequenceEndCallback = null;
 
@@ -40,10 +48,13 @@ const Sprite = function(ctx, x, y) {
 
     // This function uses a new sprite sheet in the image object.
     // - `spriteSheet` - The source of the sprite sheet (URL)
-    const useSheet = function(spriteSheet) {
+    const useSheet = function(spriteSheet, whiteSpritesheet) {
         sheet.src = spriteSheet;
+        if (whiteSpritesheet)   whiteSheet.src = whiteSpritesheet;
         return this;
     };
+
+    const SetShouldUseWhiteSheet = () => {bShouldUseWhiteSheet = true;}
 
     const getIndex = () => {return index};
 
@@ -108,8 +119,22 @@ const Sprite = function(ctx, x, y) {
 
         
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
-            x - size.width / 2, y - size.height / 2, size.width, size.height);
+
+        if (bShouldUseWhiteSheet && curWhiteSheetFrameNum < MaxWhiteSheetFrameNum) {
+            ++curWhiteSheetFrameNum;
+            if (curWhiteSheetFrameNum >= MaxWhiteSheetFrameNum) {
+                bShouldUseWhiteSheet = false;
+                curWhiteSheetFrameNum = 0;
+            }
+            ctx.drawImage(whiteSheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
+                x - size.width / 2, y - size.height / 2, size.width, size.height);
+
+        }
+        else {
+            ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
+                x - size.width / 2, y - size.height / 2, size.width, size.height);
+        }
+
 
         /* Restore saved settings */
         ctx.restore();
@@ -203,6 +228,7 @@ const Sprite = function(ctx, x, y) {
         update: update,
         setSequenceEndCallback: setSequenceEndCallback,
         getIndex: getIndex,
-        getSequenceEndCallback: getSequenceEndCallback
+        getSequenceEndCallback: getSequenceEndCallback,
+        SetShouldUseWhiteSheet: SetShouldUseWhiteSheet
     };
 };

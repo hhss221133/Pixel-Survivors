@@ -13,7 +13,7 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
     else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.MULTIPLESHOOT) scale = 0.4;
     else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.NORMALSHOOT) scale = 1.3
 
-    projectile.CreateSpriteSequences(sequences, sequences.idle, scale, "/public/assets/plasmaball.png");
+    projectile.CreateSpriteSequences(sequences, sequences.idle, scale, "assets/original/plasmaball.png");
     
 
     const GetHitBox = function() {

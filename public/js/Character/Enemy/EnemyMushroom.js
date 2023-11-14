@@ -26,7 +26,7 @@ const EnemyMushroom = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:1050, width:150, height:150, count:4, timing:200, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.8, "/public/assets/enemy_mushroom.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.8, "assets/original/enemy_mushroom.png", "assets/white/enemy_mushroom_white.png");
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();

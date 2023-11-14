@@ -7,7 +7,7 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
         explode: {x:0, y:0, width:191, height:141, count:6, timing:50, loop:false, isLeft: false, startingIndex: 0}
     }
 
-    projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, "/public/assets/waterball.png");
+    projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, "assets/original/waterball.png");
 
     const GetHitBox = function() {
         const size = projectile.getDisplaySize();

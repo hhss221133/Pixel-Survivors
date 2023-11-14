@@ -22,7 +22,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:1050, width:150, height:150, count:4, timing:100, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "/public/assets/enemy_skeleton.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "assets/original/enemy_skeleton.png", "assets/white/enemy_skeleton_white.png");
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();

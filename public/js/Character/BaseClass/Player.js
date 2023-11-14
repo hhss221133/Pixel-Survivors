@@ -129,10 +129,10 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         character.DealDamage(damage);
 
         StartKnockBack(enemyXY);
+        character.SetShouldUseWhiteSheet();
         
         let HP = character.GetCurHP();
 
-        console.log("Player Remaining HP: " + HP);
         if (HP > 0) return;
 
         // character die

@@ -91,6 +91,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         character.DealDamage(damage);
 
         StartKnockBack(playerXY);
+        character.SetShouldUseWhiteSheet();
         
         let HP = character.GetCurHP();
         if (HP > 0) return;
@@ -191,6 +192,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         getDisplaySize: character.getDisplaySize,
         Update: Update,
         GetID: character.GetID,
+        SetShouldUseWhiteSheet: character.SetShouldUseWhiteSheet,
 
         // FSM State related
         GetFSMState: character.GetFSMState,

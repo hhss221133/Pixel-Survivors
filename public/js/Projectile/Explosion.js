@@ -13,7 +13,7 @@ const Explosion = function(ctx, x, y, gameArea, owner, actorID) {
         explode: {x:0, y:192, width:192, height:192, count:16, timing:35, loop:false, isLeft: false, startingIndex: 0}
     };
 
-    sprite.setSequence(sequences.idle).setScale(1).useSheet("/public/assets/explosion.png");
+    sprite.setSequence(sequences.idle).setScale(1).useSheet("assets/original/explosion.png");
 
     const SetRandomPosition = function() {
         const randomX = Math.random() * (gameArea.getRight() - gameArea.getLeft()) + gameArea.getLeft();
