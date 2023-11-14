@@ -41,7 +41,6 @@ const EnemyMushroom = function(ctx, x, y, gameArea, enemyID) {
 
     const HandleSpawnProjectile = function() {
 
-        // only enable the hitbox when the character is attacking
         if (!enemy.CanSpawnProjectile()) return;
 
         const sequence = enemy.getCurSequence();

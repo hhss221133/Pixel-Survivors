@@ -36,13 +36,23 @@ const ENEMY_TYPE = {
 
 const PROJECTILE_TYPE = {
     WATERBALL: "Waterball",
-    FIREBALL: "Fireball"
+    FIREBALL: "Fireball",
+    PLASMABALL: "Plasmaball"
 };
 
 const ACTOR_TYPE = {
     PLAYER: 0,
     ENEMY: 1
-}
+};
+
+const BOSS_ATTACK_TYPE = {
+    NONE: 0,
+    NORMALSHOOT: 1,
+    MULTIPLESHOOT: 2,
+    FASTSHOOT: 3,
+    TELEPORT: 4,
+    AOE: 5
+};
 
 // states in the finite state machine(FSM)
 const FSM_STATE = {

@@ -74,7 +74,7 @@ const Projectile = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
         sprite.update(now);
 
         MoveProjectile();
-
+        
     };
 
 

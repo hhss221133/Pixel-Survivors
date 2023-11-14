@@ -111,7 +111,11 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     const ResetCanAttack = () => {bCanAttack = true;}
 
-    sprite.setSequenceEndCallback(ToIdle);
+    const SetSequenceEndToIdle = function() {
+        sprite.setSequenceEndCallback(ToIdle);
+    }
+    SetSequenceEndToIdle();
+
 
     const SetWalkSpeed = function(NewWalkSpeed) {
         walkSpeed = NewWalkSpeed;
@@ -280,6 +284,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
         // animation
         GetSequenceList: GetSequenceList,
+        SetSequenceEndToIdle: SetSequenceEndToIdle
 
     };
 };

@@ -49,6 +49,9 @@ const AddProjectile = function(owner, projectileType, startPos, endPos, launchSp
         case PROJECTILE_TYPE.WATERBALL:
             projectiles[newProjectileID] = Waterball(context, startPos.x, startPos.y, gameArea, owner, endPos, launchSpeed, newProjectileID);
             break;
+        case PROJECTILE_TYPE.PLASMABALL:
+            projectiles[newProjectileID] = Plasmaball(context, startPos.x, startPos.y, gameArea, owner, endPos, launchSpeed, newProjectileID);
+            break;
     }
 
     actorIndex++;
@@ -79,7 +82,27 @@ const AddPlayer = function(playerType, playerX, playerY) {
     actorIndex++;
 };
 
-let RemoveActorQueue = {};
+const FindRandomSpawnPosition = function() {
+    // Find a random position to spawn enemy or collectable health.
+    // This position should not be near to the player
+ 
+    const IsEmptyPosition = function(x, y) {
+        // check if there are any players near the target position
+        for(const playerName in players) {
+            const curPlayerPos = players[playerName].getXY();
+            const disToPlayer = Math.sqrt(Math.pow((curPlayerPos.x - x), 2) + Math.pow((curPlayerPos.y - y), 2) );
+            if (disToPlayer < 100) return false;
+        }
+        return true;
+    };
+
+    let randomX, randomY;
+    do {
+        randomX = Math.random() * (gameArea.getRight() - gameArea.getLeft()) + gameArea.getLeft();
+        randomY = Math.random() * (gameArea.getBottom() - gameArea.getTop()) + gameArea.getTop();
+    } while (!IsEmptyPosition(randomX, randomY));
+    return {x: randomX, y: randomY};
+};
 
 /************************************************************************************************************************************/
 
@@ -90,8 +113,8 @@ const GameLoop = function() {
     const InitializeGame = function() {
         // Initialze player, enemy and UI
 
-        AddKnight(500, 500);
-     //   AddWizard(600, 500);
+      //  AddKnight(500, 500);
+        AddWizard(600, 500);
 
         AddBoss(1000, 400);
       //  AddMushroom(1000, 700);

@@ -7,17 +7,24 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
         explode: {x:0, y:0, width:191, height:141, count:6, timing:50, loop:false, isLeft: false, startingIndex: 0}
     }
 
-    projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, "/public/assets/plasmaball.png");
+    let scale;
+
+    if (owner.GetAttackType() == BOSS_ATTACK_TYPE.FASTSHOOT) scale = 1;
+    else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.MULTIPLESHOOT) scale = 0.4;
+    else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.NORMALSHOOT) scale = 1.3
+
+    projectile.CreateSpriteSequences(sequences, sequences.idle, scale, "/public/assets/plasmaball.png");
+    
 
     const GetHitBox = function() {
         const size = projectile.getDisplaySize();
 
         const {x, y} = projectile.getXY();
 
-        const top = y - size.height * 0.01;
-        const left = x - size.width * 0.15;
-        const bottom = y + size.height * 0.45;
-        const right = x + size.width * 0.15;
+        const top = y + size.height * 0.1;
+        const left = x - size.width * 0.1;
+        const bottom = y + size.height * 0.32;
+        const right = x + size.width * 0.1;
 
         return BoundingBox(ctx, top, left, bottom, right);
     };
@@ -47,7 +54,7 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
         projectile.Update(now);
 
         HandleProjectileHitBox();
-        
+
     };
 
     return {

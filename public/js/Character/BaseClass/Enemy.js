@@ -147,10 +147,16 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         }
     }
 
+    const IsPlayerAtLeft = function() {
+        if (!targetPlayer) return false;
+
+        return (targetPlayer.getXY().x < character.getXY().x)? true : false;
+    }
+
     const Attack = function() {
         character.StartAttack();
 
-        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().attackLeft, character.GetSequenceList().idleLeft) :
+        (IsPlayerAtLeft())? character.setSequence(character.GetSequenceList().attackLeft, character.GetSequenceList().idleLeft) :
             character.setSequence(character.GetSequenceList().attackRight, character.GetSequenceList().idleRight);
     };
 
@@ -207,6 +213,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         CanSpawnProjectile: character.CanSpawnProjectile,
         ResetCanSpawnProjectile: character.ResetCanSpawnProjectile,
         GetTargetPlayer: GetTargetPlayer,
+        IsPlayerAtLeft: IsPlayerAtLeft,
         
     }
 };

@@ -70,6 +70,7 @@ const Sprite = function(ctx, x, y) {
     // This function sets the sprite sequence.
     // - `newSequence` - The new sprite sequence to be used by the sprite
     const setSequence = function(newSequence, newEndSequence = null) {
+        if (sequence == newSequence) return;
         sequence = newSequence;
         index = newSequence.startingIndex;
         lastUpdate = 0;
