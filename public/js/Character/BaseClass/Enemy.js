@@ -175,6 +175,8 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     const GetActorType = () => ACTOR_TYPE.ENEMY;
 
+    const IsBoss = () => {return false;}
+
     return {
         SetMaxHP: character.SetMaxHP,
         SetWalkSpeed: character.SetWalkSpeed,
@@ -216,6 +218,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         ResetCanSpawnProjectile: character.ResetCanSpawnProjectile,
         GetTargetPlayer: GetTargetPlayer,
         IsPlayerAtLeft: IsPlayerAtLeft,
+        IsBoss: IsBoss,
         
     }
 };

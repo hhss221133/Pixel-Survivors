@@ -128,7 +128,8 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
         GetHitBox: GetHitBox,
         GetAttackHitBox: GetAttackHitBox,
         TakeDamage: enemy.TakeDamage,
-        GetID: enemy.GetID
+        GetID: enemy.GetID,
+        IsBoss: enemy.IsBoss,
 
     }
 };

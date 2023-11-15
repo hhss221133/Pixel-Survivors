@@ -126,6 +126,7 @@ const EnemyMushroom = function(ctx, x, y, gameArea, enemyID) {
         TakeDamage: enemy.TakeDamage,
         GetID: enemy.GetID,
         GetAttackPower: enemy.GetAttackPower,
+        IsBoss: enemy.IsBoss,
 
     }
 };

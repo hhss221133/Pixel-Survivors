@@ -8,7 +8,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     let charState = FSM_STATE.MOVE;
 
-    let attackCoolDown = 0.5; // in seconds
+    let attackCoolDown = 1; // in seconds
 
     let bCanAttack = true;
 
@@ -37,6 +37,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
     let direction = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
 
     const GetID = () => {return ID;}
+
+    const SetCurHP = (newHP) => {curHP = newHP;}
 
     const EmptyHitTargetArray = () => {hitTargetArray = [];}
 
@@ -86,6 +88,8 @@ const Character = function(ctx, x, y, gameArea, actorID) {
     };
 
     const GetCurHP = () => {return curHP;}
+
+    const ResetHP = () => {curHP = maxHP;}
 
     const ToIdle = function() {
 
@@ -291,6 +295,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         CanSpawnProjectile: CanSpawnProjectile,
         ResetCanSpawnProjectile: ResetCanSpawnProjectile,
         AddHealth: AddHealth,
+        ResetHP: ResetHP,
 
         // animation
         GetSequenceList: GetSequenceList,

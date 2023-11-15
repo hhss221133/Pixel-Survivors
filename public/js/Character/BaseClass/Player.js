@@ -2,13 +2,17 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const character = Character(ctx, x, y, gameArea, actorID);
 
-    character.SetMaxHP(50);
-
     const invulnerabilityTime = 1; // in second
 
     let bCanTakeDamage = true;
 
     let playerType = PLAYER_TYPE.KNIGHT;
+
+    let playerScore = 0;
+
+    const playerRespawnTime = 15; // in second
+
+    let respawnTimer = null;
 
     /* Handle the keydown of ASDW keys for movement */
     $(document).on("keydown", function(event) {
@@ -26,6 +30,13 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     const SetPlayerType = function(newType) {
         playerType = newType;
     };
+
+    const AddPlayerScore = function(isEnemyBoss) {
+        playerScore = (isEnemyBoss)? playerScore + 3 : playerScore + 2;
+        console.log("Score: " + playerScore);
+    }
+
+    const GetPlayerScore = () => {return playerScore;}
 
     const HandleMovementInputDown = function(keyCode) {
         /* not movement key, return */
@@ -98,6 +109,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const HandlePlayerDead = function() {
 
+        if (bossRef && !bossRef.GetTargetPlayer()) bossRef.FindTargetPlayer();
+
         character.setSequenceEndCallback(PlayerDie);
         // stop the player
         character.ChangeSpriteDirection({horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP});
@@ -107,16 +120,19 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     };
     
     const PlayerDie = function() {
-        setTimeout(DisposePlayer, 2000);
+        respawnTimer = setTimeout(RespawnPlayer, playerRespawnTime * 1000);
     };
     
-    const DisposePlayer = function() {
-        for (playerName in players) {
-            if (players[playerName].GetID() == character.GetID()) {
-                delete players[character.GetID()];
-                return;
-            } 
-        }
+    const RespawnPlayer = function() {
+        if (respawnTimer) respawnTimer = null;
+        if (character.GetFSMState() != FSM_STATE.DEAD) return;
+
+        character.ResetHP();
+        character.SetFSMState(FSM_STATE.MOVE);
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().idleLeft) :
+            character.setSequence(character.GetSequenceList().idleRight); 
+
+        if (bossRef && !bossRef.GetTargetPlayer()) bossRef.FindTargetPlayer();
     }
 
     const TakeDamage = function(damage, enemyXY) {
@@ -213,6 +229,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         TakeDamage: TakeDamage,
         GetCurHP: character.GetCurHP,
         AddHealth: character.AddHealth,
+
+        AddPlayerScore: AddPlayerScore,
 
     };
 };

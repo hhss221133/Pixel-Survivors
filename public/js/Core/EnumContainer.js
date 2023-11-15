@@ -42,7 +42,7 @@ const PROJECTILE_TYPE = {
 
 const ACTOR_TYPE = {
     PLAYER: 0,
-    ENEMY: 1
+    ENEMY: 1,
 };
 
 const BOSS_ATTACK_TYPE = {

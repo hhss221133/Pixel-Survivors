@@ -14,7 +14,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let targetPlayer = null;
 
-    let moveThreshold = 500;
+    let moveThreshold = 600;
 
     let xMoveThreshold = 20;   // to prevent the enemy from changing direction endlessly
 
@@ -24,7 +24,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let bossStage = 1; // boss has 3 stages, attack patterns change with it
 
-    const summonMaxNum = {1: 2, 2: 3, 3: 4, 4: 5, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
+    const summonMaxNum = {1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
 
     const normalShootSpeed = {1: 200, 2: 250, 3: 300};
 
@@ -99,9 +99,19 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const FindTargetPlayer = function() {
 
-        let keys = Object.keys(players);
+        targetPlayer = null;
 
-        targetPlayer = players[keys[parseInt(keys.length * Math.random())]];
+        const playerList = {... players};
+        for(const playerName in playerList) {
+            if (playerList[playerName].GetFSMState() == FSM_STATE.DEAD) {
+                delete playerList[playerName];
+            }
+        }
+
+        let keys = Object.keys(playerList);
+
+        targetPlayer = playerList[keys[parseInt(keys.length * Math.random())]];
+        
     }
 
     FindTargetPlayer();
@@ -463,6 +473,18 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         
     };
 
+    const BossToIdle = function() {
+
+        character.SetFSMState(FSM_STATE.MOVE);
+
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().idleLeft) :
+            character.setSequence(character.GetSequenceList().idleRight);
+
+        character.EmptyHitTargetArray();
+        FindTargetPlayer();
+    };
+    character.setSequenceEndCallback(BossToIdle);
+
     const CheckStageChange = function() {
         if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) bossStage = 2;
         else if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) bossStage = 3;
@@ -470,6 +492,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         else if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) bossStage = 5;
         character.SetAttackCoolDown(attackCoolDown[bossStage]);
     }
+
+    const IsBoss = () => {return true;}
+
+    const GetTargetPlayer = () => {return targetPlayer;}
 
 
     return {
@@ -482,7 +508,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         GetAttackType: GetAttackType,
         GetAttackPower: character.GetAttackPower,
         TakeDamage: TakeDamage,
-        GetExplosionTime: GetExplosionTime
+        GetExplosionTime: GetExplosionTime,
+        IsBoss: IsBoss,
+        GetTargetPlayer: GetTargetPlayer,
+        FindTargetPlayer: FindTargetPlayer,
     }
 
 };

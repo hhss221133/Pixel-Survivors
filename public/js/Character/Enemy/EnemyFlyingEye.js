@@ -8,7 +8,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetWalkSpeed(80);
 
-    enemy.SetThreshold(80, 80, 50);
+    enemy.SetThreshold(50, 50, 50);
 
     enemy.SetKnockBackSpeed(500);
 
@@ -96,8 +96,6 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         }
     };
 
-
-
     const Update = function(now) {
         enemy.Update(now);
 
@@ -134,6 +132,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         GetAttackHitBox: GetAttackHitBox,
         TakeDamage: enemy.TakeDamage,
         GetID: enemy.GetID,
+        IsBoss: enemy.IsBoss,
 
         
 

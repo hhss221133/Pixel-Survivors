@@ -1,8 +1,14 @@
 const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
+    const maxHP = 10;
+
     const player = Player(ctx, x, y, gameArea, actorID);
 
     let playerType = PLAYER_TYPE.KNIGHT;
+
+    player.SetMaxHP(maxHP);
+
+    player.SetAttackCoolDown(0.5);
 
     player.SetWalkSpeed(300);
 
@@ -104,11 +110,11 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
                 if (player.TryAddHitTargetToArray(enemies[enemyName])) {
                     // deal damage to enemy
                     enemies[enemyName].TakeDamage(player.GetAttackPower(), player.getXY());
+                    player.AddPlayerScore(enemies[enemyName].IsBoss());
                 }
             }
         }
     };
-
 
     const Update = function(now) {
 
@@ -134,5 +140,6 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
         GetID: player.GetID,
         GetActorType: player.GetActorType,
         AddHealth: player.AddHealth,
+        AddPlayerScore: player.AddPlayerScore,
     };
 };

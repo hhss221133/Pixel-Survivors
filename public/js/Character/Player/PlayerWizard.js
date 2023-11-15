@@ -4,11 +4,15 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
     
     const magicSpeed = 300;
 
+    const maxHP = 3;
+
     let playerType = PLAYER_TYPE.WIZARD;
 
-    player.SetAttackCoolDown(0.8);
+    player.SetMaxHP(maxHP);
 
-    player.SetWalkSpeed(250);
+    player.SetAttackCoolDown(1);
+
+    player.SetWalkSpeed(180);
 
     const sequences = {
         idleRight: {x:0, y:20, width:128, height:128, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
@@ -104,5 +108,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         GetID: player.GetID,
         GetActorType: player.GetActorType,
         AddHealth: player.AddHealth,
+        AddPlayerScore: player.AddPlayerScore,
     };
 };

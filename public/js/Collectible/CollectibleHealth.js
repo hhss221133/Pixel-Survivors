@@ -5,14 +5,10 @@ const CollectibleHealth = function(actorID){
 
     const healthPoint = 1;
 
-    const GetRanNumInRange = function(min, max) {
-        return Math.random() * (max - min) + min;
-    };
-
     let moveSpeed = GetRanNumInRange(200, 1000);
     let velocity = {x: 0, y: 0};
 
-    const FindVelocity = function() {
+    const CalculateVelocity = function() {
         const ranNum = Math.floor(Math.random() * 4); // 0,1,2,3
 
         let startPos = {x: 0, y: 0};
@@ -56,7 +52,7 @@ const CollectibleHealth = function(actorID){
         velocity = {x: Math.cos(angle) * moveSpeed, y: Math.sin(angle) * moveSpeed};
 
     };
-    FindVelocity();
+    CalculateVelocity();
 
     const MoveCollectible = function() {
         let { x, y } = sprite.getXY();
@@ -79,6 +75,7 @@ const CollectibleHealth = function(actorID){
 
             const curPlayer = players[playerName];
             if (!GetHitBox().intersect(curPlayer.GetHitBox())) continue;
+            if (curPlayer.GetFSMState() == FSM_STATE.DEAD) continue;
 
             curPlayer.AddHealth(healthPoint);
             DisposeThis();

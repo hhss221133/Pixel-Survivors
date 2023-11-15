@@ -10,9 +10,17 @@ const collectibles = {};
 
 const totalGameTime = 240;   // Total game time in seconds
 
+const healthAppearIntervalMin = 5000; // in miliseconds
+
+const healthAppearIntervalMax = 9000; // in miliseconds
+
 let actorIndex = 0; // for generating GUID
 
 let deltaTime = 0.0167; // default frame time for 60fps, this will be calculated each frame by simply frame[i] - frame[i-1]
+
+let collectibleTimer = null;
+
+let bossRef = null;
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
@@ -47,6 +55,8 @@ const AddCollectibleHealth = function() {
     let newCollectibleID = "CollectibleHealth_" + actorIndex;
     collectibles[newCollectibleID] = CollectibleHealth(newCollectibleID);
     actorIndex++;
+
+    collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
 }
 
 const AddProjectile = function(owner, projectileType, startPos, endPos, launchSpeed) {
@@ -79,6 +89,8 @@ const AddBoss = function(x, y) {
     let newBossID = "Boss" + "_" + actorIndex; 
     enemies[newBossID] = Boss(context, x, y, gameArea, newBossID);
     actorIndex++;
+
+    bossRef = enemies[newBossID];
 };
 
 const AddKnight = (x, y) => AddPlayer(PLAYER_TYPE.KNIGHT, x, y);
@@ -121,6 +133,10 @@ const FindRandomSpawnPosition = function() {
     return {x: randomX, y: randomY};
 };
 
+const GetRanNumInRange = function(min, max) {
+    return Math.random() * (max - min) + min;
+};
+
 /************************************************************************************************************************************/
 
 const GameLoop = function() {
@@ -130,11 +146,11 @@ const GameLoop = function() {
     const InitializeGame = function() {
         // Initialze player, enemy and UI
 
-        AddCollectibleHealth();
+        collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
         AddKnight(500, 500);
-     //   AddWizard(600, 500);
+   //     AddWizard(600, 500);
 
-     //   AddBoss(1000, 400);
+    //    AddBoss(1000, 400);
       
     };
 
