@@ -133,5 +133,6 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
         GetFSMState: player.GetFSMState,
         GetID: player.GetID,
         GetActorType: player.GetActorType,
+        AddHealth: player.AddHealth,
     };
 };

@@ -6,11 +6,13 @@ const projectiles = {};
 
 const explosions = {};
 
+const collectibles = {};
+
 const totalGameTime = 240;   // Total game time in seconds
 
 let actorIndex = 0; // for generating GUID
 
-let deltaTime = 0.0167; // default frame time for 60fps
+let deltaTime = 0.0167; // default frame time for 60fps, this will be calculated each frame by simply frame[i] - frame[i-1]
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
@@ -40,6 +42,12 @@ const AddEnemy = function(enemyType, enemyX, enemyY) {
 
     actorIndex++;
 };
+
+const AddCollectibleHealth = function() {
+    let newCollectibleID = "CollectibleHealth_" + actorIndex;
+    collectibles[newCollectibleID] = CollectibleHealth(newCollectibleID);
+    actorIndex++;
+}
 
 const AddProjectile = function(owner, projectileType, startPos, endPos, launchSpeed) {
     let newProjectileID = owner.GetID() + "_" + projectileType + "_" + actorIndex;
@@ -122,13 +130,12 @@ const GameLoop = function() {
     const InitializeGame = function() {
         // Initialze player, enemy and UI
 
+        AddCollectibleHealth();
         AddKnight(500, 500);
      //   AddWizard(600, 500);
 
-        AddBoss(1000, 400);
-      //  AddMushroom(1000, 700);
-      //  AddSkeleton(1000, 300);
-     //   AddFlyingEye(1000, 500);
+     //   AddBoss(1000, 400);
+      
     };
 
     const doFrame = function(now) {
@@ -153,6 +160,12 @@ const GameLoop = function() {
     const UpdateAndDraw = function(now) {
         for(const explosionName in explosions) {
             const updateTarget = explosions[explosionName];
+            updateTarget.Update(now);
+            updateTarget.draw();
+        }
+
+        for(const collectibleName in collectibles) {
+            const updateTarget = collectibles[collectibleName];
             updateTarget.Update(now);
             updateTarget.draw();
         }

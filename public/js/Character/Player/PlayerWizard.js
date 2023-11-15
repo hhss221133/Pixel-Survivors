@@ -103,5 +103,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         Update: Update,
         GetID: player.GetID,
         GetActorType: player.GetActorType,
+        AddHealth: player.AddHealth,
     };
 };

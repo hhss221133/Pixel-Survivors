@@ -78,10 +78,11 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
     const ResetCanSpawnProjectile = () => {bCanSpawnProjectile = false;}
 
+    const Clamp = (val, max, min) => Math.min(Math.max(val, min), max);
+
     const DealDamage = function(damage) {
         // only for damage calculation, not for performing action after death
-        const clamp = (val, max, min) => Math.min(Math.max(val, min), max);
-        curHP = clamp(curHP - damage, maxHP, 0);
+        curHP = Clamp(curHP - damage, maxHP, 0);
     };
 
     const GetCurHP = () => {return curHP;}
@@ -131,6 +132,10 @@ const Character = function(ctx, x, y, gameArea, actorID) {
 
         charState = NewState;
     }
+
+    const AddHealth = function(healthAmount) {
+        curHP = Clamp(curHP + healthAmount, maxHP, 0);
+    };
 
     const GetFSMState = () => {return charState;}
 
@@ -285,6 +290,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         SetKnockBackSpeed: SetKnockBackSpeed,
         CanSpawnProjectile: CanSpawnProjectile,
         ResetCanSpawnProjectile: ResetCanSpawnProjectile,
+        AddHealth: AddHealth,
 
         // animation
         GetSequenceList: GetSequenceList,

@@ -212,6 +212,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         HandlePlayerDead: HandlePlayerDead,
         TakeDamage: TakeDamage,
         GetCurHP: character.GetCurHP,
+        AddHealth: character.AddHealth,
 
     };
 };
