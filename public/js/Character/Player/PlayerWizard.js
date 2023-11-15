@@ -78,7 +78,12 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
             startPos.x = x + (playerScale * 30);
             player.setSequence(sequences.attackRight, sequences.idleRight);
         }
-        const endPos = {x: event.clientX, y: event.clientY};
+
+        let rect = canvas.getBoundingClientRect();
+        const endPos = {x: event.clientX - rect.left, y: event.clientY - rect.top};
+
+
+
         AddProjectile(players[player.GetID()], PROJECTILE_TYPE.WATERBALL, startPos, endPos, magicSpeed);
 
         player.StartAttack();
@@ -86,6 +91,7 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
     const Update = function(now) {
         player.Update(now);
+
     };
 
 
