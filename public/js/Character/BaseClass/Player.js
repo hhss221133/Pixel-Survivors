@@ -10,6 +10,9 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     let playerScore = 0;
 
+    let healthImage = new Image();
+    healthImage.src = "assets/original/collectible_health.png";
+
     const playerRespawnTime = 15; // in second
 
     let respawnTimer = null;
@@ -33,7 +36,6 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const AddPlayerScore = function(isEnemyBoss) {
         playerScore = (isEnemyBoss)? playerScore + 3 : playerScore + 2;
-        console.log("Score: " + playerScore);
     }
 
     const GetPlayerScore = () => {return playerScore;}
@@ -111,15 +113,17 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         if (bossRef && !bossRef.GetTargetPlayer()) bossRef.FindTargetPlayer();
 
-        character.setSequenceEndCallback(PlayerDie);
         // stop the player
         character.ChangeSpriteDirection({horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP});
 
         (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
             character.setSequence(character.GetSequenceList().dieRight);
+
+        character.setSequenceEndCallback(PlayerDie);
     };
     
     const PlayerDie = function() {
+        if (respawnTimer) return;
         respawnTimer = setTimeout(RespawnPlayer, playerRespawnTime * 1000);
     };
     
@@ -128,6 +132,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         if (character.GetFSMState() != FSM_STATE.DEAD) return;
 
         character.ResetHP();
+        character.SetSequenceEndToIdle();
         character.SetFSMState(FSM_STATE.MOVE);
         (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().idleLeft) :
             character.setSequence(character.GetSequenceList().idleRight); 
@@ -181,14 +186,41 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     };
 
+    const draw = function() {
+        character.draw();
+        drawHealthUI();
+        drawScoreUI();
+        drawRemainingTimeUI();
+    }
+
     const ResetCanTakeDamage = () => {bCanTakeDamage = true;}
 
     const Update = function(now) {
-
         character.Update(now);
     };
 
     const GetActorType = () => ACTOR_TYPE.PLAYER;
+
+    const drawHealthUI = function() {
+        if (!healthImage.src) return;
+
+        let xOffset = 20;
+
+        for (let i = 0; i < character.GetCurHP(); i++) {
+            ctx.drawImage(healthImage, xOffset , 20, 40, 40);
+            xOffset += 50;
+        }
+    }
+
+    const drawScoreUI = function() {
+        ctx.font = "30px Arial";
+        ctx.fillText("Score: " + GetPlayerScore(), 20, 100);
+    };
+
+    const drawRemainingTimeUI = function() {
+
+        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 150);
+    };
 
 
 
@@ -207,7 +239,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         getCurSequence: character.getCurSequence,
         getDisplaySize: character.getDisplaySize,
         setSequence: character.setSequence,
-        draw: character.draw,
+        draw: draw,
         Update: Update,
         GetID: character.GetID,
         GetActorType: GetActorType,

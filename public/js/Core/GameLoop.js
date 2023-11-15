@@ -1,3 +1,7 @@
+/************************************************************************************************************************************/
+
+// Global variables and functions that all modules share
+
 const players = {};
 
 const enemies = {};
@@ -9,6 +13,8 @@ const explosions = {};
 const collectibles = {};
 
 const totalGameTime = 240;   // Total game time in seconds
+
+let remainingTime = totalGameTime;
 
 const healthAppearIntervalMin = 5000; // in miliseconds
 
@@ -25,7 +31,7 @@ let bossRef = null;
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
 const context = canvas.getContext("2d");
-const gameArea = BoundingBox(context, 0, 0, 900, 1600);
+const gameArea = BoundingBox(context, 30, 30, 840, 1570);
 
 
 const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
@@ -147,10 +153,10 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
-        AddKnight(500, 500);
-   //     AddWizard(600, 500);
+     //   AddKnight(500, 500);
+        AddWizard(600, 500);
 
-    //    AddBoss(1000, 400);
+        AddBoss(1000, 400);
       
     };
 
@@ -161,6 +167,8 @@ const GameLoop = function() {
         CalculateDeltaTime();
 
         UpdateAndDraw(now);
+
+        UpdateRemainingTime();
 
         /* Process the next frame */
         requestAnimationFrame(doFrame);
@@ -204,6 +212,10 @@ const GameLoop = function() {
             updateTarget.draw();
         }
 
+    };
+
+    const UpdateRemainingTime = function() {
+        remainingTime = remainingTime - deltaTime;
     };
 
     const StartGame = function() {

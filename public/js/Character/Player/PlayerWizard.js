@@ -60,7 +60,7 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
     const HandleWizardAttackInput = function(event) {
 
-        if (!player.CanCharAttack()) return;
+        if (!player.CanCharAttack() || player.GetFSMState() == FSM_STATE.DEAD) return;
 
         const {x, y} = player.getXY();
         const playerScale = player.getScale();

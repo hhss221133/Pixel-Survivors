@@ -451,7 +451,6 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         MoveBoss();
 
         HandleSpawnAttack();
-
     };
 
     const TakeDamage = function(damage, playerXY) {
