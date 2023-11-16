@@ -12,6 +12,8 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     player.SetWalkSpeed(300);
 
+    let hitSFX = new Audio(referenceLists.SwordHit);
+
     const sequences = {
         idleRight: {x:0, y:0, width:100, height:55, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
         idleLeft: {x:0, y:495, width:100, height:55, count:8, timing:200, loop:true, isLeft: true, startingIndex: 9},
@@ -27,8 +29,9 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite);
+    player.SetAttackSFX(referenceLists.SwordSlash, sequences.attackRight.timing * sequences.attackRight.attackIndex);
 
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite);
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();
@@ -111,6 +114,7 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
                     // deal damage to enemy
                     enemies[enemyName].TakeDamage(player.GetAttackPower(), player.getXY());
                     player.AddPlayerScore(enemies[enemyName].IsBoss());
+                    PlaySFX(hitSFX);
                 }
             }
         }

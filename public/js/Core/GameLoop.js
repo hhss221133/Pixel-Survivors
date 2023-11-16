@@ -1,6 +1,6 @@
 /************************************************************************************************************************************/
 
-// Global variables and functions that all modules share
+// Global variables and functions shared by all modules
 
 const players = {};
 
@@ -19,6 +19,8 @@ let remainingTime = totalGameTime;
 const healthAppearIntervalMin = 5000; // in miliseconds
 
 const healthAppearIntervalMax = 9000; // in miliseconds
+
+const SFXMasterVolume = 0.8;
 
 let actorIndex = 0; // for generating GUID
 
@@ -143,6 +145,13 @@ const GetRanNumInRange = function(min, max) {
     return Math.random() * (max - min) + min;
 };
 
+const PlaySFX = function(targetSFX, volume = 1) {
+    if (!targetSFX.src) return;
+    targetSFX.volume = SFXMasterVolume * volume;
+    targetSFX.currentTime = 0;
+    targetSFX.play();
+}
+
 /************************************************************************************************************************************/
 
 const GameLoop = function() {
@@ -153,10 +162,10 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
-     //   AddKnight(500, 500);
-        AddWizard(600, 500);
+        AddKnight(500, 500);
+     //   AddWizard(600, 500);
 
-        AddBoss(1000, 400);
+    //    AddBoss(1000, 400);
       
     };
 
@@ -215,7 +224,7 @@ const GameLoop = function() {
     };
 
     const UpdateRemainingTime = function() {
-        remainingTime = remainingTime - deltaTime;
+        remainingTime = Math.max(remainingTime - deltaTime, 0);
     };
 
     const StartGame = function() {

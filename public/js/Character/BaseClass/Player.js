@@ -10,6 +10,12 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     let playerScore = 0;
 
+    let takeDamageSFX = new Audio(referenceLists.PlayerHit);
+
+    let dieSFX = new Audio(referenceLists.PlayerDie);
+
+    let respawnSFX = new Audio(referenceLists.PlayerRespawn);
+
     let healthImage = new Image();
     healthImage.src = referenceLists.CollectibleHealth;
 
@@ -131,6 +137,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         if (respawnTimer) respawnTimer = null;
         if (character.GetFSMState() != FSM_STATE.DEAD) return;
 
+        PlaySFX(respawnSFX);
         character.ResetHP();
         character.SetSequenceEndToIdle();
         character.SetFSMState(FSM_STATE.MOVE);
@@ -148,13 +155,19 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         setTimeout(ResetCanTakeDamage, invulnerabilityTime * 1000);
 
         character.DealDamage(damage);
+        
 
         StartKnockBack(enemyXY);
         character.SetShouldUseWhiteSheet();
         
         let HP = character.GetCurHP();
 
-        if (HP > 0) return;
+        if (HP > 0) {
+            PlaySFX(takeDamageSFX);
+            return;
+        }
+
+        PlaySFX(dieSFX);
 
         // character die
         character.SetFSMState(FSM_STATE.DEAD);
@@ -263,6 +276,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         AddHealth: character.AddHealth,
 
         AddPlayerScore: AddPlayerScore,
+        SetAttackSFX: character.SetAttackSFX,
 
     };
 };

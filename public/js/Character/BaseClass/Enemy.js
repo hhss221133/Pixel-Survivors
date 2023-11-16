@@ -14,6 +14,8 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
 
     let distanceToPlayer = 0;
 
+    let enemyDieSFX = new Audio(referenceLists.EnemyDie);
+
     const SetThreshold = function(newMoveThreshold, newXMoveThreshold, newYMoveThreshold){
         moveThreshold = newMoveThreshold;
         yMoveThreshold = newYMoveThreshold;
@@ -95,8 +97,10 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         
         let HP = character.GetCurHP();
         if (HP > 0) return;
+        
 
         // character die
+        
         character.SetFSMState(FSM_STATE.DEAD);
         HandleEnemyDead();
         
@@ -140,6 +144,7 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
     };
 
     const DisposeEnemy = function() {
+        PlaySFX(enemyDieSFX);
         for (const enemyName in enemies) {
             if (enemies[enemyName].GetID() == character.GetID()) {
                 delete enemies[character.GetID()];
@@ -219,6 +224,9 @@ const Enemy = function(ctx, x, y, gameArea, enemyID) {
         GetTargetPlayer: GetTargetPlayer,
         IsPlayerAtLeft: IsPlayerAtLeft,
         IsBoss: IsBoss,
+
+        //SFX
+        SetAttackSFX: character.SetAttackSFX,
         
     }
 };

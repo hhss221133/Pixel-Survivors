@@ -32,15 +32,23 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         /* MUST BE initialized before using!*/
     };
 
+    let attackSFX = new Audio();
+
+    let attackSFXDelay = 0; // to match the animation, the SFX will be played after a certain time
+
     let hitTargetArray = [];  // store the target hit in the current attack, need to be reset every attack
 
     let direction = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
 
     const GetID = () => {return ID;}
 
-    const SetCurHP = (newHP) => {curHP = newHP;}
-
     const EmptyHitTargetArray = () => {hitTargetArray = [];}
+
+    const SetAttackSFX = function(audioSrc, newDelay) {
+        attackSFX.src = audioSrc;
+        attackSFXDelay = newDelay;
+    }
+
 
     const TryAddHitTargetToArray = function(newTarget) {
         if (hitTargetArray.includes(newTarget)) return false;
@@ -69,6 +77,11 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         knockBackDirection = null;
         ToIdle();
     }
+
+    const PlayAttackSFXAfterDelay = function() {
+        if (charState != FSM_STATE.ATTACK) return;
+        PlaySFX(attackSFX);
+    };
 
     const SetAttackCoolDown = (newCoolDown) => {attackCoolDown = newCoolDown;}
 
@@ -112,7 +125,9 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         bCanSpawnProjectile = true;
         SetFSMState(FSM_STATE.ATTACK);
         setTimeout(ResetCanAttack, attackCoolDown * 1000);
-    }
+        setTimeout(PlayAttackSFXAfterDelay, attackSFXDelay);
+    };
+
 
     const ResetCanAttack = () => {bCanAttack = true;}
 
@@ -302,6 +317,9 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         SetSequenceEndToIdle: SetSequenceEndToIdle,
         getSequenceEndCallback: sprite.getSequenceEndCallback,
         SetShouldUseWhiteSheet: sprite.SetShouldUseWhiteSheet,
+
+        //SFX
+        SetAttackSFX: SetAttackSFX,
 
     };
 };

@@ -1,5 +1,9 @@
 const Fireball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID) {
 
+    let spawnSPX = new Audio(referenceLists.FireballSpawn);
+
+    let hitSFX = new Audio(referenceLists.MagicHit);
+
     const projectile = Projectile(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID);
 
     const sequences = {
@@ -8,6 +12,8 @@ const Fireball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, actor
     }
 
     projectile.CreateSpriteSequences(sequences, sequences.idle, scale = 0.65, referenceLists.Fireball);
+
+    PlaySFX(spawnSPX);
 
     const GetHitBox = function() {
         const size = projectile.getDisplaySize();
@@ -34,6 +40,7 @@ const Fireball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, actor
                         // deal damage to enemy
                         curPlayer.TakeDamage(projectile.GetDamage(), projectile.getXY());
                         projectile.Explode();
+                        PlaySFX(hitSFX);
                         return;
                 }
             }

@@ -4,7 +4,7 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
     
     const magicSpeed = 300;
 
-    const maxHP = 3;
+    const maxHP = 5;
 
     let playerType = PLAYER_TYPE.WIZARD;
 
@@ -28,8 +28,9 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         dieLeft: {x:0, y:916, width:128, height:128, count:4, timing:200, loop:false, isLeft: true, startingIndex: 7},
     }
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "assets/sprite/original/player_wizard.png", "assets/sprite/white/player_wizard_white.png");
+    player.SetAttackSFX(referenceLists.MagicSpell, sequences.attackRight.timing * 4);
 
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "assets/sprite/original/player_wizard.png", "assets/sprite/white/player_wizard_white.png");
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();

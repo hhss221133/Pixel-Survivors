@@ -5,7 +5,10 @@ const CollectibleHealth = function(actorID){
 
     const healthPoint = 1;
 
+    let healSFX = new Audio(referenceLists.Heal);
+
     let moveSpeed = GetRanNumInRange(200, 800);
+
     let velocity = {x: 0, y: 0};
 
     const CalculateVelocity = function() {
@@ -78,6 +81,7 @@ const CollectibleHealth = function(actorID){
             if (curPlayer.GetFSMState() == FSM_STATE.DEAD) continue;
 
             curPlayer.AddHealth(healthPoint);
+            PlaySFX(healSFX);
             DisposeThis();
         }
 

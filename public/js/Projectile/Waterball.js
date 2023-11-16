@@ -2,6 +2,8 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
 
     const projectile = Projectile(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID);
 
+    let hitSFX = new Audio(referenceLists.MagicHit);
+
     const sequences = {
         idle: {x:0, y:0, width:191, height:141, count:2, timing:250, loop:true, isLeft: false, startingIndex: 0},
         explode: {x:0, y:0, width:191, height:141, count:6, timing:50, loop:false, isLeft: false, startingIndex: 0}
@@ -34,6 +36,7 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
                         // deal damage to enemy
                         curEnemy.TakeDamage(projectile.GetDamage(), projectile.getXY());
                         owner.AddPlayerScore(curEnemy.IsBoss());
+                        PlaySFX(hitSFX);
                         projectile.Explode();
                         return;
                 }
