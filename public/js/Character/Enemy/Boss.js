@@ -73,7 +73,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         teleportEndLeft: {x:0, y:1209, width:140, height:93, count:10, timing:80, loop:false, isLeft: true, startingIndex: 9},
     };
 
-    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 3, "assets/original/boss.png", "assets/white/boss_white.png");
+    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 3, referenceLists.BossOriginal, referenceLists.BossWhite);
 
     const GetHitBox = function() {
         const size = character.getDisplaySize();

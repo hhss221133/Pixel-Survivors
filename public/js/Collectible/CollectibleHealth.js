@@ -5,7 +5,7 @@ const CollectibleHealth = function(actorID){
 
     const healthPoint = 1;
 
-    let moveSpeed = GetRanNumInRange(200, 1000);
+    let moveSpeed = GetRanNumInRange(200, 800);
     let velocity = {x: 0, y: 0};
 
     const CalculateVelocity = function() {
@@ -67,7 +67,7 @@ const CollectibleHealth = function(actorID){
         idle: {x:0, y:0, width:128, height:128, count:1, timing:200, loop:true, isLeft: false, startingIndex: 0}
     }
 
-    sprite.setSequence(sequences.idle).setScale(0.3).useSheet("assets/original/collectible_health.png");
+    sprite.setSequence(sequences.idle).setScale(0.3).useSheet(referenceLists.CollectibleHealth);
 
     const HandlePlayerPickUp = function() {
         // check if player hits any enemy

@@ -9,6 +9,6 @@ canvas {
     bottom: 0px;
     right: 0px;
     margin: auto;
-    background: url(/public/assets/Original/background.png);
+    background: url(/public/assets/sprite/original/background.png);
     background-size: 100% 
 }

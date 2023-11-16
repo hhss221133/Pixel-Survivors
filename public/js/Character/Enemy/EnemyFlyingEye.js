@@ -4,7 +4,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackCoolDown(2);
 
-    enemy.SetMaxHP(1);
+    enemy.SetMaxHP(2);
 
     enemy.SetWalkSpeed(80);
 
@@ -26,7 +26,7 @@ const EnemyFlyingEye = function(ctx, x, y, gameArea, enemyID) {
         dieLeft: {x:0, y:750, width:150, height:150, count:4, timing:150, loop:false, isLeft: true, startingIndex: 7},
     };
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, "assets/original/enemy_flyingEye.png", "assets/white/enemy_flyingEye_white.png");
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, referenceLists.FlyingEyeOriginal, referenceLists.FlyingEyeWhite);
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();

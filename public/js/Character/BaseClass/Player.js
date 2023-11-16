@@ -11,7 +11,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     let playerScore = 0;
 
     let healthImage = new Image();
-    healthImage.src = "assets/original/collectible_health.png";
+    healthImage.src = referenceLists.CollectibleHealth;
 
     const playerRespawnTime = 15; // in second
 
