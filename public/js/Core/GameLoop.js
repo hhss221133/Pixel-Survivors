@@ -22,6 +22,8 @@ const healthAppearIntervalMax = 9000; // in miliseconds
 
 const SFXMasterVolume = 0.8;
 
+const BGMMasterVolume = 0.3;
+
 let actorIndex = 0; // for generating GUID
 
 let deltaTime = 0.0167; // default frame time for 60fps, this will be calculated each frame by simply frame[i] - frame[i-1]
@@ -29,6 +31,24 @@ let deltaTime = 0.0167; // default frame time for 60fps, this will be calculated
 let collectibleTimer = null;
 
 let bossRef = null;
+
+let BGM_stage1 = new Audio(referenceLists.Boss_Stage1);
+BGM_stage1.loop = true;
+BGM_stage1.volume = BGMMasterVolume;
+let BGM_stage2 = new Audio(referenceLists.Boss_Stage2);
+BGM_stage2.loop = true;
+BGM_stage2.volume = BGMMasterVolume;
+let BGM_stage3 = new Audio(referenceLists.Boss_Stage3);
+BGM_stage3.loop = true;
+BGM_stage3.volume = BGMMasterVolume;
+let BGM_stage4 = new Audio(referenceLists.Boss_Stage4);
+BGM_stage4.loop = true;
+BGM_stage4.volume = BGMMasterVolume;
+let BGM_stage5 = new Audio(referenceLists.Boss_Stage5);
+BGM_stage5.loop = true;
+BGM_stage5.volume = BGMMasterVolume;
+
+
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
@@ -152,6 +172,28 @@ const PlaySFX = function(targetSFX, volume = 1) {
     targetSFX.play();
 }
 
+const ChangeBossBGM = function(bossStage) {
+    if (bossStage == 1) {
+        BGM_stage1.play();
+    }
+    else if (bossStage == 2) {
+        BGM_stage1.pause();
+        BGM_stage2.play();
+    }
+    else if (bossStage == 3) {
+        BGM_stage2.pause();
+        BGM_stage3.play();
+    }
+    else if (bossStage == 4) {
+        BGM_stage3.pause();
+        BGM_stage4.play();
+    }
+    else if (bossStage == 5) {
+        BGM_stage4.pause();
+        BGM_stage5.play();
+    }
+}
+
 /************************************************************************************************************************************/
 
 const GameLoop = function() {
@@ -162,10 +204,13 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
-        AddKnight(500, 500);
-     //   AddWizard(600, 500);
+      //  AddKnight(500, 500);
+        AddWizard(600, 500);
 
-    //    AddBoss(1000, 400);
+        AddBoss(1000, 400);
+        ChangeBossBGM(1);
+
+  //  AddProjectile(enemies[], PROJECTILE_TYPE.PLASMABALL, 500, 500, 0);
       
     };
 
@@ -232,6 +277,7 @@ const GameLoop = function() {
         InitializeGame();
 
         requestAnimationFrame(doFrame);
+
     };
 
     return {

@@ -26,7 +26,7 @@ const referenceLists = {
     Plasmaball: "assets/sprite/original/plasmaball.png",
     Waterball: "assets/sprite/original/waterball.png",
 
-/******************************** SFX, BGM reference *************************************************************************/
+/******************************** SFX reference *************************************************************************/
     
     SwordSlash: "assets/audio/SFX/sword_slash.wav",
     SwordHit: "assets/audio/SFX/sword_hit.wav",
@@ -44,6 +44,16 @@ const referenceLists = {
 
     Heal: "assets/audio/SFX/heal.wav",
 
-    FireballSpawn: "assets/audio/SFX/fireball_spawn.wav",
+    FireballSpawn: "assets/audio/SFX/fireball.wav",
+    PlasmaballSpawn: "assets/audio/SFX/plasmaball.wav",
+    Teleport: "assets/audio/SFX/teleport.wav",
+    Summon: "assets/audio/SFX/summon.wav",
+
+/******************************** BGM reference *************************************************************************/
+    Boss_Stage1: "assets/audio/BGM/BGM_boss_stage1.wav",
+    Boss_Stage2: "assets/audio/BGM/BGM_boss_stage2.wav",
+    Boss_Stage3: "assets/audio/BGM/BGM_boss_stage3.wav",
+    Boss_Stage4: "assets/audio/BGM/BGM_boss_stage4.wav",
+    Boss_Stage5: "assets/audio/BGM/BGM_boss_stage5.wav",
 
 };

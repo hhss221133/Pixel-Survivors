@@ -2,6 +2,9 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
 
     const projectile = Projectile(ctx, x, y, gameArea, owner, endPos, launchSpeed, actorID);
 
+
+    let hitSFX = new Audio(referenceLists.MagicHit);
+
     const sequences = {
         idle: {x:0, y:0, width:191, height:141, count:2, timing:250, loop:true, isLeft: false, startingIndex: 0},
         explode: {x:0, y:0, width:191, height:141, count:6, timing:50, loop:false, isLeft: false, startingIndex: 0}
@@ -41,6 +44,7 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
                         // deal damage to enemy
                         curPlayer.TakeDamage(projectile.GetDamage(), projectile.getXY());
                         projectile.Explode();
+                        PlaySFX(hitSFX);
                         return;
                 }
             }

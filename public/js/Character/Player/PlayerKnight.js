@@ -1,6 +1,6 @@
 const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
-    const maxHP = 10;
+    const maxHP = 7;
 
     const player = Player(ctx, x, y, gameArea, actorID);
 

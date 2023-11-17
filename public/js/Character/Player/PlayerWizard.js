@@ -10,9 +10,9 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
     player.SetMaxHP(maxHP);
 
-    player.SetAttackCoolDown(1);
+    player.SetAttackCoolDown(0.8);
 
-    player.SetWalkSpeed(180);
+    player.SetWalkSpeed(200);
 
     const sequences = {
         idleRight: {x:0, y:20, width:128, height:128, count:8, timing:200, loop:true, isLeft: false, startingIndex: 0},
@@ -28,7 +28,7 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         dieLeft: {x:0, y:916, width:128, height:128, count:4, timing:200, loop:false, isLeft: true, startingIndex: 7},
     }
 
-    player.SetAttackSFX(referenceLists.MagicSpell, sequences.attackRight.timing * 4);
+    player.SetAttackSFX(referenceLists.MagicSpell, 0);
 
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.2, "assets/sprite/original/player_wizard.png", "assets/sprite/white/player_wizard_white.png");
 

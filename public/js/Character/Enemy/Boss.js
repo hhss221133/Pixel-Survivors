@@ -4,7 +4,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const attackCoolDown = {1: 4, 2: 3.5, 3: 3, 4: 2.5, 5: 2.5};
 
-    character.SetMaxHP(175);
+    character.SetMaxHP(150);
 
     character.SetAttackCoolDown(attackCoolDown[1]);
 
@@ -22,6 +22,13 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let bCanSummon = true;
 
+    let plasmaballSFX = new Audio(referenceLists.PlasmaballSpawn);
+
+    let teleportSFX = new Audio(referenceLists.Teleport);
+
+    let summonSFX = new Audio(referenceLists.Summon);
+
+
     let bossStage = 1; // boss has 3 stages, attack patterns change with it
 
     const summonMaxNum = {1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
@@ -30,7 +37,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const fastShootSpeed = {3: 600, 4: 700, 5: 800};
 
-    const multipleShootCount = {1: 5, 2: 4, 3: 5, 4: 5, 5: 5}; 
+    const multipleShootCount = {1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; 
 
     const multipleShootSpeed = {1: 150, 2: 200, 3: 225, 4: 250, 5: 300};
 
@@ -156,6 +163,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         // teleport the boss 
 
         const {x, y} = FindRandomSpawnPosition();
+
+        PlaySFX(teleportSFX);
         character.setXY(x, y);
     }
 
@@ -254,6 +263,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
        
         const endPos = targetPlayer.getXY();
 
+        PlaySFX(plasmaballSFX);
+
         AddProjectile(enemies[character.GetID()], PROJECTILE_TYPE.PLASMABALL, startPos, endPos, normalShootSpeed[bossStage]);
     };
 
@@ -268,6 +279,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         const angleInterval = Math.PI / 2 / (multipleShootCount[bossStage] - 1);
 
         let curEndPos = GetRotatedEndPos(-Math.PI / 4, null);
+
+        PlaySFX(plasmaballSFX);
 
         for (let i = 0; i < multipleShootCount[bossStage]; i++) {
             AddProjectile(enemies[character.GetID()], PROJECTILE_TYPE.PLASMABALL, startPos, curEndPos, multipleShootSpeed[bossStage]);
@@ -299,6 +312,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         const startPos = GetProjectileSpawnPos();
        
         const endPos = targetPlayer.getXY();
+
+        PlaySFX(plasmaballSFX);
 
         AddProjectile(enemies[character.GetID()], PROJECTILE_TYPE.PLASMABALL, startPos, endPos, fastShootSpeed[bossStage]);
 
@@ -352,6 +367,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     const SummonEnemy = function() {
         
         const enemyNum = Object.keys(enemies).length - 1;
+
+        PlaySFX(summonSFX);
 
         for (let i = enemyNum; i < summonMaxNum[bossStage]; i++) {
             const enemyType = FindRandomEnemyType();
@@ -485,10 +502,22 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     character.setSequenceEndCallback(BossToIdle);
 
     const CheckStageChange = function() {
-        if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) bossStage = 2;
-        else if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) bossStage = 3;
-        else if (bossStage == 3 && character.GetCurHP() <= character.GetMaxHP() * 0.4) bossStage = 4;
-        else if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) bossStage = 5;
+        if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) {
+            bossStage = 2;
+            ChangeBossBGM(2);
+        }
+        else if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) {
+            bossStage = 3;
+            ChangeBossBGM(3);
+        }
+        else if (bossStage == 3 && character.GetCurHP() <= character.GetMaxHP() * 0.4) {
+            bossStage = 4;
+            ChangeBossBGM(4);
+        }
+        else if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) {
+            bossStage = 5;
+            ChangeBossBGM(5);
+        }
         character.SetAttackCoolDown(attackCoolDown[bossStage]);
     }
 

@@ -8,6 +8,8 @@ const Explosion = function(ctx, x, y, gameArea, owner, actorID) {
 
     let bCanDealDamage = false;
 
+    let hitSFX = new Audio(referenceLists.MagicHit);
+
     let sequences = {
         idle: {x:0, y:0, width:192, height:192, count:1, timing:250, loop:true, isLeft: false, startingIndex: 0},
         explode: {x:0, y:192, width:192, height:192, count:16, timing:35, loop:false, isLeft: false, startingIndex: 0}
@@ -52,10 +54,14 @@ const Explosion = function(ctx, x, y, gameArea, owner, actorID) {
     const ExplodeThis = function() {
         bCanDealDamage = true;
         sprite.setSequence(sequences.explode);
+        PlaySFX(hitSFX);
         setTimeout(DisposeThis, sequences.explode.timing * sequences.explode.count);
     }
 
-    setTimeout(ExplodeThis, owner.GetExplosionTime() * 1000);
+    let explosionTimeMin = owner.GetExplosionTime() * 700;  
+    let explosionTimeMax = owner.GetExplosionTime() * 1300;
+
+    setTimeout(ExplodeThis, GetRanNumInRange(explosionTimeMin, explosionTimeMax));
 
 
     const HandleHitPlayer = function() {

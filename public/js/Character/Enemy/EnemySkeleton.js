@@ -4,7 +4,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackCoolDown(3);
 
-    enemy.SetMaxHP(2);
+    enemy.SetMaxHP(3);
 
     enemy.SetKnockBackSpeed(400);
 
