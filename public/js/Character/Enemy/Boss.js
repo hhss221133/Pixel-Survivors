@@ -16,6 +16,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let moveThreshold = 600;
 
+    let disposeEnemyTime = 5; 
+
+    let enemyDieTimer = null;
+
     let xMoveThreshold = 20;   // to prevent the enemy from changing direction endlessly
 
     let summonCoolDown = {1: 15, 2: 13, 3: 11, 4: 9, 5: 8}; 
@@ -476,18 +480,42 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         character.DealDamage(damage);
 
-        CheckStageChange();
+        
 
         character.SetShouldUseWhiteSheet();
 
         let HP = character.GetCurHP();
-        if (HP > 0) return;
+        if (HP > 0) {
+            CheckStageChange();
+            return;
+        }
 
         // character die
         character.SetFSMState(FSM_STATE.DEAD);
         HandleEnemyDead();
         
     };
+
+    const HandleEnemyDead = function() {
+        
+        character.setSequenceEndCallback(EnemyDie);
+
+        StopAllBGM();
+
+        GameRunning = false;
+
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
+            character.setSequence(character.GetSequenceList().dieRight);
+    }
+
+    const EnemyDie = function() {
+        if (!enemyDieTimer)
+            enemyDieTimer = setTimeout(ToEndGamePage, disposeEnemyTime * 1000);
+    };
+
+    const ToEndGamePage = function() {
+        console.log("Hi");
+    }
 
     const BossToIdle = function() {
 

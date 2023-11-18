@@ -24,6 +24,8 @@ const SFXMasterVolume = 0.8;
 
 const BGMMasterVolume = 0.3;
 
+let GameRunning = true;
+
 let actorIndex = 0; // for generating GUID
 
 let deltaTime = 0.0167; // default frame time for 60fps, this will be calculated each frame by simply frame[i] - frame[i-1]
@@ -194,6 +196,15 @@ const ChangeBossBGM = function(bossStage) {
     }
 }
 
+const StopAllBGM = function() {
+    BGM_stage1.pause();
+    BGM_stage2.pause();
+    BGM_stage3.pause();
+    BGM_stage4.pause();
+    BGM_stage5.pause();
+
+}
+
 /************************************************************************************************************************************/
 
 const GameLoop = function() {
@@ -225,7 +236,7 @@ const GameLoop = function() {
         UpdateRemainingTime();
 
         /* Process the next frame */
-        requestAnimationFrame(doFrame);
+        if (GameRunning)    requestAnimationFrame(doFrame);
     };
 
     const CalculateDeltaTime = function() {
@@ -236,6 +247,7 @@ const GameLoop = function() {
     };
 
     const UpdateAndDraw = function(now) {
+
         for(const explosionName in explosions) {
             const updateTarget = explosions[explosionName];
             updateTarget.Update(now);
