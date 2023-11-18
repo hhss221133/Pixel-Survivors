@@ -1,0 +1,282 @@
+const Player = function(ctx, x, y, gameArea, actorID) {
+
+    const character = Character(ctx, x, y, gameArea, actorID);
+
+    const invulnerabilityTime = 1; // in second
+
+    let bCanTakeDamage = true;
+
+    let playerType = PLAYER_TYPE.KNIGHT;
+
+    let playerScore = 0;
+
+    let takeDamageSFX = new Audio(referenceLists.PlayerHit);
+
+    let dieSFX = new Audio(referenceLists.PlayerDie);
+
+    let respawnSFX = new Audio(referenceLists.PlayerRespawn);
+
+    let healthImage = new Image();
+    healthImage.src = referenceLists.CollectibleHealth;
+
+    const playerRespawnTime = 15; // in second
+
+    let respawnTimer = null;
+
+    /* Handle the keydown of ASDW keys for movement */
+    $(document).on("keydown", function(event) {
+
+        HandleMovementInputDown(event.keyCode);
+
+    });
+
+    /* Handle the keyup of ASDW keys for movement */
+    $(document).on("keyup", function(event) {
+
+        HandleMovementInputUp(event.keyCode);
+    });
+
+    const SetPlayerType = function(newType) {
+        playerType = newType;
+    };
+
+    const AddPlayerScore = function(isEnemyBoss) {
+        playerScore = (isEnemyBoss)? playerScore + 3 : playerScore + 2;
+    }
+
+    const GetPlayerScore = () => {return playerScore;}
+
+    const HandleMovementInputDown = function(keyCode) {
+        /* not movement key, return */
+        if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
+            && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
+
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
+
+        let curDir = character.GetDirection();
+        let newDir = character.GetDirection();
+
+        /* x-direction */
+        if (keyCode == MOVEMENT_KEY.LEFT) {
+            if (curDir.horizontal != DIRECTION_X.LEFT) 
+                newDir.horizontal = DIRECTION_X.LEFT;
+        }
+        else if (keyCode == MOVEMENT_KEY.RIGHT) {
+            if (curDir.horizontal != DIRECTION_X.RIGHT) 
+                newDir.horizontal = DIRECTION_X.RIGHT;
+        }
+
+
+        /* y-direction */
+        if (keyCode == MOVEMENT_KEY.UP) {
+            newDir.vertical = DIRECTION_Y.UP;
+        }
+        else if (keyCode == MOVEMENT_KEY.DOWN) {
+            newDir.vertical = DIRECTION_Y.DOWN;
+        }
+
+     //   if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
+        character.ChangeSpriteDirection(newDir);
+    };
+
+    const HandleMovementInputUp = function(keyCode) {
+
+        /* not movement key, return */
+        if (keyCode != MOVEMENT_KEY.DOWN && keyCode != MOVEMENT_KEY.UP 
+            && keyCode != MOVEMENT_KEY.LEFT && keyCode != MOVEMENT_KEY.RIGHT) return;
+
+        if (character.GetFSMState() == FSM_STATE.DEAD) return;
+            
+        /* get the current direction of the player for initialization */
+        let curDir = character.GetDirection();
+        let newDir = character.GetDirection();
+
+        /* x-direction */
+        if (keyCode == MOVEMENT_KEY.LEFT ) {
+            if (curDir.horizontal != DIRECTION_X.RIGHT)
+                newDir.horizontal = DIRECTION_X.STOP;
+        }
+        else if (keyCode == MOVEMENT_KEY.RIGHT) {
+            if (curDir.horizontal != DIRECTION_X.LEFT)
+                newDir.horizontal = DIRECTION_X.STOP;
+        }
+
+        /* y-direction */
+        if (keyCode == MOVEMENT_KEY.UP) {
+            if (curDir.vertical != DIRECTION_X.DOWN)
+                newDir.vertical = DIRECTION_X.STOP;
+        }
+        else if (keyCode == MOVEMENT_KEY.DOWN) {
+            if (curDir.vertical != DIRECTION_X.UP)
+                newDir.vertical = DIRECTION_X.STOP;
+        }
+
+        if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
+        character.ChangeSpriteDirection(newDir);
+    };
+
+    const HandlePlayerDead = function() {
+
+        if (bossRef && !bossRef.GetTargetPlayer()) bossRef.FindTargetPlayer();
+
+        // stop the player
+        character.ChangeSpriteDirection({horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP});
+
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
+            character.setSequence(character.GetSequenceList().dieRight);
+
+        character.setSequenceEndCallback(PlayerDie);
+    };
+    
+    const PlayerDie = function() {
+        if (respawnTimer) return;
+        respawnTimer = setTimeout(RespawnPlayer, playerRespawnTime * 1000);
+    };
+    
+    const RespawnPlayer = function() {
+        if (respawnTimer) respawnTimer = null;
+        if (character.GetFSMState() != FSM_STATE.DEAD) return;
+
+        PlaySFX(respawnSFX);
+        character.ResetHP();
+        character.SetSequenceEndToIdle();
+        character.SetFSMState(FSM_STATE.MOVE);
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().idleLeft) :
+            character.setSequence(character.GetSequenceList().idleRight); 
+
+        if (bossRef && !bossRef.GetTargetPlayer()) bossRef.FindTargetPlayer();
+    }
+
+    const TakeDamage = function(damage, enemyXY) {
+
+        if (character.GetFSMState() == FSM_STATE.DEAD || !bCanTakeDamage) return;
+
+        bCanTakeDamage = false;
+        setTimeout(ResetCanTakeDamage, invulnerabilityTime * 1000);
+
+        character.DealDamage(damage);
+        
+
+        StartKnockBack(enemyXY);
+        character.SetShouldUseWhiteSheet();
+        
+        let HP = character.GetCurHP();
+
+        if (HP > 0) {
+            PlaySFX(takeDamageSFX);
+            return;
+        }
+
+        PlaySFX(dieSFX);
+
+        // character die
+        character.SetFSMState(FSM_STATE.DEAD);
+
+        HandlePlayerDead();
+    };
+
+    const StartKnockBack = function(enemyXY) {
+
+        const playerXY = character.getXY();
+
+        let knockBackDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
+
+        if (playerXY.x < enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.LEFT;
+        }
+        else if (playerXY.x > enemyXY.x) {
+            knockBackDir.horizontal = DIRECTION_X.RIGHT;
+        }
+
+        if (playerXY.y < enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.UP;
+        }
+        else if (playerXY.y > enemyXY.y && Math.abs(playerXY.y - enemyXY.y) > 10) {
+            knockBackDir.vertical = DIRECTION_Y.DOWN;
+        } 
+
+        character.StartKnockBack(knockBackDir);
+
+    };
+
+    const draw = function() {
+        character.draw();
+        drawHealthUI();
+        drawScoreUI();
+        drawRemainingTimeUI();
+    }
+
+    const ResetCanTakeDamage = () => {bCanTakeDamage = true;}
+
+    const Update = function(now) {
+        character.Update(now);
+    };
+
+    const GetActorType = () => ACTOR_TYPE.PLAYER;
+
+    const drawHealthUI = function() {
+        if (!healthImage.src) return;
+
+        let xOffset = 20;
+
+        for (let i = 0; i < character.GetCurHP(); i++) {
+            ctx.drawImage(healthImage, xOffset , 20, 40, 40);
+            xOffset += 50;
+        }
+    }
+
+    const drawScoreUI = function() {
+        ctx.font = "30px Arial";
+        ctx.fillText("Score: " + GetPlayerScore(), 20, 100);
+    };
+
+    const drawRemainingTimeUI = function() {
+
+        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 150);
+    };
+
+
+
+    return {
+        SetMaxHP: character.SetMaxHP,
+        SetWalkSpeed: character.SetWalkSpeed,
+        SetAttackPower: character.SetAttackPower,
+        GetDirection: character.GetDirection,
+        CreateSpriteSequences: character.CreateSpriteSequences,
+        MoveCharacter: character.MoveCharacter,
+        SetPlayerType: SetPlayerType,
+        getXY: character.getXY,
+        getScale: character.getScale,
+        drawBox: character.drawBox,
+        ChangeSpriteDirection: character.ChangeSpriteDirection,
+        getCurSequence: character.getCurSequence,
+        getDisplaySize: character.getDisplaySize,
+        setSequence: character.setSequence,
+        draw: draw,
+        Update: Update,
+        GetID: character.GetID,
+        GetActorType: GetActorType,
+        SetAttackCoolDown: character.SetAttackCoolDown,
+
+        // FSM State related
+        GetFSMState: character.GetFSMState,
+        SetFSMState: character.SetFSMState,
+        CanCharAttack: character.CanCharAttack,
+        setSequenceEndCallback: character.setSequenceEndCallback,
+        StartAttack: character.StartAttack,
+
+        // attack related
+        getIndex: character.getIndex,
+        TryAddHitTargetToArray: character.TryAddHitTargetToArray,
+        EmptyHitTargetArray: character.EmptyHitTargetArray,
+        GetAttackPower: character.GetAttackPower,
+        HandlePlayerDead: HandlePlayerDead,
+        TakeDamage: TakeDamage,
+        GetCurHP: character.GetCurHP,
+        AddHealth: character.AddHealth,
+
+        AddPlayerScore: AddPlayerScore,
+        SetAttackSFX: character.SetAttackSFX,
+
+    };
+};

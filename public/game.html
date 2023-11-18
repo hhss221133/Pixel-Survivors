@@ -15,19 +15,35 @@
         </div>
         
         <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-        <script src="/socket.io/socket.io.min.js"></script>
-        
-        <script src="./js/Core/GameLoop.js"></script>
-        <script src="./js/Character/Character.js"></script>
-        <script src="./js/Core/EnumContainer.js"></script>
-        <script src="./js/Character/Sprite.js"></script>
-        <script src="./js/Core/BoundingBox.js"></script>
-        <script src="./js/Character/Player.js"></script>
 
-        <script type="module" src="./js/SocketHandler.js"></script>
+        <script src="./js/Core/AssetsReference.js"></script>
+        <script src="./js/Core/BoundingBox.js"></script>
+        <script src="./js/Core/GameLoop.js"></script>
+        <script src="./js/Core/EnumContainer.js"></script>
+
+        <script src="./js/Character/BaseClass/Character.js"></script>
+        <script src="./js/Character/BaseClass/Player.js"></script>
+        <script src="./js/Character/BaseClass/Sprite.js"></script>
+        <script src="./js/Character/BaseClass/Enemy.js"></script>
+        <script src="./js/Character/Player/PlayerKnight.js"></script>
+        <script src="./js/Character/Player/PlayerWizard.js"></script>
+        <script src="./js/Character/Enemy/EnemySkeleton.js"></script>
+        <script src="./js/Character/Enemy/EnemyFlyingEye.js"></script>
+        <script src="./js/Character/Enemy/EnemyMushroom.js"></script>
+        <script src="./js/Character/Enemy/Boss.js"></script>
+
+        <script src="./js/Projectile/Projectile.js"></script>
+        <script src="./js/Projectile/Waterball.js"></script>
+        <script src="./js/Projectile/Fireball.js"></script>
+        <script src="./js/Projectile/Plasmaball.js"></script>
+        <script src="./js/Projectile/Explosion.js"></script>
+        <script src="./js/Collectible/CollectibleHealth.js"></script>
+
+       
         <script>
             let Game = GameLoop();
             Game.StartGame();
+
         </script>
 
     </body>

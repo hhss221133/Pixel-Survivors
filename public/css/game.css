@@ -1,7 +1,14 @@
+
+body {
+    background-color: black;
+}
 canvas {
     position: absolute;
     top: 0px;
     left: 0px;
-    background: url(../assets/background.png);
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+    background: url(/public/assets/sprite/original/background.png);
     background-size: 100% 
 }
