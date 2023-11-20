@@ -55,7 +55,7 @@ BGM_stage5.volume = BGMMasterVolume;
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
 const context = canvas.getContext("2d");
-const gameArea = BoundingBox(context, 30, 30, 840, 1570);
+const gameArea = BoundingBox(context, 30, 30, 660, 1220);
 
 
 const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
@@ -215,10 +215,10 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
-      //  AddKnight(500, 500);
-        AddWizard(600, 500);
+        AddKnight(1200, 50);
+      //  AddWizard(50, 630);
 
-        AddBoss(1000, 400);
+     //   AddBoss(1000, 400);
         ChangeBossBGM(1);
 
   //  AddProjectile(enemies[], PROJECTILE_TYPE.PLASMABALL, 500, 500, 0);

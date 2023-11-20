@@ -84,3 +84,10 @@ socket.on('lobby join json error', (err) => {
     alert("There was an error joining the room, please try again.");
     window.location.href = '/lobbies';
 });
+
+socket.on("initialize and start game", (roomPlayers) => {
+    console.log("Starting game communication!");
+    console.log(roomPlayers);
+  //  if (roomPlayers[document.getElementById('client')] == undefined) return;
+
+});

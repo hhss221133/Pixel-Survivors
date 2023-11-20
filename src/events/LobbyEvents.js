@@ -1,4 +1,5 @@
 const LobbiesModel = require('../models/LobbiesModel');
+const GameEvents = require('../events/GameEvents');
 const {performCleanup} = require('../middleware/MWLobbiesCleanup');
 
 
@@ -75,7 +76,7 @@ function LobbyEvents(socket, io, userTimeouts) {
     });
 
     socket.on('start game', () => {
-        console.log("hi");
+        GameEvents(socket, io, userTimeouts);
     });
 }
 
