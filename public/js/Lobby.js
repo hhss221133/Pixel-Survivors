@@ -84,3 +84,12 @@ socket.on('lobby join json error', (err) => {
     alert("There was an error joining the room, please try again.");
     window.location.href = '/lobbies';
 });
+
+
+socket.on('game started', () => {
+    console.log("Play bgm");
+    const lobby = document.getElementById('lobby');
+    const game_spa = document.getElementById('game_spa');
+
+
+});

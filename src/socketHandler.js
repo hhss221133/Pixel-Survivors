@@ -1,6 +1,7 @@
 
 const LobbiesEvents = require('./events/LobbiesEvents');
 const LobbyEvents = require('./events/LobbyEvents');
+const GameEvents = require('./events/GameEvents');
 const {performCleanup, edit_lobby_status} = require('./middleware/MWLobbiesCleanup');
 const {socketrequireLogin} = require('./middleware/MWSocketSessions');
 
@@ -25,6 +26,7 @@ module.exports = function (io, Session) {
 
         LobbiesEvents(socket, io, userTimeouts);
         LobbyEvents(socket, io, userTimeouts);
+        GameEvents(socket, io, userTimeouts);
 
         socket.on('reconnected', () => {
             clearTimeout(userTimeouts.get(sessID));
