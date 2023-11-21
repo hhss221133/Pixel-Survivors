@@ -168,14 +168,10 @@ const LobbiesModel = {
             }
             lobby.players[playerIndex].character = char;
 
-
-            
-
-    
             // Write the updated list of lobbies back to the file
             writeLobbiesFile(lobbies, err => {
                 if (err) return callback(err);
-                callback(null);
+                callback(null, lobby);
             });
         });
     },

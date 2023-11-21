@@ -1,17 +1,1 @@
-[
-  {
-    "createdBy": "a",
-    "createdAt": "2023-11-21T04:55:54.646Z",
-    "players": [
-      {
-        "username": "a",
-        "status": "joined",
-        "character": "Knight"
-      }
-    ],
-    "settings": {
-      "maxPlayers": 2
-    },
-    "status": "waiting"
-  }
-]
+[]

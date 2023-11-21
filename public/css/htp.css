@@ -11,7 +11,6 @@ body {
 
 .main_t {
     padding: 10px;
-    background-color: aqua;
 }
 
 .exp {
@@ -24,4 +23,22 @@ body {
 
 .t-center {
     text-align: center;
+    font-size:24px;
+}
+
+.c_title {
+    font-size: 50px;
+    padding:10px;
+    margin:0;
+    color:coral;
+    text-shadow: 3px 3px 0px #7f8c8d;
+}
+
+.splitter {
+    display:flex;
+    flex-direction:row; 
+}
+
+section {
+    overflow: auto;
 }
