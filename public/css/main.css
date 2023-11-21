@@ -17,14 +17,9 @@ input {
 body {
     overflow: hidden;
     margin:0;
-    /* height:100vh; */
     background-color: black;
-    /* background-image: url('../assets/enemy_skeleton_clipped.png'); */
-    /* background-image: url('../assets/ForrestBackground.png'); */
     background-image: url('../assets/LayerCloud_Sky.png');
-    /* background-size: 150px 150px; */
     background-size:cover;
-    /* background-repeat:repeat-x; */
     background-position:center;
     background-repeat:no-repeat;
     min-width:700px;

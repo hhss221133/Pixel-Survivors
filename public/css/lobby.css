@@ -24,6 +24,18 @@ h3 {
     margin:0;
 }
 
-.game_spa {
-    display:hidden;
+
+.split_flex {
+    align-self:center;
+    display:flex;
+    flex-direction:row;
+    column-gap:10px;
+}
+
+.tag {
+    display: none;
+}
+
+.center_select {
+    text-align: center;
 }

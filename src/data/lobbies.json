@@ -1,3 +1,16 @@
 [
-
+  {
+    "createdBy": "a",
+    "createdAt": "2023-11-21T01:36:18.217Z",
+    "players": [
+      {
+        "username": "a",
+        "status": "joined"
+      }
+    ],
+    "settings": {
+      "maxPlayers": 2
+    },
+    "status": "waiting"
+  }
 ]

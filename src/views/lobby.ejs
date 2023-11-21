@@ -13,14 +13,28 @@
     <body>
         <section id='lobby' class="lobby_wrap">
             <div class = "lobby_container">
-                <h3> Please do not refresh the browser </h3>
+            </div>
+            <div class = "lobby_container">
+                <h3> Please DO NOT refresh the browser </h3>
                 <div class = "player">
                     <h1> Player 1 (Host) </h1>
                     <h2 id="host"> Loading... </h2>
+                    <select class="center_select">
+                        <option>Wizard</option>
+                        <option>Knight</option>
+                    </select>
+                    <div class="split_flex">
+                        <div class="wizard_sprite"></div>
+                        <div class="knight_sprite"></div>
+                    </div>
                 </div>
                 <div class = "player">
                     <h1> Player 2 </h1>
                     <h2 id="client"> Loading... </h2>
+                    <select class="center_select">
+                        <option>Wizard</option>
+                        <option>Knight</option>
+                    </select>
                 </div>
                 <%
                     if(username == roomID) {
@@ -32,12 +46,9 @@
                     }
                 %>
             </div>
+            <div class = "lobby_container">
+            </div>
         </section>
-
-        <section id='game_spa' class="game_screen">
-
-        </section>
-
 
         <script src="/socket.io/socket.io.min.js"></script>
         <script type='module' src="./js/SocketHandler.js"></script>
