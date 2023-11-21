@@ -39,8 +39,8 @@ function LobbyEvents(socket, io, userTimeouts) {
 
                 console.log(`Socket ${socket.request.session.username} joined lobby room ${newLobby.createdBy}`);
                 
-                io.to(newLobby.createdBy).emit('lobby updated', newLobby);
-                io.emit('io updated lobbies json'); //multicast
+                io.to(newLobby.createdBy).emit('lobby updated', newLobby); //multicast only to room
+                io.emit('io updated lobbies json'); //multicast all client
             }
         });
 
@@ -72,6 +72,25 @@ function LobbyEvents(socket, io, userTimeouts) {
         console.log(socket.request.session.username, "requested delete lobby");
         performCleanup(socket.request.session.username, socket, io);
         userTimeouts.delete(socket.request.session.username);
+    });
+
+    socket.on('lobby char change', (char) => {
+        console.log(socket.request.session.username, socket.request.session.username, "sent host char change");
+        LobbiesModel.editLobbyChar(socket.request.session.roomID, char, (err, updatedLobby) => {
+            if (err) {
+                // console.error('Error joining lobby:', err);
+                socket.emit('lobby edit json error', err.message);
+            } else {
+                // The user successfully joined the lobby
+                // socket.join(sroomID);
+
+                // console.log(`${username} joined lobby ${roomID}`);
+                // Emit to all sockets in the room that a new user has joined
+                console.log('Socket callback');
+                io.to(roomID).emit('lobby updated', updatedLobby);
+                // io.emit('io updated lobbies json'); //multicast
+            }
+        });
     });
 }
 

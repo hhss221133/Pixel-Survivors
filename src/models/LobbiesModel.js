@@ -41,7 +41,7 @@ const LobbiesModel = {
                 const newLobby = {
                     createdBy: username,
                     createdAt: new Date().toISOString(),
-                    players: [{ username: username, status: "joined" }],
+                    players: [{ username: username, status: "joined", character: 'Knight' }],
                     settings: { maxPlayers: 2 },
                     status: "waiting"
                 };
@@ -80,7 +80,8 @@ const LobbiesModel = {
     
             lobby.players.push({
                 username: username,
-                status: "joined"
+                status: "joined",
+                character: "Knight"
             });
     
             // Write the updated lobbies back to the file
@@ -117,7 +118,6 @@ const LobbiesModel = {
         });
     },
     
-
     leaveLobby: (username, roomID, callback) => {
         readLobbiesFile((err, lobbies) => {
             if (err) return callback(err);
@@ -150,8 +150,35 @@ const LobbiesModel = {
                 callback(null, lobbies, lobby);
             });
         });
-    },    
+    },
+    
+    editLobbyChar: (username, roomID, char, callback ) => {
+        readLobbiesFile((err, lobbies) => {
 
+            if (err) return callback(err);
+    
+            // Find the lobby with the given ID
+            let lobby = lobbies.find(lobby => lobby.createdBy === roomID);
+            if (!lobby) {
+                return callback(new Error('Lobby not found'));
+            }
+            const playerIndex = lobby.players.findIndex(player => player.username === username);
+            if (playerIndex === -1) {
+                return callback(new Error('User not found in the lobby'));
+            }
+            lobby.players[playerIndex].character = char;
+
+
+            
+
+    
+            // Write the updated list of lobbies back to the file
+            writeLobbiesFile(lobbies, err => {
+                if (err) return callback(err);
+                callback(null);
+            });
+        });
+    },
 }
 
 module.exports = LobbiesModel;

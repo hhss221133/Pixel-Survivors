@@ -1,11 +1,12 @@
 [
   {
     "createdBy": "a",
-    "createdAt": "2023-11-21T01:36:18.217Z",
+    "createdAt": "2023-11-21T04:55:54.646Z",
     "players": [
       {
         "username": "a",
-        "status": "joined"
+        "status": "joined",
+        "character": "Knight"
       }
     ],
     "settings": {
