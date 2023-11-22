@@ -1,4 +1,4 @@
-const {InitGame, PlayerReady} = require('../game/objectModel');
+const {InitGame, PlayerReady, isAllReady} = require('../game/objectModel');
 
 
 function GameEvents(socket, io, userTimeouts) {
@@ -17,7 +17,14 @@ function GameEvents(socket, io, userTimeouts) {
         }
     });
 
+    socket.on('is playing?', () => {
+        console.log('Checking...')
+        var isPlaying = isAllReady(socket.request.session.roomID, socket.request.session.username);
+        io.to(socket.request.session.roomID).emit('player playing', isPlaying);
+    });
+
     socket.on('rejoin room', () => {
+        console.log("Refreshed")
         socket.join(socket.request.session.roomID);
     });
 

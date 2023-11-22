@@ -6,14 +6,13 @@ function InitGame(roomID, host, client) {
     var new_game = new Game(roomID, host, client);
     game_in_memory.push(new_game);
     console.log(game_in_memory);
-    for(i = 0; i < game_in_memory.length; i++) {
-        console.log(game_in_memory[i].getGameID());
-    }
 }
 
 function PlayerReady(roomID, player) {
+    
     // Find the Game object with the specified roomID
     let game = game_in_memory.find(g => g.getGameID() === roomID);
+    console.log(game_in_memory);
 
     if (game) {
         game.setPlayerReady(player);
@@ -25,4 +24,17 @@ function PlayerReady(roomID, player) {
     }
 }
 
-module.exports = {InitGame, PlayerReady};
+function isAllReady(roomID, player) {
+    let game = game_in_memory.find(g => g.getGameID() === roomID);
+    console.log(game_in_memory);
+
+    if (game) {
+        return game.isAllReady();
+        
+    } else {
+        console.log(`No game found for room ID ${roomID}`);
+    }
+    
+}
+
+module.exports = {InitGame, PlayerReady, isAllReady};
