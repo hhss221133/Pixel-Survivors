@@ -73,20 +73,21 @@ p {
 .characters {
     display:flex;
     flex-direction:row;
-    align-items:baseline;
+    align-items:end;
+    justify-content:end;
     column-gap:30px;
     margin-bottom:-5px;
 }
 
 .knight_sprite {
-    display: flex;
+    /* display: flex; */
     transform: scale(1.5,1.5);
     width: 44px; 
-    height: 66px; 
+    height: 44px; 
     background-image: url('../assets/player_knight_clipped.png');
     background-repeat: no-repeat;
     background-position:bottom;
-    margin-bottom:15px;
+    /* margin-bottom:15px; */
 }
 .wizard_sprite {
     display: flex;
@@ -98,6 +99,7 @@ p {
     /* transform: scale(500,500); */
     align-self:baseline;
     margin-top:auto;
+    margin-bottom:-10px;
 }
 
 .bg {

@@ -6,11 +6,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
     ping_server();
     rejoin_room();
+    on_load();
     ready_button();
 });
 
 function ping_server() {
     socket.emit('reconnected');
+}
+
+function on_load() {
+    socket.emit('is playing?');
 }
 
 function rejoin_room() {
@@ -46,3 +51,10 @@ socket.on('all ready', () => {
 });
 
 
+socket.on('player playing', (isPlaying) => {
+    if(isPlaying) {
+        console.log('callback');
+        const init_overlay = document.getElementById('init_overlay');
+        init_overlay.style.display = 'none';
+    }
+});

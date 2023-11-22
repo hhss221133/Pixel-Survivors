@@ -13,9 +13,13 @@ body {
     padding: 10px;
 }
 
+ul {
+    margin:0;
+}
+
 .exp {
     width:100%;
-    background-color: aquamarine;
+    background-color: gray;
     padding:30px;
     padding-left:30px;
     padding-right:30px;
@@ -41,4 +45,12 @@ body {
 
 section {
     overflow: auto;
+}
+
+.label {
+    color:chartreuse;
+}
+
+.label1 {
+    color:lightcoral;
 }
