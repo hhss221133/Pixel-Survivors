@@ -12,6 +12,8 @@ const explosions = {};
 
 const collectibles = {};
 
+let curSocket = null;
+
 const totalGameTime = 240;   // Total game time in seconds
 
 let remainingTime = totalGameTime;
@@ -284,7 +286,8 @@ const GameLoop = function() {
         remainingTime = Math.max(remainingTime - deltaTime, 0);
     };
 
-    const StartGame = function() {
+    const StartGame = function(socket) {
+        curSocket = socket;
 
         InitializeGame();
 

@@ -1,7 +1,9 @@
 class Player {
-    constructor(name) {
+    constructor(name, playerType) {
         this.name = name;
         this.ready = null;
+        this.score = 0;
+        this.playerType = playerType;
     }
 
     setReady(bool_) {
@@ -14,6 +16,15 @@ class Player {
 
     getName() {
         return this.name;
+    }
+
+    addScore(score) {
+        if (score <= 0) return;
+        this.score += score;
+    }
+
+    getScore() {
+        return this.score;
     }
 }
 

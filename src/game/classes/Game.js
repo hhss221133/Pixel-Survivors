@@ -22,6 +22,11 @@ class Game {
         }
     }
 
+    addScoreToplayer(username, score) {
+        (username == this.playerHost.getName())? this.playerHost.addScore(score) : this.playerClient.addScore(score);
+        console.log("Updated Score: " + this.playerHost.getScore() + " " + this.playerClient.getScore());
+    }
+
     isAllReady() {
         return this.playerHost.getReady() === true && this.playerClient.getReady() === true;
     }

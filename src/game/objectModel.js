@@ -25,4 +25,18 @@ function PlayerReady(roomID, player) {
     }
 }
 
-module.exports = {InitGame, PlayerReady};
+function AddScore(roomID, username, score) {
+    let game = game_in_memory.find(g => g.getGameID() === roomID);
+    if (!game) return;
+    game.addScoreToplayer(username, score);
+
+};
+
+function GetGameInMemory() {return game_in_memory;}
+
+module.exports = {
+    InitGame, 
+    PlayerReady,
+    GetGameInMemory,
+    AddScore
+};

@@ -1,22 +1,3 @@
 [
-  {
-    "createdBy": "q",
-    "createdAt": "2023-11-22T14:44:00.641Z",
-    "players": [
-      {
-        "username": "q",
-        "status": "joined",
-        "character": "Knight"
-      },
-      {
-        "username": "a",
-        "status": "joined",
-        "character": "Knight"
-      }
-    ],
-    "settings": {
-      "maxPlayers": 2
-    },
-    "status": "waiting"
-  }
+
 ]

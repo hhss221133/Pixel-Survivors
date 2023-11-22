@@ -41,7 +41,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     };
 
     const AddPlayerScore = function(isEnemyBoss) {
-        playerScore = (isEnemyBoss)? playerScore + 3 : playerScore + 2;
+        if (!curSocket) return;
+        (isEnemyBoss)? curSocket.emit("add score", 3) : curSocket.emit("add score", 2);
     }
 
     const GetPlayerScore = () => {return playerScore;}
