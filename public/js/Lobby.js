@@ -2,6 +2,7 @@ import socket from './SocketHandler.js'; // Import the socket instance
 
 document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
+    one_time_disable();
     ping_server();
     retrieve_session();
     char_change_handler();
@@ -14,6 +15,13 @@ function ping_server() {
 
 function retrieve_session() {
     socket.emit("retrieve lobby session");
+}
+
+function one_time_disable() {
+    const start_game = document.getElementById('start_game');
+    if(start_game) {
+        start_game.setAttribute('disabled', true);
+    }
 }
 
 function start_game_button() {
@@ -79,11 +87,20 @@ socket.on('lobby updated', (lobbyInfo) => {
         host_char.value = lobbyInfo.players[0].character;
 
         if(lobbyInfo.players.length > 1) {
+            const start_game = document.getElementById('start_game');
+            if(start_game) {
+                start_game.removeAttribute('disabled');
+            }
+
             client.textContent = lobbyInfo.players[1].username;
             client.dataset.player = lobbyInfo.players[1].username;
             client_char.value = lobbyInfo.players[1].character;
         } 
         else {
+            const start_game = document.getElementById('start_game');
+            if(start_game) {
+                start_game.setAttribute('disabled', true);
+            }
             client_char.value = 'Knight';
             client.textContent = "Waiting for player...";
         }
@@ -98,6 +115,13 @@ socket.on('lobby join json error', (err) => {
     // alert("There was an error joining the room, please try again.");
     window.location.href = '/lobbies';
 });
+
+socket.on('game started', () => {
+    // alert("There was an error joining the room, please try again.");
+    window.location.href = '/game';
+});
+
+
 
 
 

@@ -76,9 +76,9 @@ router.get('/howtoplay', (req, res) => {
   res.sendFile(path.join(__dirname, '../views/howtoplay.html'));
 });
 
-// router.get('/game', requireLogin, (req, res) => {
-//   res.sendFile(path.join(__dirname, '../protected_views/game.html'));
-// });
+router.get('/game', requireLogin, (req, res) => {
+  res.render('game', {username: req.session.username, roomID: req.session.roomID});
+});
 
 
 module.exports = router;

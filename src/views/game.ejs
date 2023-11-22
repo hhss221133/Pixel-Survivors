@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html data-username= '<%=username %>' data-roomID='<%=roomID %>'>
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>Pixel Survivors</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./css/game.css">
     </head>
 
     <body>
+        <div id='init_overlay' class="init_overlay">
+            <button id="ready_button">
+                Ready
+            </button>
+            <p id="waiting_ready" class="message" hidden>
+                Waiting for others to ready...
+            </p>
+        </div>
+
         <div id="game-container">
             <canvas width="1600px" height="900px"></canvas>
         </div>
         
         <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <script src="/socket.io/socket.io.min.js"></script>
+        <script type='module' src="./js/SocketHandler.js"></script>
+        <script type='module' src="./js/Game.js"></script>
 
-        <script src="./js/Core/AssetsReference.js"></script>
+        <!-- <script src="./js/Core/AssetsReference.js"></script>
         <script src="./js/Core/BoundingBox.js"></script>
         <script src="./js/Core/GameLoop.js"></script>
         <script src="./js/Core/EnumContainer.js"></script>
@@ -37,14 +52,14 @@
         <script src="./js/Projectile/Fireball.js"></script>
         <script src="./js/Projectile/Plasmaball.js"></script>
         <script src="./js/Projectile/Explosion.js"></script>
-        <script src="./js/Collectible/CollectibleHealth.js"></script>
+        <script src="./js/Collectible/CollectibleHealth.js"></script> -->
 
        
-        <script>
+        <!-- <script>
             let Game = GameLoop();
             Game.StartGame();
 
-        </script>
+        </script> -->
 
     </body>
 </html>
