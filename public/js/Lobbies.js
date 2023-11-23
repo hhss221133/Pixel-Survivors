@@ -43,10 +43,10 @@ function perform_cleanup() {
     socket.emit('lobbies json cleanup');
 }
 
-function populate_profile(username) {
-    const username_el = document.getElementById('profile_username');
-    username_el.textContent = username;
-}
+// function populate_profile(username) {
+//     const username_el = document.getElementById('profile_username');
+//     username_el.textContent = username;
+// }
 
 // function get_profile() {
 //     socket.emit('get username');

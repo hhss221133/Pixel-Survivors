@@ -80,5 +80,8 @@ router.get('/game', requireLogin, (req, res) => {
   res.render('game', {username: req.session.username, roomID: req.session.roomID});
 });
 
+router.get('/rankings', requireLogin, (req, res) => {
+  res.render('rankings', {username: req.session.username, roomID: req.session.roomID});
+});
 
 module.exports = router;
