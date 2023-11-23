@@ -1,8 +1,5 @@
 const ObjectModel = require('../game/objectModel');
 const LobbiesModel = require('../models/LobbiesModel');
-const Player = require('../game/classes/Player');
-
-const players = [];
 
 let bBackendLoopRunning = false;
 
@@ -34,6 +31,7 @@ function GameEvents(socket, io, userTimeouts) {
     });
 
     socket.on('ready', () => {
+        sendCharacterToPlayer(socket);
         console.log(`${socket.request.session.username} ready in ${socket.request.session.roomID}`);
         var allReady = ObjectModel.PlayerReady(socket.request.session.roomID, socket.request.session.username);
         if(allReady) {
@@ -65,6 +63,23 @@ function GameEvents(socket, io, userTimeouts) {
 
 }
 
+function sendCharacterToPlayer(socket) {
+    let playerType = "Knight";
+    LobbiesModel.getLobbies( (err, lobbyList) => {
+        if (!lobbyList) return; 
+
+        const curLobby = lobbyList.find(lobby => lobby.createdBy === socket.request.session.roomID);
+        for (playerObject of curLobby.players) {
+            if (playerObject.username == socket.request.session.username) {
+                playerType = playerObject.character;
+                socket.emit("set character", playerType);
+                break;
+            }
+        }
+        
+    }); 
+}
+
 function getAllSocketIdsInRoom(roomID, io) {
     const clients = io.sockets.adapter.rooms.get(roomID);
     return clients ? Array.from(clients) : [];
@@ -85,19 +100,18 @@ function getUsernamesInRoom(roomID, io) {
 }
 
 function StartBackendLoop(io) {
-    setInterval(BackendLoop, 15, io);
+    setInterval(BackendLoop, 15, io); // 15ms = 66.67fps, which is recommended by Valve
 };
 
 function BackendLoop(io) {
     const gameList = ObjectModel.GetGameInMemory();
     for (const game in gameList) {
-        const curgame = gameList[game];
-        if (!curgame.isGameActive()) continue;
+        if (!gameList[game].isGameActive()) continue;
         // this game is active, update the stats for all players in this game
 
-        UpdatePlayerState(io, curgame)
+        UpdatePlayerState(io, gameList[game])
 
-        UpdateGameTime(io, curgame);
+        UpdateGameTime(io, gameList[game]);
         
     }
 };

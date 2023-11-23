@@ -14,7 +14,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let targetPlayer = null;
 
-    let moveThreshold = 600;
+    let moveThreshold = 500;
 
     let disposeEnemyTime = 5; 
 
@@ -81,14 +81,14 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         explosionRight: {x:0, y:372, width:140, height:93, count:9, timing:150, loop:false, isLeft: false, startingIndex: 0, attackIndex: 5},
         explosionLeft: {x:0, y:1023, width:140, height:93, count:9, timing:150, loop:false, isLeft: true, startingIndex: 9, attackIndex: 4},
 
-        dieRight: {x:0, y:465, width:140, height:93, count:3, timing:800, loop:false, isLeft: false, startingIndex: 0},
-        dieLeft: {x:0, y:1116, width:140, height:93, count:3, timing:800, loop:false, isLeft: true, startingIndex: 9},
+        dieRight: {x:0, y:465, width:140, height:93, count:3, timing:650, loop:false, isLeft: false, startingIndex: 0},
+        dieLeft: {x:0, y:1116, width:140, height:93, count:3, timing:650, loop:false, isLeft: true, startingIndex: 9},
 
         teleportEndRight: {x:0, y:558, width:140, height:93, count:10, timing:80, loop:false, isLeft: false, startingIndex: 0},
         teleportEndLeft: {x:0, y:1209, width:140, height:93, count:10, timing:80, loop:false, isLeft: true, startingIndex: 9},
     };
 
-    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 3, referenceLists.BossOriginal, referenceLists.BossWhite);
+    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 2.8, referenceLists.BossOriginal, referenceLists.BossWhite);
 
     const GetHitBox = function() {
         const size = character.getDisplaySize();
@@ -423,6 +423,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const MoveBoss = function() {
 
+        FindTargetPlayer();
+
         let newDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
 
         if (!targetPlayer) {
@@ -512,11 +514,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const SwitchToRankingPage = function() {
         bossRef = null;
-        console.log("Boss is dead!!");
-    }
-
-    const ToEndGamePage = function() {
-        console.log("Hi");
+        console.log("Game Ends!!");
     }
 
     const BossToIdle = function() {

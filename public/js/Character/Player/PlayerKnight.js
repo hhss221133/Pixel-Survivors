@@ -10,7 +10,7 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     player.SetAttackCoolDown(0.5);
 
-    player.SetWalkSpeed(300);
+    player.SetWalkSpeed(250);
 
     let hitSFX = new Audio(referenceLists.SwordHit);
 
@@ -31,7 +31,7 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     player.SetAttackSFX(referenceLists.SwordSlash, sequences.attackRight.timing * sequences.attackRight.attackIndex);
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 2, referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite);
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.7, referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite);
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();

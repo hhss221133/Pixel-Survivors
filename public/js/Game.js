@@ -2,6 +2,8 @@ import socket from './SocketHandler.js'; // Import the socket instance
 
 const Game = GameLoop();
 
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
     ping_server();
@@ -38,6 +40,11 @@ function send_ready() {
 }
 
 //Listeners;
+
+socket.on("set character", (playerType) => {
+    (playerType == "Knight")? AddKnight(50, 630) : AddWizard(50, 630);
+});
+
 socket.on('all ready', () => {
     console.log('callback');
     const init_overlay = document.getElementById('init_overlay');
