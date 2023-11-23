@@ -42,7 +42,7 @@ function send_ready() {
 //Listeners;
 
 socket.on("set character", (playerType) => {
-    (playerType == "Knight")? AddKnight(50, 630) : AddWizard(50, 630);
+    (playerType == "Knight")? AddKnight(100, 540) : AddWizard(100, 540);
 });
 
 socket.on('all ready', () => {

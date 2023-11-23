@@ -20,7 +20,7 @@ const Projectile = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
 
     const GetID = () => {return ID;}
 
-    const GetDamage = () => {return damage;}
+    const GetDamage = () => {return owner.GetAttackPower();}
 
     const CanDealDamage = () => {return bCanDealDamage;}
 

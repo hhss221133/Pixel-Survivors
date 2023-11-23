@@ -8,6 +8,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
+    let walkSpeed;
+
     let playerScore = 0;
 
     let takeDamageSFX = new Audio(referenceLists.PlayerHit);
@@ -15,6 +17,10 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     let dieSFX = new Audio(referenceLists.PlayerDie);
 
     let respawnSFX = new Audio(referenceLists.PlayerRespawn);
+
+    let cheatModeSFX = new Audio();
+
+    let bIsCheatMode = false;
 
     let healthImage = new Image();
     healthImage.src = referenceLists.CollectibleHealth;
@@ -27,6 +33,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     $(document).on("keydown", function(event) {
 
         HandleMovementInputDown(event.keyCode);
+
+        HandleCheatKey(event.keyCode);
 
     });
 
@@ -42,7 +50,11 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const AddPlayerScore = function(isEnemyBoss) {
         if (!curSocket) return;
-        (isEnemyBoss)? curSocket.emit("add score", 3) : curSocket.emit("add score", 2);
+        const dataObj = {}
+        dataObj.damage = character.GetAttackPower();
+        dataObj.score = (isEnemyBoss)? character.GetAttackPower() * 3 : character.GetAttackPower() * 2;
+        dataObj.isBoss = isEnemyBoss;
+        curSocket.emit("add score", dataObj);
     }
 
     const GetPlayerScore = () => {return playerScore;}
@@ -114,6 +126,34 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
+    };
+
+    const HandleCheatKey = function(keyCode) {
+        if (keyCode != ACTION_KEY.CHEAT) return;
+        cheatModeSFX.pause();
+
+        (bIsCheatMode)? ToNormalMode() : ToCheatMode();
+
+    };
+
+    const ToCheatMode = function() {
+        bIsCheatMode = true;
+        cheatModeSFX.src = referenceLists.CheatOn;
+        PlaySFX(cheatModeSFX);
+        
+        character.SetShouldUseCheatSheet(true);
+        character.SetWalkSpeed(500);
+        character.SetAttackPower(10);
+    }
+
+    const ToNormalMode = function() {
+        bIsCheatMode = false;
+        cheatModeSFX.src = referenceLists.CheatOff;
+        PlaySFX(cheatModeSFX);
+        
+        character.SetShouldUseCheatSheet(false);
+        character.SetWalkSpeed(walkSpeed);
+        character.SetAttackPower(1);
     };
 
     const HandlePlayerDead = function() {
@@ -202,6 +242,10 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const draw = function() {
         character.draw();
+        drawUI();
+    }
+    
+    const drawUI = function() {
         drawHealthUI();
         drawScoreUI();
         drawRemainingTimeUI();
@@ -261,11 +305,16 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         }
     };
 
+    const SetWalkSpeed = function(NewWalkSpeed) {
+        walkSpeed = NewWalkSpeed;
+        character.SetWalkSpeed(walkSpeed);
+    };
+
 
 
     return {
         SetMaxHP: character.SetMaxHP,
-        SetWalkSpeed: character.SetWalkSpeed,
+        SetWalkSpeed: SetWalkSpeed,
         SetAttackPower: character.SetAttackPower,
         GetDirection: character.GetDirection,
         CreateSpriteSequences: character.CreateSpriteSequences,
@@ -303,6 +352,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         AddPlayerScore: AddPlayerScore,
         SetAttackSFX: character.SetAttackSFX,
+        drawUI: drawUI
 
     };
 };

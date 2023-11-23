@@ -42,12 +42,11 @@ function GameEvents(socket, io, userTimeouts) {
         }
     });
 
-    socket.on("add score", (score) => {
-        console.log("User: " + socket.request.session.username);
-        ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, score);
-        if (score != 3) return;
+    socket.on("add score", (dataObj) => {
+        ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, dataObj.score);
+        if (!dataObj.isBoss) return;
 
-        const bIsBossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, 1);
+        const bIsBossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, dataObj.damage);
 
         if (bIsBossAlive) return;
         // the boss is dead, end the game

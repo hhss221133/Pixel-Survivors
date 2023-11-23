@@ -167,9 +167,9 @@ const Character = function(ctx, x, y, gameArea, actorID) {
     };
 
     /* Create sprite sequeunces specific to each character  */
-    const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, SheetName, WhiteSheetName) {
+    const CreateSpriteSequences = function(NewSpriteSequence, DefaultSequence, Scale, SheetName, WhiteSheetName, CheatSheetName) {
         sequences = NewSpriteSequence;
-        sprite.setSequence(DefaultSequence).setScale(Scale).useSheet(SheetName, WhiteSheetName);
+        sprite.setSequence(DefaultSequence).setScale(Scale).useSheet(SheetName, WhiteSheetName, CheatSheetName);
     };
 
     const MoveCharacter = function() {
@@ -317,6 +317,7 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         SetSequenceEndToIdle: SetSequenceEndToIdle,
         getSequenceEndCallback: sprite.getSequenceEndCallback,
         SetShouldUseWhiteSheet: sprite.SetShouldUseWhiteSheet,
+        SetShouldUseCheatSheet: sprite.SetShouldUseCheatSheet,
 
         //SFX
         SetAttackSFX: SetAttackSFX,

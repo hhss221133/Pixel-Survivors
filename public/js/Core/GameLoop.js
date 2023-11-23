@@ -32,6 +32,8 @@ let collectibleTimer = null;
 
 let bossRef = null;
 
+let playerRef = null;
+
 let BGM_stage1 = new Audio(referenceLists.Boss_Stage1);
 BGM_stage1.loop = true;
 BGM_stage1.volume = BGMMasterVolume;
@@ -56,7 +58,7 @@ let TimeLeft = null;
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
 const context = canvas.getContext("2d");
-const gameArea = BoundingBox(context, 30, 30, 660, 1240);
+const gameArea = BoundingBox(context, 30, 30, 630, 1240);
 
 
 const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
@@ -90,10 +92,11 @@ const HandleEndGame = function() {
 };
 
 const GameEndDoFrame = function(now) {
-    if (!bossRef) return;
+    if (!bossRef || !playerRef) return;
     context.clearRect(0, 0, canvas.width, canvas.height);
     bossRef.Update(now);
     bossRef.draw();
+    playerRef.drawUI();
     requestAnimationFrame(GameEndDoFrame);
 }
 
@@ -154,6 +157,7 @@ const AddPlayer = function(playerType, playerX, playerY) {
             break;
     }
 
+    playerRef = players[newPlayerID];
     actorIndex++;
 };
 
@@ -232,7 +236,7 @@ const GameLoop = function() {
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
 
-        AddBoss(1000, 400);
+        AddBoss(1000, 180);
         ChangeBossBGM(1);
     };
 

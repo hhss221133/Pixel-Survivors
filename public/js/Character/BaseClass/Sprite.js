@@ -9,11 +9,15 @@ const Sprite = function(ctx, x, y) {
 
     const whiteSheet = new Image();
 
+    const cheatSheet = new Image();
+
     const MaxWhiteSheetFrameNum = 10;
 
     let curWhiteSheetFrameNum = 0;
 
     let bShouldUseWhiteSheet = false;
+
+    let bShouldUseCheatSheet = false;
 
     // used to notice others when animation ends
     let sequenceEndCallback = null;
@@ -48,13 +52,16 @@ const Sprite = function(ctx, x, y) {
 
     // This function uses a new sprite sheet in the image object.
     // - `spriteSheet` - The source of the sprite sheet (URL)
-    const useSheet = function(spriteSheet, whiteSpritesheet) {
+    const useSheet = function(spriteSheet, whiteSpritesheet, cheatSpriteSheet) {
         sheet.src = spriteSheet;
         if (whiteSpritesheet)   whiteSheet.src = whiteSpritesheet;
+        if (cheatSpriteSheet) cheatSheet.src = cheatSpriteSheet;
         return this;
     };
 
     const SetShouldUseWhiteSheet = () => {bShouldUseWhiteSheet = true;}
+
+    const SetShouldUseCheatSheet = (bShoulduse) => {bShouldUseCheatSheet = bShoulduse;}
 
     const getIndex = () => {return index};
 
@@ -129,6 +136,10 @@ const Sprite = function(ctx, x, y) {
             ctx.drawImage(whiteSheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
                 x - size.width / 2, y - size.height / 2, size.width, size.height);
 
+        }
+        else if (bShouldUseCheatSheet) {
+            ctx.drawImage(cheatSheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
+                x - size.width / 2, y - size.height / 2, size.width, size.height);
         }
         else {
             ctx.drawImage(sheet, sequence.x + index * sequence.width, sequence.y, sequence.width, sequence.height, 
@@ -229,6 +240,7 @@ const Sprite = function(ctx, x, y) {
         setSequenceEndCallback: setSequenceEndCallback,
         getIndex: getIndex,
         getSequenceEndCallback: getSequenceEndCallback,
-        SetShouldUseWhiteSheet: SetShouldUseWhiteSheet
+        SetShouldUseWhiteSheet: SetShouldUseWhiteSheet,
+        SetShouldUseCheatSheet: SetShouldUseCheatSheet
     };
 };

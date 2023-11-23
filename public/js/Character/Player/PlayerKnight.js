@@ -31,7 +31,8 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     player.SetAttackSFX(referenceLists.SwordSlash, sequences.attackRight.timing * sequences.attackRight.attackIndex);
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.7, referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite);
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.7, 
+        referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite, referenceLists.PlayerKnightCheat);
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();
@@ -145,5 +146,6 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
         GetActorType: player.GetActorType,
         AddHealth: player.AddHealth,
         AddPlayerScore: player.AddPlayerScore,
+        drawUI: player.drawUI
     };
 };

@@ -17,9 +17,11 @@ const referenceLists = {
 
     PlayerKnightOriginal: "assets/sprite/original/player_knight.png",
     PlayerKnightWhite: "assets/sprite/white/player_knight_white.png",
+    PlayerKnightCheat: "assets/sprite/white/player_knight_cheat.png",
 
     PlayerWizardOriginal: "assets/sprite/original/player_wizard.png",
     PlayerWizardWhite: "assets/sprite/white/player_wizard_white.png",
+    PlayerWizardCheat: "assets/sprite/white/player_wizard_cheat.png",
 
     Explosion: "assets/sprite/original/explosion.png",
     Fireball: "assets/sprite/original/fireball.png",
@@ -37,6 +39,8 @@ const referenceLists = {
     PlayerHit: "assets/audio/SFX/player_hit.wav",
     PlayerDie: "assets/audio/SFX/player_die.wav",
     PlayerRespawn: "assets/audio/SFX/player_respawn.wav",
+    CheatOn: "assets/audio/SFX/cheat_on.wav",
+    CheatOff: "assets/audio/SFX/cheat_off.wav",
 
     EnemyDie: "assets/audio/SFX/enemy_die.wav",
     FlyingEyeAttack: "assets/audio/SFX/flyingEye_attack.wav",

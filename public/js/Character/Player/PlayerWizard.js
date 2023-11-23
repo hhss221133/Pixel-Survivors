@@ -30,7 +30,8 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
     player.SetAttackSFX(referenceLists.MagicSpell, 0);
 
-    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1, "assets/sprite/original/player_wizard.png", "assets/sprite/white/player_wizard_white.png");
+    player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1, 
+        referenceLists.PlayerWizardOriginal, referenceLists.PlayerWizardWhite, referenceLists.PlayerWizardCheat);
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();
@@ -116,5 +117,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         GetActorType: player.GetActorType,
         AddHealth: player.AddHealth,
         AddPlayerScore: player.AddPlayerScore,
+        drawUI: player.drawUI,
     };
 };

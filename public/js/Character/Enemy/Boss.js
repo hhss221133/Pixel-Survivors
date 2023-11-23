@@ -14,7 +14,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let targetPlayer = null;
 
-    let moveThreshold = 500;
+    let moveThreshold = 400;
 
     let disposeEnemyTime = 5; 
 
