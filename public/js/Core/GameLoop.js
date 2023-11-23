@@ -52,7 +52,9 @@ let BGM_stage5 = new Audio(referenceLists.Boss_Stage5);
 BGM_stage5.loop = true;
 BGM_stage5.volume = BGMMasterVolume;
 
+let PlayerData = 0;
 
+let TimeRemaining = 0;
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);

@@ -37,11 +37,6 @@ function send_ready() {
     socket.emit('ready');
 }
 
-export function send_addScore(score) {
-    socket.emit("add score", score);
-}
-
-
 //Listeners;
 socket.on('all ready', () => {
     console.log('callback');
@@ -57,4 +52,10 @@ socket.on('player playing', (isPlaying) => {
         const init_overlay = document.getElementById('init_overlay');
         init_overlay.style.display = 'none';
     }
+});
+
+socket.on("update player scores",  (gameData) => {
+    if (!Game) return;
+    console.log("Name: " + gameData["username"]);
+    PlayerData = gameData;
 });

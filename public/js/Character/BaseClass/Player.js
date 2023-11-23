@@ -228,7 +228,24 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const drawScoreUI = function() {
         ctx.font = "30px Arial";
-        ctx.fillText("Score: " + GetPlayerScore(), 20, 100);
+        if (!PlayerData) {
+            ctx.fillText("Your score: 0", 20, 100);
+            ctx.fillText("Rival's score: 0", 20, 150);
+            return;
+        }
+
+        const user = PlayerData["username"];
+
+        for (const property in PlayerData) {
+            if (property == user) {
+                // player's score
+                ctx.fillText("Your score: " + PlayerData[user], 20, 100);
+            }
+            else if (property != "username") {
+                // rival's score
+                ctx.fillText("Rival's score: " + PlayerData[property], 20, 150);
+            }
+        }
     };
 
     const drawRemainingTimeUI = function() {

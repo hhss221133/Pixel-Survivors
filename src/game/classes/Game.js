@@ -5,7 +5,26 @@ class Game {
         this.gameID = roomID;
         this.playerHost = new Player(hostN);
         this.playerClient = new Player(clientN);
-        this.gameState = 'waiting'; // Example states: 'waiting', 'active', 'finished'
+        this.gameState = "waiting"; // Example states: 'waiting', 'active', 'finished'
+        this.remainingTime = 240;
+        this.bossCurHP = 150;
+    }
+
+    getBossHP() {
+        return this.bossCurHP;
+    }
+
+    isBossDead() {
+        return this.bossCurHP <= 0;
+    }
+
+    dealDamageToBoss(damage) {
+        if (damage <= 0) return;
+        this.bossCurHP -= damage;
+        if (this.bossCurHP < 0) this.bossCurHP = 0;
+
+        // true => continue the game, false => end the game (the boss is dead)
+        return (this.bossCurHP > 0);
     }
 
     getGameID() {
@@ -22,13 +41,36 @@ class Game {
         }
     }
 
+    setGameState(newState) {
+        this.gameState = newState;
+    }
+
+    getGameState() {
+        return this.gameState;
+    }
+
+    isGameActive() {
+        return this.gameState == "active";
+    }
+
     addScoreToplayer(username, score) {
         (username == this.playerHost.getName())? this.playerHost.addScore(score) : this.playerClient.addScore(score);
-        console.log("Updated Score: " + this.playerHost.getScore() + " " + this.playerClient.getScore());
     }
 
     isAllReady() {
         return this.playerHost.getReady() === true && this.playerClient.getReady() === true;
+    }
+
+    getRemainingTime() {
+        return this.remainingTime;
+    }
+
+    getPlayerData() {
+        const playerData ={};
+
+        playerData[this.playerHost.getName()] = this.playerHost.getScore();
+        playerData[this.playerClient.getName()] = this.playerClient.getScore();
+        return playerData;
     }
 }
 

@@ -4,6 +4,8 @@ const Player = require('../game/classes/Player');
 
 const players = [];
 
+let bBackendLoopRunning = false;
+
 function GameEvents(socket, io, userTimeouts) {
 
     socket.on('start game', () => {
@@ -36,7 +38,8 @@ function GameEvents(socket, io, userTimeouts) {
         var allReady = ObjectModel.PlayerReady(socket.request.session.roomID, socket.request.session.username);
         if(allReady) {
             console.log(`all ready in ${socket.request.session.roomID}`);
-            io.to(socket.request.session.roomID).emit('all ready');
+            ObjectModel.SetGameState(socket.request.session.roomID, "active");
+            io.to(socket.request.session.roomID).emit('all ready'); // start the game
             console.log('callback sent');
         }
     });
@@ -44,7 +47,24 @@ function GameEvents(socket, io, userTimeouts) {
     socket.on("add score", (score) => {
         console.log("User: " + socket.request.session.username);
         ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, score);
+        if (score != 3) return;
+
+        // a player hits the boss, reduce its HP
+        const BossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, 1);
+
+        if (BossAlive) return;
+
+        ObjectModel.SetGameState(socket.request.session.roomID, "finished");
+        // end the game
+        console.log("the boss is dead");
+        
     });
+
+    if (!bBackendLoopRunning) {
+        bBackendLoopRunning = true;
+        StartBackendLoop(socket, io);
+    }
+
 }
 
 function getAllSocketIdsInRoom(roomID, io) {
@@ -66,45 +86,25 @@ function getUsernamesInRoom(roomID, io) {
     return usernames;
 }
 
+function StartBackendLoop(socket, io) {
+    setInterval(BackendLoop, 15, socket, io);
+};
+
+function BackendLoop(socket, io) {
+    const gameList = ObjectModel.GetGameInMemory();
+    for (const game in gameList) {
+        if (!gameList[game].isGameActive()) continue;
+        // this game is active, update the stats for all players in this game
+        const playerData = {... gameList[game].getPlayerData()};
+        const usersInRoom = getUsernamesInRoom(socket.request.session.roomID, io);
+        
+        playerData["username"] = socket.request.session.username;
+        io.to(gameList[game].getGameID()).emit("update player scores", playerData);
+
+     //   gameData["timeLeft"] = gameList[game].getRemainingTime(); 
+    }
+
+};
+
 
 module.exports = GameEvents;
-
-
-
-
-/*const LobbiesModel = require('../models/LobbiesModel');
-const roomPlayers = {};
-const playerSpawnPositionOccupied = {
-    bottomLeft: false,
-    topRight: false
-}
-function GameEvents(socket, io, userTimeouts) {
-    const username = socket.request.session.username;
-    const roomID = socket.request.session.roomID;
-    LobbiesModel.getLobbies( (err, lobbyList) => {
-        const curLobby = lobbyList.find(lobby => lobby.createdBy === username);
-        InitializePlayers(curLobby);
-        io.to(roomID).emit("initialize and start game", roomPlayers);
-    }); 
-};
-function InitializePlayers(lobby) {
-    if (!lobby) return;
-    for (playerObject of lobby.players) {
-        roomPlayers[playerObject.username] = {
-            maxHP: 5,
-            playerType: "Knight",
-            walkSpeed: 300,
-            isDead: false
-        };
-        if (!playerSpawnPositionOccupied.bottomLeft) {
-            roomPlayers[playerObject.username].pos = {x: 50, y: 630};
-            playerSpawnPositionOccupied.bottomLeft = true;
-        }
-        else {
-            roomPlayers[playerObject.username].pos = {x: 1200, y: 50};
-            playerSpawnPositionOccupied.topRight = true;
-        }
-    }
-    console.log("Initializing players: " + JSON.stringify(roomPlayers));
-};
-module.exports = GameEvents; */
