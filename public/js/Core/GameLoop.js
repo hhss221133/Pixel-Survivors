@@ -14,10 +14,6 @@ const collectibles = {};
 
 let curSocket = null;
 
-const totalGameTime = 240;   // Total game time in seconds
-
-let remainingTime = totalGameTime;
-
 const healthAppearIntervalMin = 5000; // in miliseconds
 
 const healthAppearIntervalMax = 9000; // in miliseconds
@@ -52,9 +48,10 @@ let BGM_stage5 = new Audio(referenceLists.Boss_Stage5);
 BGM_stage5.loop = true;
 BGM_stage5.volume = BGMMasterVolume;
 
-let PlayerData = 0;
+let PlayerStateData = null;
 
-let TimeRemaining = 0;
+let TimeLeft = null;
+
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
@@ -84,6 +81,21 @@ const AddEnemy = function(enemyType, enemyX, enemyY) {
 
     actorIndex++;
 };
+
+const HandleEndGame = function() {
+    if (!bossRef) return;
+    bossRef.HandleEnemyDead();
+
+    requestAnimationFrame(GameEndDoFrame);
+};
+
+const GameEndDoFrame = function(now) {
+    if (!bossRef) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    bossRef.Update(now);
+    bossRef.draw();
+    requestAnimationFrame(GameEndDoFrame);
+}
 
 const AddCollectibleHealth = function() {
     let newCollectibleID = "CollectibleHealth_" + actorIndex;
@@ -237,13 +249,19 @@ const GameLoop = function() {
 
         UpdateAndDraw(now);
 
-        UpdateRemainingTime();
-
         /* Process the next frame */
-        if (GameRunning)    requestAnimationFrame(doFrame);
+        if (GameRunning) {
+            requestAnimationFrame(doFrame);
+        }
+        else {
+            // show boss die animation and end the game
+            HandleEndGame();
+        }
     };
 
     const CalculateDeltaTime = function() {
+
+        // simple delta time by taking frame[n] - frame[n-1]
         let current = Date.now();
         deltaTime = current - start;
         deltaTime *= 0.001;
@@ -282,10 +300,6 @@ const GameLoop = function() {
             updateTarget.draw();
         }
 
-    };
-
-    const UpdateRemainingTime = function() {
-        remainingTime = Math.max(remainingTime - deltaTime, 0);
     };
 
     const StartGame = function(socket) {

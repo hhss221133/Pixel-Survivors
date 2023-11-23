@@ -38,8 +38,8 @@ function GameEvents(socket, io, userTimeouts) {
         var allReady = ObjectModel.PlayerReady(socket.request.session.roomID, socket.request.session.username);
         if(allReady) {
             console.log(`all ready in ${socket.request.session.roomID}`);
-            ObjectModel.SetGameState(socket.request.session.roomID, "active");
             io.to(socket.request.session.roomID).emit('all ready', socket.request.session.username); // start the game
+            ObjectModel.SetGameState(socket.request.session.roomID, "active");
             console.log('callback sent');
         }
     });
@@ -49,14 +49,12 @@ function GameEvents(socket, io, userTimeouts) {
         ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, score);
         if (score != 3) return;
 
-        // a player hits the boss, reduce its HP
-        const BossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, 1);
+        const bIsBossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, 1);
 
-        if (BossAlive) return;
-
-        ObjectModel.SetGameState(socket.request.session.roomID, "finished");
-        // end the game
-        console.log("the boss is dead");
+        if (bIsBossAlive) return;
+        // the boss is dead, end the game
+        let curGame = ObjectModel.GetGameInMemory().find(g => g.getGameID() === socket.request.session.roomID);
+        HandleGameEnd(io, curGame);
         
     });
 
@@ -93,14 +91,37 @@ function StartBackendLoop(io) {
 function BackendLoop(io) {
     const gameList = ObjectModel.GetGameInMemory();
     for (const game in gameList) {
-        if (!gameList[game].isGameActive()) continue;
+        const curgame = gameList[game];
+        if (!curgame.isGameActive()) continue;
         // this game is active, update the stats for all players in this game
 
-        io.to(gameList[game].getGameID()).emit("update player scores", gameList[game].getPlayerData());
+        UpdatePlayerState(io, curgame)
 
-     //   gameData["timeLeft"] = gameList[game].getRemainingTime(); 
+        UpdateGameTime(io, curgame);
+        
+    }
+};
+
+function UpdatePlayerState(io, game) {
+    io.to(game.getGameID()).emit("update player states", game.getPlayerData());
+}
+
+function UpdateGameTime(io, game) {
+    const timeLeft = game.updateRemainingTime();
+    io.to(game.getGameID()).emit("update time left", game.getRemainingTime());
+    if (timeLeft <= 0) {
+        HandleGameEnd(io, game);
     }
 
+}
+
+
+function HandleGameEnd(io, game) {
+    if (game.getGameState() == "finished") return; // avoid double calling
+    game.setGameState("finished");
+    game.setClearTime();
+    console.log("Time used: " + game.getClearTime());
+    io.to(game.getGameID()).emit("game ends");
 };
 
 

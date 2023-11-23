@@ -6,8 +6,11 @@ class Game {
         this.playerHost = new Player(hostN);
         this.playerClient = new Player(clientN);
         this.gameState = "waiting"; // Example states: 'waiting', 'active', 'finished'
-        this.remainingTime = 240;
-        this.bossCurHP = 150;
+        this.maxGameTime = 240000; // in ms
+        this.remainingTime = this.maxGameTime; // in ms
+        this.bossMaxHP = 3;
+        this.bossCurHP = this.bossMaxHP;
+        this.clearTime = null; // in second
     }
 
     getBossHP() {
@@ -27,6 +30,13 @@ class Game {
         return (this.bossCurHP > 0);
     }
 
+    updateRemainingTime() {
+        if (!this.isGameActive()) return 0;
+        this.remainingTime -= 15;
+        if (this.remainingTime < 0) this.remainingTime = 0;
+        return this.remainingTime;
+    }
+
     getGameID() {
         return this.gameID;
     }
@@ -39,6 +49,14 @@ class Game {
         } else {
             return false;
         }
+    }
+
+    setClearTime() {
+        this.clearTime = Math.ceil((this.maxGameTime - this.remainingTime) * 0.001);
+    }
+    
+    getClearTime() {
+        return this.clearTime;
     }
 
     setGameState(newState) {

@@ -32,6 +32,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let summonSFX = new Audio(referenceLists.Summon);
 
+    let bossDisappearSFX = new Audio(referenceLists.BossDisappear);
+
+    let bossDieSFX = new Audio(referenceLists.BossDie);
+
 
     let bossStage = 1; // boss has 3 stages, attack patterns change with it
 
@@ -480,8 +484,6 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         character.DealDamage(damage);
 
-        
-
         character.SetShouldUseWhiteSheet();
 
         let HP = character.GetCurHP();
@@ -490,28 +492,28 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
             return;
         }
 
-        // character die
-        character.SetFSMState(FSM_STATE.DEAD);
-        HandleEnemyDead();
-        
     };
 
     const HandleEnemyDead = function() {
-        
+        character.SetFSMState(FSM_STATE.DEAD);
         character.setSequenceEndCallback(EnemyDie);
 
         StopAllBGM();
+        PlaySFX(bossDieSFX);
 
-        GameRunning = false;
-
-        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
-            character.setSequence(character.GetSequenceList().dieRight);
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft, character.GetSequenceList().teleportStartLeft) :
+            character.setSequence(character.GetSequenceList().dieRight, character.GetSequenceList().teleportStartRight);
     }
 
     const EnemyDie = function() {
-        if (!enemyDieTimer)
-            enemyDieTimer = setTimeout(ToEndGamePage, disposeEnemyTime * 1000);
+        PlaySFX(bossDisappearSFX);
+        setTimeout(SwitchToRankingPage, character.GetSequenceList().teleportStartLeft.timing * character.GetSequenceList().teleportStartLeft.count);
     };
+
+    const SwitchToRankingPage = function() {
+        bossRef = null;
+        console.log("Boss is dead!!");
+    }
 
     const ToEndGamePage = function() {
         console.log("Hi");
@@ -568,6 +570,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         IsBoss: IsBoss,
         GetTargetPlayer: GetTargetPlayer,
         FindTargetPlayer: FindTargetPlayer,
+        HandleEnemyDead: HandleEnemyDead,
     }
 
 };

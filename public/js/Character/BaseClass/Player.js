@@ -228,7 +228,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const drawScoreUI = function() {
         ctx.font = "30px Arial";
-        if (!PlayerData) {
+        if (!PlayerStateData) {
             ctx.fillText("Your score: 0", 20, 100);
             ctx.fillText("Rival's score: 0", 20, 150);
             return;
@@ -238,8 +238,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         let playerScore, rivalScore;
 
-        for (const property in PlayerData) {
-            (property == username)? playerScore = PlayerData[property] : rivalScore = PlayerData[property];
+        for (const property in PlayerStateData) {
+            (property == username)?  playerScore = PlayerStateData[property] : rivalScore = PlayerStateData[property];
         }
         ctx.fillStyle = "black";
         if (playerScore < rivalScore) ctx.fillStyle = "red";
@@ -253,7 +253,12 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const drawRemainingTimeUI = function() {
         ctx.fillStyle = "black";
-        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 200);
+        if (!TimeLeft) {
+            ctx.fillText("Time Remaining: 240", 20, 200);
+        }
+        else {
+            ctx.fillText("Time Remaining: " + Math.ceil(TimeLeft * 0.001), 20, 200);
+        }
     };
 
 

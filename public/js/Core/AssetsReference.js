@@ -48,6 +48,8 @@ const referenceLists = {
     PlasmaballSpawn: "assets/audio/SFX/plasmaball.wav",
     Teleport: "assets/audio/SFX/teleport.wav",
     Summon: "assets/audio/SFX/summon.wav",
+    BossDisappear: "assets/audio/SFX/boss_disappear.wav",
+    BossDie: "assets/audio/SFX/boss_die.wav",
 
 /******************************** BGM reference *************************************************************************/
     Boss_Stage1: "assets/audio/BGM/BGM_boss_stage1.wav",

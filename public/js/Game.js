@@ -53,8 +53,14 @@ socket.on('player playing', (isPlaying) => {
     }
 });
 
-socket.on("update player scores",  (gameData) => {
-    if (!Game) return;
+socket.on("update player states",  (playerData) => {
+    PlayerStateData = playerData;
+});
 
-    PlayerData = gameData;
+socket.on("update time left",  (timeData) => {
+    TimeLeft = timeData;
+});
+
+socket.on("game ends", () => {
+    GameRunning = false;
 });
