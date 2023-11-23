@@ -55,6 +55,20 @@ function GameEvents(socket, io, userTimeouts) {
         
     });
 
+    socket.on("end the game", () => {
+        const gameList = ObjectModel.GetGameInMemory();
+
+        // you may redirect both the players here, this event will be sent twice (from both two players), 
+        // so you should ensure that your codes are runned only once
+        //
+        // clear time of the game can be accessed by game.getClearTime() (in seconds)
+        // scores of the player can be accessed by game.getPlayerData()
+        // you need to get the target game object from ObjectModel
+
+        /* Your code here */
+        
+    });
+
     if (!bBackendLoopRunning) {
         bBackendLoopRunning = true;
         StartBackendLoop(io);

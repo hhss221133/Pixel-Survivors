@@ -514,7 +514,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const SwitchToRankingPage = function() {
         bossRef = null;
-        console.log("Game Ends!!");
+        if (!curSocket) return;
+        curSocket.emit("end the game");
     }
 
     const BossToIdle = function() {
