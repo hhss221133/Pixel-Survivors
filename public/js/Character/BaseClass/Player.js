@@ -234,23 +234,26 @@ const Player = function(ctx, x, y, gameArea, actorID) {
             return;
         }
 
-        const user = PlayerData["username"];
+        const username = $("html").data("username");
+
+        let playerScore, rivalScore;
 
         for (const property in PlayerData) {
-            if (property == user) {
-                // player's score
-                ctx.fillText("Your score: " + PlayerData[user], 20, 100);
-            }
-            else if (property != "username") {
-                // rival's score
-                ctx.fillText("Rival's score: " + PlayerData[property], 20, 150);
-            }
+            (property == username)? playerScore = PlayerData[property] : rivalScore = PlayerData[property];
         }
+        ctx.fillStyle = "black";
+        if (playerScore < rivalScore) ctx.fillStyle = "red";
+        else if (playerScore > rivalScore) ctx.fillStyle = "blue";
+        ctx.fillText("Your score: " + playerScore, 20, 100);
+
+        ctx.fillStyle = "black";
+        ctx.fillText("Rival's score: " + rivalScore, 20, 150);
+
     };
 
     const drawRemainingTimeUI = function() {
-
-        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 150);
+        ctx.fillStyle = "black";
+        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 200);
     };
 
 

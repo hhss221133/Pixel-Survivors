@@ -39,7 +39,7 @@ function GameEvents(socket, io, userTimeouts) {
         if(allReady) {
             console.log(`all ready in ${socket.request.session.roomID}`);
             ObjectModel.SetGameState(socket.request.session.roomID, "active");
-            io.to(socket.request.session.roomID).emit('all ready'); // start the game
+            io.to(socket.request.session.roomID).emit('all ready', socket.request.session.username); // start the game
             console.log('callback sent');
         }
     });
@@ -62,7 +62,7 @@ function GameEvents(socket, io, userTimeouts) {
 
     if (!bBackendLoopRunning) {
         bBackendLoopRunning = true;
-        StartBackendLoop(socket, io);
+        StartBackendLoop(io);
     }
 
 }
@@ -86,20 +86,17 @@ function getUsernamesInRoom(roomID, io) {
     return usernames;
 }
 
-function StartBackendLoop(socket, io) {
-    setInterval(BackendLoop, 15, socket, io);
+function StartBackendLoop(io) {
+    setInterval(BackendLoop, 15, io);
 };
 
-function BackendLoop(socket, io) {
+function BackendLoop(io) {
     const gameList = ObjectModel.GetGameInMemory();
     for (const game in gameList) {
         if (!gameList[game].isGameActive()) continue;
         // this game is active, update the stats for all players in this game
-        const playerData = {... gameList[game].getPlayerData()};
-        const usersInRoom = getUsernamesInRoom(socket.request.session.roomID, io);
-        
-        playerData["username"] = socket.request.session.username;
-        io.to(gameList[game].getGameID()).emit("update player scores", playerData);
+
+        io.to(gameList[game].getGameID()).emit("update player scores", gameList[game].getPlayerData());
 
      //   gameData["timeLeft"] = gameList[game].getRemainingTime(); 
     }

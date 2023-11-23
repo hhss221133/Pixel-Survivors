@@ -45,7 +45,6 @@ socket.on('all ready', () => {
     Game.StartGame(socket);
 });
 
-
 socket.on('player playing', (isPlaying) => {
     if(isPlaying) {
         console.log('callback');
@@ -56,6 +55,6 @@ socket.on('player playing', (isPlaying) => {
 
 socket.on("update player scores",  (gameData) => {
     if (!Game) return;
-    console.log("Name: " + gameData["username"]);
+
     PlayerData = gameData;
 });
