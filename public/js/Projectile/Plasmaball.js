@@ -12,9 +12,9 @@ const Plasmaball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, act
 
     let scale;
 
-    if (owner.GetAttackType() == BOSS_ATTACK_TYPE.FASTSHOOT) scale = 1;
+    if (owner.GetAttackType() == BOSS_ATTACK_TYPE.FASTSHOOT) scale = 0.8;
     else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.MULTIPLESHOOT) scale = 0.4;
-    else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.NORMALSHOOT) scale = 1.3
+    else if (owner.GetAttackType() == BOSS_ATTACK_TYPE.NORMALSHOOT) scale = 1.1;
 
     projectile.CreateSpriteSequences(sequences, sequences.idle, scale, referenceLists.Plasmaball);
     

@@ -24,7 +24,7 @@ const EnemySkeleton = function(ctx, x, y, gameArea, enemyID) {
 
     enemy.SetAttackSFX(referenceLists.SkeletonAttack, sequences.attackRight.timing * sequences.attackRight.attackIndex);
 
-    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.5, referenceLists.SkeletonOriginal, referenceLists.SkeletonWhite);
+    enemy.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.3, referenceLists.SkeletonOriginal, referenceLists.SkeletonWhite);
 
     const GetHitBox = function() {
         const size = enemy.getDisplaySize();

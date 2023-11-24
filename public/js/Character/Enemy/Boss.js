@@ -14,7 +14,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     let targetPlayer = null;
 
-    let moveThreshold = 600;
+    let moveThreshold = 400;
 
     let disposeEnemyTime = 5; 
 
@@ -31,6 +31,10 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     let teleportSFX = new Audio(referenceLists.Teleport);
 
     let summonSFX = new Audio(referenceLists.Summon);
+
+    let bossDisappearSFX = new Audio(referenceLists.BossDisappear);
+
+    let bossDieSFX = new Audio(referenceLists.BossDie);
 
 
     let bossStage = 1; // boss has 3 stages, attack patterns change with it
@@ -77,14 +81,14 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         explosionRight: {x:0, y:372, width:140, height:93, count:9, timing:150, loop:false, isLeft: false, startingIndex: 0, attackIndex: 5},
         explosionLeft: {x:0, y:1023, width:140, height:93, count:9, timing:150, loop:false, isLeft: true, startingIndex: 9, attackIndex: 4},
 
-        dieRight: {x:0, y:465, width:140, height:93, count:3, timing:800, loop:false, isLeft: false, startingIndex: 0},
-        dieLeft: {x:0, y:1116, width:140, height:93, count:3, timing:800, loop:false, isLeft: true, startingIndex: 9},
+        dieRight: {x:0, y:465, width:140, height:93, count:3, timing:650, loop:false, isLeft: false, startingIndex: 0},
+        dieLeft: {x:0, y:1116, width:140, height:93, count:3, timing:650, loop:false, isLeft: true, startingIndex: 9},
 
         teleportEndRight: {x:0, y:558, width:140, height:93, count:10, timing:80, loop:false, isLeft: false, startingIndex: 0},
         teleportEndLeft: {x:0, y:1209, width:140, height:93, count:10, timing:80, loop:false, isLeft: true, startingIndex: 9},
     };
 
-    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 3, referenceLists.BossOriginal, referenceLists.BossWhite);
+    character.CreateSpriteSequences(sequences, sequences.moveRight, scale = 2.8, referenceLists.BossOriginal, referenceLists.BossWhite);
 
     const GetHitBox = function() {
         const size = character.getDisplaySize();
@@ -419,6 +423,8 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
     const MoveBoss = function() {
 
+        FindTargetPlayer();
+
         let newDir = {horizontal: DIRECTION_X.STOP, vertical: DIRECTION_Y.STOP};
 
         if (!targetPlayer) {
@@ -480,8 +486,6 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         character.DealDamage(damage);
 
-        
-
         character.SetShouldUseWhiteSheet();
 
         let HP = character.GetCurHP();
@@ -490,31 +494,28 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
             return;
         }
 
-        // character die
-        character.SetFSMState(FSM_STATE.DEAD);
-        HandleEnemyDead();
-        
     };
 
     const HandleEnemyDead = function() {
-        
+        character.SetFSMState(FSM_STATE.DEAD);
         character.setSequenceEndCallback(EnemyDie);
 
         StopAllBGM();
+        PlaySFX(bossDieSFX);
 
-        GameRunning = false;
-
-        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft) :
-            character.setSequence(character.GetSequenceList().dieRight);
+        (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().dieLeft, character.GetSequenceList().teleportStartLeft) :
+            character.setSequence(character.GetSequenceList().dieRight, character.GetSequenceList().teleportStartRight);
     }
 
     const EnemyDie = function() {
-        if (!enemyDieTimer)
-            enemyDieTimer = setTimeout(ToEndGamePage, disposeEnemyTime * 1000);
+        PlaySFX(bossDisappearSFX);
+        setTimeout(SwitchToRankingPage, character.GetSequenceList().teleportStartLeft.timing * character.GetSequenceList().teleportStartLeft.count);
     };
 
-    const ToEndGamePage = function() {
-        console.log("Hi");
+    const SwitchToRankingPage = function() {
+        bossRef = null;
+        if (!curSocket) return;
+        curSocket.emit("end the game");
     }
 
     const BossToIdle = function() {
@@ -568,6 +569,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         IsBoss: IsBoss,
         GetTargetPlayer: GetTargetPlayer,
         FindTargetPlayer: FindTargetPlayer,
+        HandleEnemyDead: HandleEnemyDead,
     }
 
 };

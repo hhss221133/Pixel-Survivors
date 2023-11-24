@@ -1,8 +1,7 @@
 const ObjectModel = require('../game/objectModel');
 const LobbiesModel = require('../models/LobbiesModel');
-const Player = require('../game/classes/Player');
 
-const players = [];
+let bBackendLoopRunning = false;
 
 function GameEvents(socket, io, userTimeouts) {
 
@@ -32,19 +31,66 @@ function GameEvents(socket, io, userTimeouts) {
     });
 
     socket.on('ready', () => {
+        sendCharacterToPlayer(socket);
         console.log(`${socket.request.session.username} ready in ${socket.request.session.roomID}`);
         var allReady = ObjectModel.PlayerReady(socket.request.session.roomID, socket.request.session.username);
         if(allReady) {
             console.log(`all ready in ${socket.request.session.roomID}`);
-            io.to(socket.request.session.roomID).emit('all ready');
+            io.to(socket.request.session.roomID).emit('all ready', socket.request.session.username); // start the game
+            ObjectModel.SetGameState(socket.request.session.roomID, "active");
             console.log('callback sent');
         }
     });
 
-    socket.on("add score", (score) => {
-        console.log("User: " + socket.request.session.username);
-        ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, score);
+    socket.on("add score", (dataObj) => {
+        ObjectModel.AddScore(socket.request.session.roomID, socket.request.session.username, dataObj.score);
+        if (!dataObj.isBoss) return;
+
+        const bIsBossAlive = ObjectModel.DealDamageToBoss(socket.request.session.roomID, dataObj.damage);
+
+        if (bIsBossAlive) return;
+        // the boss is dead, end the game
+        let curGame = ObjectModel.GetGameInMemory().find(g => g.getGameID() === socket.request.session.roomID);
+        HandleGameEnd(io, curGame);
+        
     });
+
+    socket.on("end the game", () => {
+        const gameList = ObjectModel.GetGameInMemory();
+
+        // you may redirect both the players here, this event will be sent twice (from both two players), 
+        // so you should ensure that your codes are runned only once
+        //
+        // clear time of the game can be accessed by game.getClearTime() (in seconds)
+        // scores of the player can be accessed by game.getPlayerData()
+        // you need to get the target game object from ObjectModel
+
+        /* Your code here */
+        
+    });
+
+    if (!bBackendLoopRunning) {
+        bBackendLoopRunning = true;
+        StartBackendLoop(io);
+    }
+
+}
+
+function sendCharacterToPlayer(socket) {
+    let playerType = "Knight";
+    LobbiesModel.getLobbies( (err, lobbyList) => {
+        if (!lobbyList) return; 
+
+        const curLobby = lobbyList.find(lobby => lobby.createdBy === socket.request.session.roomID);
+        for (playerObject of curLobby.players) {
+            if (playerObject.username == socket.request.session.username) {
+                playerType = playerObject.character;
+                socket.emit("set character", playerType);
+                break;
+            }
+        }
+        
+    }); 
 }
 
 function getAllSocketIdsInRoom(roomID, io) {
@@ -66,45 +112,44 @@ function getUsernamesInRoom(roomID, io) {
     return usernames;
 }
 
+function StartBackendLoop(io) {
+    setInterval(BackendLoop, 15, io); // 15ms = 66.67fps, which is recommended by Valve
+};
+
+function BackendLoop(io) {
+    const gameList = ObjectModel.GetGameInMemory();
+    for (const game in gameList) {
+        if (!gameList[game].isGameActive()) continue;
+        // this game is active, update the stats for all players in this game
+
+        UpdatePlayerState(io, gameList[game])
+
+        UpdateGameTime(io, gameList[game]);
+        
+    }
+};
+
+function UpdatePlayerState(io, game) {
+    io.to(game.getGameID()).emit("update player states", game.getPlayerData());
+}
+
+function UpdateGameTime(io, game) {
+    const timeLeft = game.updateRemainingTime();
+    io.to(game.getGameID()).emit("update time left", game.getRemainingTime());
+    if (timeLeft <= 0) {
+        HandleGameEnd(io, game);
+    }
+
+}
+
+
+function HandleGameEnd(io, game) {
+    if (game.getGameState() == "finished") return; // avoid double calling
+    game.setGameState("finished");
+    game.setClearTime();
+    console.log("Time used: " + game.getClearTime());
+    io.to(game.getGameID()).emit("game ends");
+};
+
 
 module.exports = GameEvents;
-
-
-
-
-/*const LobbiesModel = require('../models/LobbiesModel');
-const roomPlayers = {};
-const playerSpawnPositionOccupied = {
-    bottomLeft: false,
-    topRight: false
-}
-function GameEvents(socket, io, userTimeouts) {
-    const username = socket.request.session.username;
-    const roomID = socket.request.session.roomID;
-    LobbiesModel.getLobbies( (err, lobbyList) => {
-        const curLobby = lobbyList.find(lobby => lobby.createdBy === username);
-        InitializePlayers(curLobby);
-        io.to(roomID).emit("initialize and start game", roomPlayers);
-    }); 
-};
-function InitializePlayers(lobby) {
-    if (!lobby) return;
-    for (playerObject of lobby.players) {
-        roomPlayers[playerObject.username] = {
-            maxHP: 5,
-            playerType: "Knight",
-            walkSpeed: 300,
-            isDead: false
-        };
-        if (!playerSpawnPositionOccupied.bottomLeft) {
-            roomPlayers[playerObject.username].pos = {x: 50, y: 630};
-            playerSpawnPositionOccupied.bottomLeft = true;
-        }
-        else {
-            roomPlayers[playerObject.username].pos = {x: 1200, y: 50};
-            playerSpawnPositionOccupied.topRight = true;
-        }
-    }
-    console.log("Initializing players: " + JSON.stringify(roomPlayers));
-};
-module.exports = GameEvents; */

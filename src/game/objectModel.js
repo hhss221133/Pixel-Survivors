@@ -24,9 +24,16 @@ function PlayerReady(roomID, player) {
     }
 }
 
-function AddScore(roomID, username, score) {
+function SetGameState(roomID, newState) {
     let game = game_in_memory.find(g => g.getGameID() === roomID);
     if (!game) return;
+    game.setGameState(newState);
+}
+
+function AddScore(roomID, username, score) {
+    let game = game_in_memory.find(g => g.getGameID() === roomID);
+    if (!game || !game.isGameActive()) return; 
+    // only add score if the game is active
     game.addScoreToplayer(username, score);
 
 };
@@ -45,11 +52,20 @@ function isAllReady(roomID, player) {
     }
 }
 
+function DealDamageToBoss(roomID, damage) {
+    let game = game_in_memory.find(g => g.getGameID() === roomID);
+    if (!game || !game.isGameActive()) return;
+
+    return (game.dealDamageToBoss(damage));
+}
+
 module.exports = {
     InitGame, 
     PlayerReady,
     GetGameInMemory,
     AddScore,
-    isAllReady
+    isAllReady,
+    SetGameState,
+    DealDamageToBoss
 };
 

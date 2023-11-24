@@ -2,6 +2,8 @@ import socket from './SocketHandler.js'; // Import the socket instance
 
 const Game = GameLoop();
 
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
     ping_server();
@@ -37,12 +39,12 @@ function send_ready() {
     socket.emit('ready');
 }
 
-export function send_addScore(score) {
-    socket.emit("add score", score);
-}
-
-
 //Listeners;
+
+socket.on("set character", (playerType) => {
+    (playerType == "Knight")? AddKnight(100, 540) : AddWizard(100, 540);
+});
+
 socket.on('all ready', () => {
     console.log('callback');
     const init_overlay = document.getElementById('init_overlay');
@@ -50,11 +52,22 @@ socket.on('all ready', () => {
     Game.StartGame(socket);
 });
 
-
 socket.on('player playing', (isPlaying) => {
     if(isPlaying) {
         console.log('callback');
         const init_overlay = document.getElementById('init_overlay');
         init_overlay.style.display = 'none';
     }
+});
+
+socket.on("update player states",  (playerData) => {
+    PlayerStateData = playerData;
+});
+
+socket.on("update time left",  (timeData) => {
+    TimeLeft = timeData;
+});
+
+socket.on("game ends", () => {
+    GameRunning = false;
 });

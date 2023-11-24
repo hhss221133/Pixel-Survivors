@@ -5,7 +5,36 @@ class Game {
         this.gameID = roomID;
         this.playerHost = new Player(hostN);
         this.playerClient = new Player(clientN);
-        this.gameState = 'waiting'; // Example states: 'waiting', 'active', 'finished'
+        this.gameState = "waiting"; // Example states: 'waiting', 'active', 'finished'
+        this.maxGameTime = 240000; // in ms
+        this.remainingTime = this.maxGameTime; // in ms
+        this.bossMaxHP = 3;
+        this.bossCurHP = this.bossMaxHP;
+        this.clearTime = null; // in second
+    }
+
+    getBossHP() {
+        return this.bossCurHP;
+    }
+
+    isBossDead() {
+        return this.bossCurHP <= 0;
+    }
+
+    dealDamageToBoss(damage) {
+        if (damage <= 0) return;
+        this.bossCurHP -= damage;
+        if (this.bossCurHP < 0) this.bossCurHP = 0;
+
+        // true => continue the game, false => end the game (the boss is dead)
+        return (this.bossCurHP > 0);
+    }
+
+    updateRemainingTime() {
+        if (!this.isGameActive()) return 0;
+        this.remainingTime -= 15;
+        if (this.remainingTime < 0) this.remainingTime = 0;
+        return this.remainingTime;
     }
 
     getGameID() {
@@ -22,13 +51,44 @@ class Game {
         }
     }
 
+    setClearTime() {
+        this.clearTime = Math.ceil((this.maxGameTime - this.remainingTime) * 0.001);
+    }
+    
+    getClearTime() {
+        return this.clearTime;
+    }
+
+    setGameState(newState) {
+        this.gameState = newState;
+    }
+
+    getGameState() {
+        return this.gameState;
+    }
+
+    isGameActive() {
+        return this.gameState == "active";
+    }
+
     addScoreToplayer(username, score) {
         (username == this.playerHost.getName())? this.playerHost.addScore(score) : this.playerClient.addScore(score);
-        console.log("Updated Score: " + this.playerHost.getScore() + " " + this.playerClient.getScore());
     }
 
     isAllReady() {
         return this.playerHost.getReady() === true && this.playerClient.getReady() === true;
+    }
+
+    getRemainingTime() {
+        return this.remainingTime;
+    }
+
+    getPlayerData() {
+        const playerData ={};
+
+        playerData[this.playerHost.getName()] = this.playerHost.getScore();
+        playerData[this.playerClient.getName()] = this.playerClient.getScore();
+        return playerData;
     }
 }
 

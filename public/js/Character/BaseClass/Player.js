@@ -8,6 +8,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     let playerType = PLAYER_TYPE.KNIGHT;
 
+    let walkSpeed;
+
     let playerScore = 0;
 
     let takeDamageSFX = new Audio(referenceLists.PlayerHit);
@@ -15,6 +17,10 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     let dieSFX = new Audio(referenceLists.PlayerDie);
 
     let respawnSFX = new Audio(referenceLists.PlayerRespawn);
+
+    let cheatModeSFX = new Audio();
+
+    let bIsCheatMode = false;
 
     let healthImage = new Image();
     healthImage.src = referenceLists.CollectibleHealth;
@@ -27,6 +33,8 @@ const Player = function(ctx, x, y, gameArea, actorID) {
     $(document).on("keydown", function(event) {
 
         HandleMovementInputDown(event.keyCode);
+
+        HandleCheatKey(event.keyCode);
 
     });
 
@@ -42,7 +50,11 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const AddPlayerScore = function(isEnemyBoss) {
         if (!curSocket) return;
-        (isEnemyBoss)? curSocket.emit("add score", 3) : curSocket.emit("add score", 2);
+        const dataObj = {}
+        dataObj.damage = character.GetAttackPower();
+        dataObj.score = (isEnemyBoss)? character.GetAttackPower() * 3 : character.GetAttackPower() * 2;
+        dataObj.isBoss = isEnemyBoss;
+        curSocket.emit("add score", dataObj);
     }
 
     const GetPlayerScore = () => {return playerScore;}
@@ -114,6 +126,34 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         if (curDir.horizontal == newDir.horizontal && curDir.vertical == newDir.vertical) return;
         character.ChangeSpriteDirection(newDir);
+    };
+
+    const HandleCheatKey = function(keyCode) {
+        if (keyCode != ACTION_KEY.CHEAT) return;
+        cheatModeSFX.pause();
+
+        (bIsCheatMode)? ToNormalMode() : ToCheatMode();
+
+    };
+
+    const ToCheatMode = function() {
+        bIsCheatMode = true;
+        cheatModeSFX.src = referenceLists.CheatOn;
+        PlaySFX(cheatModeSFX);
+        
+        character.SetShouldUseCheatSheet(true);
+        character.SetWalkSpeed(500);
+        character.SetAttackPower(10);
+    }
+
+    const ToNormalMode = function() {
+        bIsCheatMode = false;
+        cheatModeSFX.src = referenceLists.CheatOff;
+        PlaySFX(cheatModeSFX);
+        
+        character.SetShouldUseCheatSheet(false);
+        character.SetWalkSpeed(walkSpeed);
+        character.SetAttackPower(1);
     };
 
     const HandlePlayerDead = function() {
@@ -202,6 +242,10 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const draw = function() {
         character.draw();
+        drawUI();
+    }
+    
+    const drawUI = function() {
         drawHealthUI();
         drawScoreUI();
         drawRemainingTimeUI();
@@ -228,19 +272,49 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const drawScoreUI = function() {
         ctx.font = "30px Arial";
-        ctx.fillText("Score: " + GetPlayerScore(), 20, 100);
+        if (!PlayerStateData) {
+            ctx.fillText("Your score: 0", 20, 100);
+            ctx.fillText("Rival's score: 0", 20, 150);
+            return;
+        }
+
+        const username = $("html").data("username");
+
+        let playerScore, rivalScore;
+
+        for (const property in PlayerStateData) {
+            (property == username)?  playerScore = PlayerStateData[property] : rivalScore = PlayerStateData[property];
+        }
+        ctx.fillStyle = "black";
+        if (playerScore < rivalScore) ctx.fillStyle = "red";
+        else if (playerScore > rivalScore) ctx.fillStyle = "blue";
+        ctx.fillText("Your score: " + playerScore, 20, 100);
+
+        ctx.fillStyle = "black";
+        ctx.fillText("Rival's score: " + rivalScore, 20, 150);
+
     };
 
     const drawRemainingTimeUI = function() {
+        ctx.fillStyle = "black";
+        if (!TimeLeft) {
+            ctx.fillText("Time Remaining: 240", 20, 200);
+        }
+        else {
+            ctx.fillText("Time Remaining: " + Math.ceil(TimeLeft * 0.001), 20, 200);
+        }
+    };
 
-        ctx.fillText("Time Remaining: " + Math.ceil(remainingTime), 20, 150);
+    const SetWalkSpeed = function(NewWalkSpeed) {
+        walkSpeed = NewWalkSpeed;
+        character.SetWalkSpeed(walkSpeed);
     };
 
 
 
     return {
         SetMaxHP: character.SetMaxHP,
-        SetWalkSpeed: character.SetWalkSpeed,
+        SetWalkSpeed: SetWalkSpeed,
         SetAttackPower: character.SetAttackPower,
         GetDirection: character.GetDirection,
         CreateSpriteSequences: character.CreateSpriteSequences,
@@ -278,6 +352,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
         AddPlayerScore: AddPlayerScore,
         SetAttackSFX: character.SetAttackSFX,
+        drawUI: drawUI
 
     };
 };

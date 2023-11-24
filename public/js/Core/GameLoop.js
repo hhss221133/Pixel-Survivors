@@ -14,10 +14,6 @@ const collectibles = {};
 
 let curSocket = null;
 
-const totalGameTime = 240;   // Total game time in seconds
-
-let remainingTime = totalGameTime;
-
 const healthAppearIntervalMin = 5000; // in miliseconds
 
 const healthAppearIntervalMax = 9000; // in miliseconds
@@ -36,6 +32,8 @@ let collectibleTimer = null;
 
 let bossRef = null;
 
+let playerRef = null;
+
 let BGM_stage1 = new Audio(referenceLists.Boss_Stage1);
 BGM_stage1.loop = true;
 BGM_stage1.volume = BGMMasterVolume;
@@ -52,12 +50,15 @@ let BGM_stage5 = new Audio(referenceLists.Boss_Stage5);
 BGM_stage5.loop = true;
 BGM_stage5.volume = BGMMasterVolume;
 
+let PlayerStateData = null;
+
+let TimeLeft = null;
 
 
 /* Get the canvas and 2D context */
 const canvas = $("canvas").get(0);
 const context = canvas.getContext("2d");
-const gameArea = BoundingBox(context, 30, 30, 840, 1570);
+const gameArea = BoundingBox(context, 30, 30, 630, 1240);
 
 
 const AddSkeleton = (x, y) => AddEnemy(ENEMY_TYPE.SKELETON, x, y);
@@ -82,6 +83,22 @@ const AddEnemy = function(enemyType, enemyX, enemyY) {
 
     actorIndex++;
 };
+
+const HandleEndGame = function() {
+    if (!bossRef) return;
+    bossRef.HandleEnemyDead();
+
+    requestAnimationFrame(GameEndDoFrame);
+};
+
+const GameEndDoFrame = function(now) {
+    if (!bossRef || !playerRef) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    bossRef.Update(now);
+    bossRef.draw();
+    playerRef.drawUI();
+    requestAnimationFrame(GameEndDoFrame);
+}
 
 const AddCollectibleHealth = function() {
     let newCollectibleID = "CollectibleHealth_" + actorIndex;
@@ -140,6 +157,7 @@ const AddPlayer = function(playerType, playerX, playerY) {
             break;
     }
 
+    playerRef = players[newPlayerID];
     actorIndex++;
 };
 
@@ -217,14 +235,9 @@ const GameLoop = function() {
         // Initialze player, enemy and UI
 
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
-      //  AddKnight(500, 500);
-        AddWizard(600, 500);
 
-        AddBoss(1000, 400);
+        AddBoss(1000, 180);
         ChangeBossBGM(1);
-
-  //  AddProjectile(enemies[], PROJECTILE_TYPE.PLASMABALL, 500, 500, 0);
-      
     };
 
     const doFrame = function(now) {
@@ -235,13 +248,19 @@ const GameLoop = function() {
 
         UpdateAndDraw(now);
 
-        UpdateRemainingTime();
-
         /* Process the next frame */
-        if (GameRunning)    requestAnimationFrame(doFrame);
+        if (GameRunning) {
+            requestAnimationFrame(doFrame);
+        }
+        else {
+            // show boss die animation and end the game
+            HandleEndGame();
+        }
     };
 
     const CalculateDeltaTime = function() {
+
+        // simple delta time by taking frame[n] - frame[n-1]
         let current = Date.now();
         deltaTime = current - start;
         deltaTime *= 0.001;
@@ -280,10 +299,6 @@ const GameLoop = function() {
             updateTarget.draw();
         }
 
-    };
-
-    const UpdateRemainingTime = function() {
-        remainingTime = Math.max(remainingTime - deltaTime, 0);
     };
 
     const StartGame = function(socket) {
