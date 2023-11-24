@@ -48,7 +48,6 @@ module.exports = function (io, Session) {
                 console.log(`Client ${sessID} did not send keep-alive. Performing cleanup.`);
                 performCleanup(sessID, socket, io);
             }, 3000));
-
         });
     });
 }

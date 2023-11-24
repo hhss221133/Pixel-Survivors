@@ -2,9 +2,15 @@ import socket from './SocketHandler.js'; // Import the socket instance
 
 document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
+    ping_server();
     perform_cleanup();
     get_rankings();
 });
+
+
+function ping_server() {
+    socket.emit('reconnected');
+}
 
 function perform_cleanup() {
     socket.emit('lobbies json cleanup');
@@ -22,7 +28,7 @@ function populate_rankings(rankingsData) {
     
     // Get the 'ul' element
     const rankList = document.getElementById('rank_list');
-    
+    rankList.innerHTML = '';
     // Populate the 'ul' with sorted data
     rankingsData.forEach((item, index) => {
         // Create the 'li' element

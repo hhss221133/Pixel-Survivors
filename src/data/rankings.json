@@ -12,5 +12,19 @@
       "wasd": 1,
       "block": 10
     }
+  },
+  {
+    "clearTime": 64,
+    "playerData": {
+      "a": 409,
+      "q": 200
+    }
+  },
+  {
+    "clearTime": 131,
+    "playerData": {
+      "q": 203,
+      "a": 398
+    }
   }
 ]

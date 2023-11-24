@@ -147,3 +147,15 @@ socket.on('lobby session started', () => {
     socket.emit('set creating or joining');
     window.location.href = '/lobby';
 });
+
+
+//Clean up occuring
+socket.on('disable create', () => {
+    const create_lobby = document.getElementById('create_lobby');
+    create_lobby.setAttribute('disabled', true);
+});
+
+socket.on('allow create', () => {
+    const create_lobby = document.getElementById('create_lobby');
+    create_lobby.removeAttribute('disabled');
+});

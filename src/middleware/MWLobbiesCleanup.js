@@ -18,12 +18,15 @@ function edit_lobby_status(sessID, socket, status) {
 function performCleanup(sessID, socket, io) {
     console.log("");
     console.log("cleaning up");
+    socket.emit('disable create');
     LobbiesModel.leaveLobby(sessID, socket.request.session.roomID, (err, updatedLobbies, lobbyInfo) => {
         if (err) {
             console.error('Error in lobby delete:', err);
             socket.emit('lobby delete error', "Lobby deletion failed");
+            socket.emit('allow create');
         } else {
             roomID = socket.request.session.roomID;
+            socket.emit('allow create');
             io.to(roomID).emit('lobby updated', lobbyInfo);
             io.emit('io updated lobbies json', updatedLobbies);
 

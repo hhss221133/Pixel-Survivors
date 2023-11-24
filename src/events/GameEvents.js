@@ -5,12 +5,13 @@ const path = require('path');
 const rankings_path = path.join(__dirname, '../data/rankings.json');
 
 
-
-
 let bBackendLoopRunning = false;
 
 function GameEvents(socket, io, userTimeouts) {
 
+    socket.on('clear user game', () => {
+        
+    });
     socket.on('start game', () => {
         // CreateTest(socket.request.session.username);
         console.log(`${socket.request.session.roomID} lobby started the game`)
