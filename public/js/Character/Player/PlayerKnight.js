@@ -1,6 +1,6 @@
 const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
-    const maxHP = 7;
+    const maxHP = 5;
 
     const player = Player(ctx, x, y, gameArea, actorID);
 
@@ -113,7 +113,9 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
             if (GetAttackHitBox().intersect(enemies[enemyName].GetHitBox())) {
                 if (player.TryAddHitTargetToArray(enemies[enemyName])) {
                     // deal damage to enemy
-                    enemies[enemyName].TakeDamage(player.GetAttackPower(), player.getXY());
+                    if (!enemies[enemyName].IsBoss())
+                        enemies[enemyName].TakeDamage(player.GetAttackPower(), player.getXY());
+                    
                     player.AddPlayerScore(enemies[enemyName].IsBoss());
                     PlaySFX(hitSFX);
                 }

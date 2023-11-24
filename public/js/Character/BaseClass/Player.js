@@ -255,6 +255,13 @@ const Player = function(ctx, x, y, gameArea, actorID) {
 
     const Update = function(now) {
         character.Update(now);
+        sendDataToServer();
+
+    };
+
+    const sendDataToServer = function() {
+        if (!curSocket) return;
+        curSocket.emit("update player pos", character.getXY());
     };
 
     const GetActorType = () => ACTOR_TYPE.PLAYER;

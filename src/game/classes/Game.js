@@ -1,16 +1,24 @@
 const Player = require('./Player');
 
 class Game {
-    constructor(roomID, hostN, clientN) {
+    constructor(roomID, hostN, clientN, hostChar, clientChar) {
         this.gameID = roomID;
-        this.playerHost = new Player(hostN);
-        this.playerClient = new Player(clientN);
+        this.playerHost = new Player(hostN, hostChar);
+        this.playerClient = new Player(clientN, clientChar);
         this.gameState = "waiting"; // Example states: 'waiting', 'active', 'finished'
         this.maxGameTime = 240000; // in ms
         this.remainingTime = this.maxGameTime; // in ms
-        this.bossMaxHP = 3;
+        this.bossMaxHP = 140;
         this.bossCurHP = this.bossMaxHP;
         this.clearTime = null; // in second
+    }
+
+    setPlayerPos(isHost, pos) {
+        (isHost)? this.playerHost.setPlayerPos(pos) : this.playerClient.setPlayerPos(pos);
+    }
+
+    setBossPos(isHost, pos) {
+        (isHost)? this.playerHost.setBossPos(pos) : this.playerClient.setBossPos(pos);
     }
 
     getBossHP() {
@@ -89,6 +97,15 @@ class Game {
         playerData[this.playerHost.getName()] = this.playerHost.getScore();
         playerData[this.playerClient.getName()] = this.playerClient.getScore();
         return playerData;
+    }
+
+    getGameData() {
+        const gameData = {};
+        gameData[this.playerHost.getName()] = this.playerHost.getPlayerGameData();
+        gameData[this.playerClient.getName()] = this.playerClient.getPlayerGameData();
+        gameData["timeLeft"] = this.getRemainingTime();
+        gameData["BossHP"] = this.getBossHP();
+        return gameData;
     }
 }
 

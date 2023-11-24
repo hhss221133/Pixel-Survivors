@@ -34,21 +34,19 @@ let bossRef = null;
 
 let playerRef = null;
 
-let BGM_stage1 = new Audio(referenceLists.Boss_Stage1);
-BGM_stage1.loop = true;
-BGM_stage1.volume = BGMMasterVolume;
-let BGM_stage2 = new Audio(referenceLists.Boss_Stage2);
-BGM_stage2.loop = true;
-BGM_stage2.volume = BGMMasterVolume;
-let BGM_stage3 = new Audio(referenceLists.Boss_Stage3);
-BGM_stage3.loop = true;
-BGM_stage3.volume = BGMMasterVolume;
-let BGM_stage4 = new Audio(referenceLists.Boss_Stage4);
-BGM_stage4.loop = true;
-BGM_stage4.volume = BGMMasterVolume;
-let BGM_stage5 = new Audio(referenceLists.Boss_Stage5);
-BGM_stage5.loop = true;
-BGM_stage5.volume = BGMMasterVolume;
+const BGM_boss = {
+    1: new Audio(referenceLists.Boss_Stage1),
+    2: new Audio(referenceLists.Boss_Stage2),
+    3: new Audio(referenceLists.Boss_Stage3),
+    4: new Audio(referenceLists.Boss_Stage4),
+    5: new Audio(referenceLists.Boss_Stage5)
+}
+
+for (const property in BGM_boss) {
+    BGM_boss[property].loop = true;
+    BGM_boss[property].volume = BGMMasterVolume;
+}
+
 
 let PlayerStateData = null;
 
@@ -134,9 +132,9 @@ const AddExplosion = function(owner) {
     actorIndex++;
 };
 
-const AddBoss = function(x, y) {
+const AddBoss = function(pos, health) {
     let newBossID = "Boss" + "_" + actorIndex; 
-    enemies[newBossID] = Boss(context, x, y, gameArea, newBossID);
+    enemies[newBossID] = Boss(context, pos.x, pos.y, gameArea, newBossID, health);
     actorIndex++;
 
     bossRef = enemies[newBossID];
@@ -195,35 +193,19 @@ const PlaySFX = function(targetSFX, volume = 1) {
 }
 
 const ChangeBossBGM = function(bossStage) {
-    if (bossStage == 1) {
-        BGM_stage1.play();
-    }
-    else if (bossStage == 2) {
-        BGM_stage1.pause();
-        BGM_stage2.play();
-    }
-    else if (bossStage == 3) {
-        BGM_stage2.pause();
-        BGM_stage3.play();
-    }
-    else if (bossStage == 4) {
-        BGM_stage3.pause();
-        BGM_stage4.play();
-    }
-    else if (bossStage == 5) {
-        BGM_stage4.pause();
-        BGM_stage5.play();
-    }
+    StopAllBGM();
+    BGM_boss[bossStage].currentTime = 0;
+    BGM_boss[bossStage].volume = BGMMasterVolume;
+    BGM_boss[bossStage].play();
 }
 
 const StopAllBGM = function() {
-    BGM_stage1.pause();
-    BGM_stage2.pause();
-    BGM_stage3.pause();
-    BGM_stage4.pause();
-    BGM_stage5.pause();
-
+    for (const property in BGM_boss) {
+        BGM_boss[property].pause();
+    }
 }
+
+let gameStarted = false;
 
 /************************************************************************************************************************************/
 
@@ -231,13 +213,34 @@ const GameLoop = function() {
 
     let start = Date.now();
 
-    const InitializeGame = function() {
+    const InitializeGame = function(gameData) {
         // Initialze player, enemy and UI
 
+        gameStarted = true;
+        
         collectibleTimer = setTimeout(AddCollectibleHealth, GetRanNumInRange(healthAppearIntervalMin, healthAppearIntervalMax));
 
-        AddBoss(1000, 180);
-        ChangeBossBGM(1);
+        const username = $("html").data("username");
+        
+        TimeLeft = gameData["timeLeft"];
+        delete gameData["timeLeft"];
+        const BossHP = gameData["BossHP"];
+        delete gameData["BossHP"];
+
+        let bossPos = {x: 500, y: 500};
+        const playerData = {};
+
+        for (const property in gameData) {  
+            if ((property == username)) {
+                bossPos = gameData[property].bossPos;
+
+                AddPlayer(gameData[property].playerType, gameData[property].playerPos.x, gameData[property].playerPos.y);
+            }
+            playerData[property] = gameData[property].score;
+        }
+        PlayerStateData = {... playerData};
+        
+        AddBoss(bossPos, BossHP);
     };
 
     const doFrame = function(now) {
@@ -301,10 +304,10 @@ const GameLoop = function() {
 
     };
 
-    const StartGame = function(socket) {
+    const StartGame = function(socket, gameData) {
         curSocket = socket;
 
-        InitializeGame();
+        InitializeGame(gameData);
 
         requestAnimationFrame(doFrame);
 

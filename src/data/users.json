@@ -18,5 +18,13 @@
   {
     "username": "q",
     "password": "$2b$04$xVOZKOaRRTOgE3tWJHFuWOBicGWJWiM8jpiQ2FOT5Epnk8LQdkEsG"
+  },
+  {
+    "username": "w",
+    "password": "$2b$04$uDYwyzo4UdlmsuZTtdgHmem3YFaDWcFZXF0Tzti2ounsQsLfRqvPa"
+  },
+  {
+    "username": "s",
+    "password": "$2b$04$95PRvVvPLHC6si9yj05k2ukodm29VQMaoVW.gVjMtEWr65GUhtD8G"
   }
 ]

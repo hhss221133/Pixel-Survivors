@@ -34,7 +34,8 @@ const Waterball = function(ctx, x, y, gameArea, owner, endPos, launchSpeed, acto
                 const curEnemy = enemies[enemyName]; 
                 if (projectile.CanDealDamage() && curEnemy.GetFSMState() != FSM_STATE.DEAD && GetHitBox().intersect(curEnemy.GetHitBox())) {
                         // deal damage to enemy
-                        curEnemy.TakeDamage(projectile.GetDamage(), projectile.getXY());
+                        if (!curEnemy.IsBoss())
+                            curEnemy.TakeDamage(projectile.GetDamage(), projectile.getXY());
                         owner.AddPlayerScore(curEnemy.IsBoss());
                         PlaySFX(hitSFX);
                         projectile.Explode();

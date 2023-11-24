@@ -2,8 +2,8 @@ const Game = require('./classes/Game');
 
 game_in_memory = [];
 
-function InitGame(roomID, host, client) {
-    var new_game = new Game(roomID, host, client);
+function InitGame(roomID, host, client, hostChar, clientChar) {
+    var new_game = new Game(roomID, host, client, hostChar, clientChar);
     game_in_memory.push(new_game);
     console.log(game_in_memory);
 }
@@ -59,6 +59,13 @@ function DealDamageToBoss(roomID, damage) {
     return (game.dealDamageToBoss(damage));
 }
 
+function GetGameData(roomID) {
+    let game = game_in_memory.find(g => g.getGameID() === roomID);
+    if (!game) return;
+
+    return game.getGameData();
+};
+
 module.exports = {
     InitGame, 
     PlayerReady,
@@ -66,6 +73,7 @@ module.exports = {
     AddScore,
     isAllReady,
     SetGameState,
-    DealDamageToBoss
+    DealDamageToBoss,
+    GetGameData
 };
 

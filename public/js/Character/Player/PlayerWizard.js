@@ -84,8 +84,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
         let rect = canvas.getBoundingClientRect();
         const endPos = {x: event.clientX - rect.left, y: event.clientY - rect.top};
 
-
-
         AddProjectile(players[player.GetID()], PROJECTILE_TYPE.WATERBALL, startPos, endPos, magicSpeed);
 
         player.StartAttack();
