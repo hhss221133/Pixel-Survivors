@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
 
     logout();
-    perform_cleanup();
+    // perform_cleanup();
     // get_profile();
     get_lobbies();
     create_lobby_session();

@@ -3,9 +3,9 @@ import socket from './SocketHandler.js'; // Import the socket instance
 document.addEventListener('DOMContentLoaded', (event) => {
     // This code will run after the document is fully loaded
     ping_server();
-    perform_cleanup();
+    // perform_cleanup();
     get_rankings();
-});
+})
 
 
 function ping_server() {
