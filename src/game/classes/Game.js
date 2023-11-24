@@ -29,6 +29,10 @@ class Game {
         return this.bossCurHP <= 0;
     }
 
+    setPlayerHP(name, newHP) {
+        (name == this.playerHost.getName())?  this.playerHost.setHP(newHP) : this.playerClient.setHP(newHP);
+    }
+
     dealDamageToBoss(damage) {
         if (damage <= 0) return;
         this.bossCurHP -= damage;

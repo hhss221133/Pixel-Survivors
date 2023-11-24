@@ -144,14 +144,14 @@ const AddKnight = (x, y) => AddPlayer(PLAYER_TYPE.KNIGHT, x, y);
 
 const AddWizard = (x, y) => AddPlayer(PLAYER_TYPE.WIZARD, x, y);
 
-const AddPlayer = function(playerType, playerX, playerY) {
+const AddPlayer = function(playerType, playerX, playerY, HP) {
     let newPlayerID = playerType + "_" + actorIndex;
     switch (playerType) {
         case PLAYER_TYPE.KNIGHT:
-            players[newPlayerID] = PlayerKnight(context, playerX, playerY, gameArea, newPlayerID);
+            players[newPlayerID] = PlayerKnight(context, playerX, playerY, gameArea, newPlayerID, HP);
             break;
         case PLAYER_TYPE.WIZARD:
-            players[newPlayerID] = PlayerWizard(context, playerX, playerY, gameArea, newPlayerID);
+            players[newPlayerID] = PlayerWizard(context, playerX, playerY, gameArea, newPlayerID, HP);
             break;
     }
 
@@ -234,7 +234,7 @@ const GameLoop = function() {
             if ((property == username)) {
                 bossPos = gameData[property].bossPos;
 
-                AddPlayer(gameData[property].playerType, gameData[property].playerPos.x, gameData[property].playerPos.y);
+                AddPlayer(gameData[property].playerType, gameData[property].playerPos.x, gameData[property].playerPos.y, gameData[property].curHP);
             }
             playerData[property] = gameData[property].score;
         }

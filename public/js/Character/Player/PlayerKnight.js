@@ -1,4 +1,4 @@
-const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
+const PlayerKnight = function(ctx, x, y, gameArea, actorID, HP) {
 
     const maxHP = 5;
 
@@ -7,6 +7,8 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
     let playerType = PLAYER_TYPE.KNIGHT;
 
     player.SetMaxHP(maxHP);
+
+    player.SetCurHP(HP);
 
     player.SetAttackCoolDown(0.5);
 
@@ -33,6 +35,11 @@ const PlayerKnight = function(ctx, x, y, gameArea, actorID) {
 
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1.7, 
         referenceLists.PlayerKnightOriginal, referenceLists.PlayerKnightWhite, referenceLists.PlayerKnightCheat);
+
+    if (player.GetCurHP() <= 0) {
+        player.SetFSMState(FSM_STATE.DEAD);
+        player.HandlePlayerDead();
+    }
 
     const GetHitBox = function() {
         const size = player.getDisplaySize();

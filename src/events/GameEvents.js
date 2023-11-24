@@ -85,6 +85,13 @@ function GameEvents(socket, io, userTimeouts) {
         
     });
 
+    socket.on("set player HP", (newHP) => {
+        const gameList = ObjectModel.GetGameInMemory();
+        const game = gameList.find(g => g.getGameID() === socket.request.session.roomID);
+
+        game.setPlayerHP(socket.request.session.username, newHP);
+    });
+
     socket.on("update player pos", (playerPos) => {
         const gameList = ObjectModel.GetGameInMemory();
         const game = gameList.find(g => g.getGameID() === socket.request.session.roomID);

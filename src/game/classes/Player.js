@@ -3,6 +3,8 @@ class Player {
         this.name = name;
         this.ready = null;
         this.score = 0;
+        this.maxHP = 5;
+        this.curHP = this.maxHP;
         this.playerType = playerType;
         this.playerPos = {x: 100, y: 540};
         this.bossPos = {x: 1000, y: 180};
@@ -18,6 +20,14 @@ class Player {
 
     getName() {
         return this.name;
+    }
+
+    setHP(newHP) {
+        this.curHP = newHP;
+    }
+    
+    getHP() {
+        return this.curHP;
     }
 
     addScore(score) {
@@ -57,6 +67,7 @@ class Player {
         data["bossPos"] = this.getBossPos();
         data["score"] = this.getScore();
         data["playerType"] = this.getPlayerType();
+        data["curHP"] = this.getHP();
         return data;
     }
 }

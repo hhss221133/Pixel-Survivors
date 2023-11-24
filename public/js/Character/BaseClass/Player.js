@@ -1,3 +1,4 @@
+
 const Player = function(ctx, x, y, gameArea, actorID) {
 
     const character = Character(ctx, x, y, gameArea, actorID);
@@ -182,6 +183,9 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         character.ResetHP();
         character.SetSequenceEndToIdle();
         character.SetFSMState(FSM_STATE.MOVE);
+        if (curSocket) {
+            curSocket.emit("set player HP", character.GetCurHP());
+        }
         (character.getCurSequence().isLeft)? character.setSequence(character.GetSequenceList().idleLeft) :
             character.setSequence(character.GetSequenceList().idleRight); 
 
@@ -196,12 +200,18 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         setTimeout(ResetCanTakeDamage, invulnerabilityTime * 1000);
 
         character.DealDamage(damage);
+
+        let HP = character.GetCurHP();
+
+        if (curSocket) {
+            curSocket.emit("set player HP", HP);
+        }
         
 
         StartKnockBack(enemyXY);
         character.SetShouldUseWhiteSheet();
         
-        let HP = character.GetCurHP();
+        
 
         if (HP > 0) {
             PlaySFX(takeDamageSFX);
@@ -339,6 +349,7 @@ const Player = function(ctx, x, y, gameArea, actorID) {
         GetID: character.GetID,
         GetActorType: GetActorType,
         SetAttackCoolDown: character.SetAttackCoolDown,
+        SetCurHP: character.SetCurHP,
 
         // FSM State related
         GetFSMState: character.GetFSMState,
