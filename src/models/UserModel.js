@@ -44,7 +44,7 @@ const UserModel = {
                 return callback(err);
             }
 
-            bcrypt.hash(newUser.password, parseInt(process.env.PASSWORD_SALT_ROUNDS, 10), function(err, hash) {
+            bcrypt.hash(newUser.password, parseInt(3, 10), function(err, hash) {
                 if (err) return callback(err);
 
                 newUser.password = hash;

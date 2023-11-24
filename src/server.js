@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-require('dotenv').config();
+// require('dotenv').config();
 
 //Express App setup
 const app = express();
@@ -12,7 +12,7 @@ app.use(express.json());
 
 //Session settings
 const Session = session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'pixelsurvivors',
     resave: false,
     saveUninitialized: false,
     rolling: true,
