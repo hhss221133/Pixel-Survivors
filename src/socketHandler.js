@@ -2,6 +2,7 @@
 const LobbiesEvents = require('./events/LobbiesEvents');
 const LobbyEvents = require('./events/LobbyEvents');
 const GameEvents = require('./events/GameEvents');
+const RankingsEvents = require('./events/RankingsEvents');
 const {performCleanup, edit_lobby_status} = require('./middleware/MWLobbiesCleanup');
 const {socketrequireLogin} = require('./middleware/MWSocketSessions');
 
@@ -27,6 +28,7 @@ module.exports = function (io, Session) {
         LobbiesEvents(socket, io, userTimeouts);
         LobbyEvents(socket, io, userTimeouts);
         GameEvents(socket, io, userTimeouts);
+        RankingsEvents(socket, io, userTimeouts);
 
         socket.on('reconnected', () => {
             clearTimeout(userTimeouts.get(sessID));
@@ -43,6 +45,7 @@ module.exports = function (io, Session) {
             io.emit('io updated lobbies json'); //multicast
 
             userTimeouts.set(sessID, setTimeout(() => {
+                console.log(`Client ${sessID} did not send keep-alive. Performing cleanup.`);
                 performCleanup(sessID, socket, io);
             }, 3000));
 

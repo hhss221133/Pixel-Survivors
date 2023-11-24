@@ -17,7 +17,7 @@ function edit_lobby_status(sessID, socket, status) {
 
 function performCleanup(sessID, socket, io) {
     console.log("");
-    console.log(`Client ${sessID} did not send keep-alive. Performing cleanup.`);
+    console.log("cleaning up");
     LobbiesModel.leaveLobby(sessID, socket.request.session.roomID, (err, updatedLobbies, lobbyInfo) => {
         if (err) {
             console.error('Error in lobby delete:', err);

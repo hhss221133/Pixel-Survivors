@@ -76,3 +76,8 @@ socket.on("damage boss", (damage) => {
 socket.on("game ends", () => {
     GameRunning = false;
 });
+
+socket.on('send to rankings', () => {
+    window.location.href = '/rankings';
+
+});

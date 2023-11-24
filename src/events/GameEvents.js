@@ -1,5 +1,11 @@
 const ObjectModel = require('../game/objectModel');
 const LobbiesModel = require('../models/LobbiesModel');
+const fs = require('fs');
+const path = require('path');
+const rankings_path = path.join(__dirname, '../data/rankings.json');
+
+
+
 
 let bBackendLoopRunning = false;
 
@@ -105,16 +111,54 @@ function GameEvents(socket, io, userTimeouts) {
     });
 
     socket.on("end the game", () => {
-        const gameList = ObjectModel.GetGameInMemory();
+        if(socket.request.session.username == socket.request.session.roomID) {
+            const endedGame = ObjectModel.RemoveGameData(socket.request.session.roomID);
+            if(endedGame) {
+                let clearT = endedGame.getClearTime(); 
 
-        // you may redirect both the players here, this event will be sent twice (from both two players), 
-        // so you should ensure that your codes are runned only once
-        //
-        // clear time of the game can be accessed by game.getClearTime() (in seconds)
-        // scores of the player can be accessed by game.getPlayerData()
-        // you need to get the target game object from ObjectModel
+                let gameSummary = {
+                    clearTime: clearT,
+                    playerData: {}
+                };
 
-        /* Your code here */
+                let pData = endedGame.getPlayerData();
+                for (const key in pData) {
+                    if (pData.hasOwnProperty(key)) {
+                        // Assuming the value of each key in pData is an integer
+                        gameSummary.playerData[key] = pData[key];
+                    }
+                }
+
+                console.log(gameSummary);
+
+                fs.readFile(rankings_path, (err, data) => {
+                    if (err) {
+                        // Handle the error, maybe the file doesn't exist yet
+                        console.error("Error reading file:", err);
+                        return;
+                    }
+        
+                    // Parse existing data and append new data
+                    let rankings = JSON.parse(data);
+                    rankings.push(gameSummary);
+                    
+                    io.emit('all rankings', rankings);
+                    // Write updated rankings back to file
+                    fs.writeFile(rankings_path, JSON.stringify(rankings, null, 2), (err) => {
+                        if (err) {
+                            console.error("Error writing file:", err);
+                        } else {
+                            console.log("Rankings updated successfully.");
+                        }
+                    });
+                });
+                io.to(socket.request.session.roomID).emit('send to rankings')
+            }
+        }
+        else {
+            //Ignore clients, only consider host
+            return;
+        }
         
     });
 

@@ -66,6 +66,22 @@ function GetGameData(roomID) {
     return game.getGameData();
 };
 
+function RemoveGameData(roomID) {
+    // Find the index of the game with the given roomID
+    const gameIndex = game_in_memory.findIndex(game => game.getGameID() === roomID);
+
+    // If the game is found, remove it and return the removed game
+    if (gameIndex !== -1) {
+        const removedGames = game_in_memory.splice(gameIndex, 1);
+        return removedGames[0]; // Since splice returns an array, return the first element
+    } else {
+        console.log('Game not found with roomID:', roomID);
+        return null; // Return null to indicate no game was found/removed
+    }
+}
+
+
+
 module.exports = {
     InitGame, 
     PlayerReady,
@@ -74,6 +90,7 @@ module.exports = {
     isAllReady,
     SetGameState,
     DealDamageToBoss,
-    GetGameData
+    GetGameData,
+    RemoveGameData
 };
 
