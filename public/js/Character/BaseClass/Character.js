@@ -270,8 +270,13 @@ const Character = function(ctx, x, y, gameArea, actorID) {
         HandleKnockBack();
     };
 
+    const SetCurHP = function(newHP) {
+        curHP = newHP;
+    }
+
     return {
         SetMaxHP: SetMaxHP,
+        SetCurHP: SetCurHP,
         GetMaxHP: GetMaxHP,
         SetWalkSpeed: SetWalkSpeed,
         SetAttackPower: SetAttackPower,

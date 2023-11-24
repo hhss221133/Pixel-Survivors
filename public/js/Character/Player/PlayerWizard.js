@@ -1,4 +1,4 @@
-const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
+const PlayerWizard = function(ctx, x, y, gameArea, actorID, HP) {
 
     const player = Player(ctx, x, y, gameArea, actorID);
     
@@ -9,6 +9,8 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
     let playerType = PLAYER_TYPE.WIZARD;
 
     player.SetMaxHP(maxHP);
+
+    player.SetCurHP(HP);
 
     player.SetAttackCoolDown(0.8);
 
@@ -33,6 +35,12 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
     player.CreateSpriteSequences(sequences, sequences.idleRight, scale = 1, 
         referenceLists.PlayerWizardOriginal, referenceLists.PlayerWizardWhite, referenceLists.PlayerWizardCheat);
 
+
+    if (player.GetCurHP() <= 0) {
+        player.SetFSMState(FSM_STATE.DEAD);
+        player.HandlePlayerDead();
+    }
+    
     const GetHitBox = function() {
         const size = player.getDisplaySize();
 
@@ -83,8 +91,6 @@ const PlayerWizard = function(ctx, x, y, gameArea, actorID) {
 
         let rect = canvas.getBoundingClientRect();
         const endPos = {x: event.clientX - rect.left, y: event.clientY - rect.top};
-
-
 
         AddProjectile(players[player.GetID()], PROJECTILE_TYPE.WATERBALL, startPos, endPos, magicSpeed);
 

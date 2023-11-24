@@ -1,10 +1,12 @@
-const Boss = function(ctx, x, y, gameArea, enemyID) {
+const Boss = function(ctx, x, y, gameArea, enemyID, health) {
 
     const character = Character(ctx, x, y, gameArea, enemyID);
 
     const attackCoolDown = {1: 4, 2: 3.5, 3: 3, 4: 2.5, 5: 2.5};
 
     character.SetMaxHP(150);
+
+    character.SetCurHP(health);
 
     character.SetAttackCoolDown(attackCoolDown[1]);
 
@@ -37,7 +39,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     let bossDieSFX = new Audio(referenceLists.BossDie);
 
 
-    let bossStage = 1; // boss has 3 stages, attack patterns change with it
+    let bossStage = 0; // boss has 5 stages, attack patterns change with it
 
     const summonMaxNum = {1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
 
@@ -130,6 +132,37 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     }
 
     FindTargetPlayer();
+
+    const CheckStageChange = function() {
+        let stageChange = false;
+    
+        if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) {
+            bossStage = 2;
+            stageChange = true;
+        }
+        if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) {
+            bossStage = 3;
+            stageChange = true;
+        }
+        if (bossStage == 3 && character.GetCurHP() <= character.GetMaxHP() * 0.4) {
+            bossStage = 4;
+            stageChange = true;
+        }
+        if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) {
+            bossStage = 5;
+            stageChange = true;
+        }
+    
+        if (stageChange) {
+            character.SetAttackCoolDown(attackCoolDown[bossStage]);
+            ChangeBossBGM(bossStage);
+        }
+        else if (bossStage == 0) {
+            bossStage = 1;
+            ChangeBossBGM(1);
+        }
+    }
+    CheckStageChange();
 
     const ResetCanSummon = () => {bCanSummon = true;}
 
@@ -478,9 +511,17 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         MoveBoss();
 
         HandleSpawnAttack();
+
+        sendDataToServer();
+
     };
 
-    const TakeDamage = function(damage, playerXY) {
+    const sendDataToServer = function() {
+        if (!curSocket) return;
+        curSocket.emit("update boss pos", character.getXY());
+    };
+
+    const TakeDamage = function(damage) {
 
         if (character.GetFSMState() == FSM_STATE.DEAD) return;
 
@@ -488,8 +529,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
 
         character.SetShouldUseWhiteSheet();
 
-        let HP = character.GetCurHP();
-        if (HP > 0) {
+        if (character.GetCurHP() > 0) {
             CheckStageChange();
             return;
         }
@@ -530,26 +570,6 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
     };
     character.setSequenceEndCallback(BossToIdle);
 
-    const CheckStageChange = function() {
-        if (bossStage == 1 && character.GetCurHP() <= character.GetMaxHP() * 0.8) {
-            bossStage = 2;
-            ChangeBossBGM(2);
-        }
-        else if (bossStage == 2 && character.GetCurHP() <= character.GetMaxHP() * 0.6) {
-            bossStage = 3;
-            ChangeBossBGM(3);
-        }
-        else if (bossStage == 3 && character.GetCurHP() <= character.GetMaxHP() * 0.4) {
-            bossStage = 4;
-            ChangeBossBGM(4);
-        }
-        else if (bossStage == 4 && character.GetCurHP() <= character.GetMaxHP() * 0.2) {
-            bossStage = 5;
-            ChangeBossBGM(5);
-        }
-        character.SetAttackCoolDown(attackCoolDown[bossStage]);
-    }
-
     const IsBoss = () => {return true;}
 
     const GetTargetPlayer = () => {return targetPlayer;}
@@ -570,6 +590,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID) {
         GetTargetPlayer: GetTargetPlayer,
         FindTargetPlayer: FindTargetPlayer,
         HandleEnemyDead: HandleEnemyDead,
+        CheckStageChange: CheckStageChange
     }
 
 };

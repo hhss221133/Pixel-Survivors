@@ -3,7 +3,11 @@ class Player {
         this.name = name;
         this.ready = null;
         this.score = 0;
+        this.maxHP = 5;
+        this.curHP = this.maxHP;
         this.playerType = playerType;
+        this.playerPos = {x: 100, y: 540};
+        this.bossPos = {x: 1000, y: 180};
     }
 
     setReady(bool_) {
@@ -18,13 +22,53 @@ class Player {
         return this.name;
     }
 
+    setHP(newHP) {
+        this.curHP = newHP;
+    }
+    
+    getHP() {
+        return this.curHP;
+    }
+
     addScore(score) {
         if (score <= 0) return;
         this.score += score;
     }
 
+    getPlayerType() {
+        return this.playerType;
+    }
+
     getScore() {
         return this.score;
+    }
+
+    setBossPos(pos) {
+        this.bossPos.x = pos.x;
+        this.bossPos.y = pos.y;
+    }
+
+    setPlayerPos(pos) {
+        this.playerPos.x = pos.x;
+        this.playerPos.y = pos.y;
+    }
+
+    getBossPos() {
+        return this.bossPos;
+    }
+
+    getPlayerPos() {
+        return this.playerPos;
+    }
+
+    getPlayerGameData() {
+        const data = {};
+        data["playerPos"] = this.getPlayerPos();
+        data["bossPos"] = this.getBossPos();
+        data["score"] = this.getScore();
+        data["playerType"] = this.getPlayerType();
+        data["curHP"] = this.getHP();
+        return data;
     }
 }
 

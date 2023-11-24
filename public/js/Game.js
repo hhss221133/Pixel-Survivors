@@ -41,23 +41,23 @@ function send_ready() {
 
 //Listeners;
 
-socket.on("set character", (playerType) => {
-    (playerType == "Knight")? AddKnight(100, 540) : AddWizard(100, 540);
-});
-
-socket.on('all ready', () => {
-    console.log('callback');
+socket.on('all ready', (gameData) => {
+    console.log('game starts');
     const init_overlay = document.getElementById('init_overlay');
     init_overlay.style.display = 'none';
-    Game.StartGame(socket);
+
+    if (!gameStarted) Game.StartGame(socket, gameData);
 });
 
-socket.on('player playing', (isPlaying) => {
-    if(isPlaying) {
-        console.log('callback');
-        const init_overlay = document.getElementById('init_overlay');
-        init_overlay.style.display = 'none';
-    }
+socket.on('player playing', (gameData) => {
+    if(!gameData["isPlaying"]) return;
+
+    console.log('getting game data');
+    const init_overlay = document.getElementById('init_overlay');
+    init_overlay.style.display = 'none';
+
+    if (!gameStarted) Game.StartGame(socket, gameData);
+
 });
 
 socket.on("update player states",  (playerData) => {
@@ -66,6 +66,11 @@ socket.on("update player states",  (playerData) => {
 
 socket.on("update time left",  (timeData) => {
     TimeLeft = timeData;
+});
+
+socket.on("damage boss", (damage) => {
+    if (!bossRef) return;
+    bossRef.TakeDamage(damage);
 });
 
 socket.on("game ends", () => {
