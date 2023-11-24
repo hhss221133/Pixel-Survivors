@@ -1,4 +1,4 @@
-const socket = io('http://localhost:8000');
+const socket = io('http://ec2-18-162-115-233.ap-east-1.compute.amazonaws.com');
 
 socket.on('connect', () => {
     console.log('Connected to the server via WebSockets!');
