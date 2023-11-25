@@ -4,7 +4,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID, health) {
 
     const attackCoolDown = {1: 4, 2: 3.5, 3: 3, 4: 2.5, 5: 2.5};
 
-    character.SetMaxHP(150);
+    character.SetMaxHP(90);
 
     character.SetCurHP(health);
 
@@ -24,7 +24,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID, health) {
 
     let xMoveThreshold = 20;   // to prevent the enemy from changing direction endlessly
 
-    let summonCoolDown = {1: 15, 2: 13, 3: 11, 4: 9, 5: 8}; 
+    let summonCoolDown = {0: 15, 1: 15, 2: 13, 3: 11, 4: 9, 5: 8}; 
 
     let bCanSummon = true;
 
@@ -41,7 +41,7 @@ const Boss = function(ctx, x, y, gameArea, enemyID, health) {
 
     let bossStage = 0; // boss has 5 stages, attack patterns change with it
 
-    const summonMaxNum = {1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
+    const summonMaxNum = {0: 3, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7}; // max number of enemies to be summoned on the field, not including boss itself
 
     const normalShootSpeed = {1: 200, 2: 250, 3: 300};
 
@@ -387,11 +387,11 @@ const Boss = function(ctx, x, y, gameArea, enemyID, health) {
 
         if (!bCanSummon) return false;
 
-        bCanSummon = false;
-
         const enemyNum = Object.keys(enemies).length - 1;
 
         if (enemyNum >= summonMaxNum[bossStage] * 0.7) return false;
+
+        bCanSummon = false;
 
         // should summon enemy
         (character.getCurSequence().isLeft)? character.setSequence(sequences.summonLeft, sequences.idleLeft) :

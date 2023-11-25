@@ -1,30 +1,16 @@
 [
   {
-    "clearTime": 6,
+    "clearTime": 105,
     "playerData": {
-      "q": 3,
-      "a": 0
+      "zxc": 310,
+      "q": 138
     }
   },
   {
-    "clearTime": 9,
+    "clearTime": 106,
     "playerData": {
-      "wasd": 1,
-      "block": 10
-    }
-  },
-  {
-    "clearTime": 64,
-    "playerData": {
-      "a": 409,
-      "q": 200
-    }
-  },
-  {
-    "clearTime": 131,
-    "playerData": {
-      "q": 203,
-      "a": 398
+      "zxc": 458,
+      "q": 0
     }
   }
 ]
