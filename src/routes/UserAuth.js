@@ -4,10 +4,6 @@ const UserModel = require('../models/UserModel');
 const path = require('path');
 const requireLogin = require('../middleware/MWAuth');
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/index.html'));
-});
-
 // Route to handle login
 router.post('/login', (req, res) => {
     const {username, password} = req.body;
