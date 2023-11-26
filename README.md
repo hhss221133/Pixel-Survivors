@@ -23,9 +23,11 @@ Project Details:
 
 Regarding the server:
 
-1. Since it is an action game, it is really hard to play the game by yourself using localhost. So, we set up a "real" server using AWS(ec2). 
+1. The game works perfectly fine in localhost, but since it is an action game, it is really hard to play the game by yourself using localhost. 
 
-2. You can play the game using the link below if you want.
+2. Therefore, we set up a "real" server using AWS(ec2). You can play the game using the link below if you want.
 http://ec2-18-162-115-233.ap-east-1.compute.amazonaws.com/
 
-2. Feel free to contact Haruki (hsaegusa@connect.ust.hk) if the link is not working
+3. We recommend using localhost for marking. The real server is only for demonstation and we cannot guarantee that the server works 100% fine.
+
+4. Feel free to contact Haruki (hsaegusa@connect.ust.hk) if the link is not working.
