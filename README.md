@@ -20,3 +20,12 @@ Project Details:
 4. When a game ends, the players will be redirected to the ranking page. The ranks are based on the clear time of the game and scores of the two players are shown.
 
 5. Cheat mode can be toggled in the game by pressing BACKSPACE key, and the damage and walking speed of the players increases significantly.
+
+Regarding the server:
+
+1. Since it is an action game, it is really hard to play the game by yourself using localhost. So, we set up a "real" server using AWS(ec2). 
+
+2. You can play the game using the link below if you want.
+http://ec2-18-162-115-233.ap-east-1.compute.amazonaws.com/
+
+2. Feel free to contact Haruki (hsaegusa@connect.ust.hk) if the link is not working
