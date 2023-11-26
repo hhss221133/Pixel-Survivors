@@ -2,10 +2,9 @@
 COMP4021 Group 3 Final Project
 
 How to build and run:
-1. Clone the Repo
-2. 'npm install'
-3. cd into src directory
-4. 'node server.js'
+1. run 'npm install'
+2. run 'cd src' 
+3. run 'node server.js'
 
 Members:
 hsaegusa@connect.ust.hk
@@ -16,13 +15,8 @@ Project Details:
 
 2. A registration/login form and a how-to-play section
 
-3. It is a 2D pixel co-op game where players work together to defeat a boss that spawns several other enemies. The win condition is to deplete the boss' Hit Points (HP) while maximising their score (by damaging the boss), players lose when all players lose all HP, or if the time runs out (4 minutes). If a player loses all HP (dead), another player can revive the dead player. Reviving can also add points. A dead player will revive after 15 seconds if they are not revived by another player.
+3. It is a 2D pixel co-op game where players work together to defeat a boss that spawns several other enemies. The win condition is to deplete the boss' Hit Points (HP) while maximising their score (by damaging the boss and other enemies), If a player loses all HP (dead), he will revive after 15 seconds.
 
-4. The game over page will display a win/loss screen. When a player wins their individual scores will be displayed along with the completion time -and it will be listed on a rankings page. When a player loses only the damage statistics will be displayed.
+4. When a game ends, the players will be redirected to the ranking page. The ranks are based on the clear time of the game and scores of the two players are shown.
 
-5. Cheating can be toggled in the game by pressing a key, and the damage output of the players increases significantly.
-
-
-link to assets
-
-https://docs.google.com/document/d/11CN1Sab_wOOiY_lCCS4OrXzSRlypOETKJ9lfh5rZ2p8/edit?usp=sharing
+5. Cheat mode can be toggled in the game by pressing BACKSPACE key, and the damage and walking speed of the players increases significantly.

@@ -8,7 +8,7 @@ class Game {
         this.gameState = "waiting"; // Example states: 'waiting', 'active', 'finished'
         this.maxGameTime = 240000; // in ms
         this.remainingTime = this.maxGameTime; // in ms
-        this.bossMaxHP = 90; ///140
+        this.bossMaxHP = 90; ///90 for localhost, 180 for real multiplayer
         this.bossCurHP = this.bossMaxHP;
         this.clearTime = null; // in second
     }
